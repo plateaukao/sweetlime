@@ -178,12 +178,6 @@ public class SetupImLoadDialog extends DialogFragment {
                 SetupImLoadDialog.this.activity.CONNECTIVITY_SERVICE);
 
         imcount = datasource.count(imtype);
-        /*try {
-            datasource.open();
-            datasource.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
 
         View rootView = inflater.inflate(R.layout.fragment_dialog_im, container, false);
 
@@ -612,11 +606,12 @@ public class SetupImLoadDialog extends DialogFragment {
             }
         });
 
-        listview = (ListView) dialog.findViewById(R.id.listview_loading_target);
-        toplayout = (LinearLayout) dialog.findViewById(R.id.linearlayout_loading_confirm_top);
-        listview.setAdapter(getAdapter(new File(Lime.DATABASE_FOLDER_EXTERNAL)));
+        listview = dialog.findViewById(R.id.listview_loading_target);
+        toplayout = dialog.findViewById(R.id.linearlayout_loading_confirm_top);
+        File externalFileDir =ContextCompat.getExternalFilesDirs(getContext(), null)[0];
+        listview.setAdapter(getAdapter(externalFileDir));
 
-        createNavigationButtons(new File(Lime.DATABASE_FOLDER_EXTERNAL));
+        createNavigationButtons(externalFileDir);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
@@ -774,10 +769,10 @@ public class SetupImLoadDialog extends DialogFragment {
         List<File> list = new ArrayList<File>();
         File check = new File(path);
 
-        if (check.exists() && check.isDirectory()) {
+        if (check.exists() && check.isDirectory() && check.listFiles() != null) {
 
             for(File f: check.listFiles()){
-                if(f.canRead()){
+                if(true){
                     if(!f.isDirectory()){
                         if(imtype.equalsIgnoreCase(Lime.DB_RELATED)){
                             if( (f.getName().toLowerCase().startsWith(Lime.DB_RELATED) &&
@@ -956,19 +951,6 @@ public class SetupImLoadDialog extends DialogFragment {
                             if (userRecordsCount == 0) return;
 
                             try {
-                                // Load backuptable records
-                                /*
-                                Cursor cursorsource = datasource.rawQuery("select * from " + imtype);
-                                List<Word> clist = Word.getList(cursorsource);
-                                cursorsource.close();
-
-                                HashMap<String, Word> wordcheck = new HashMap<String, Word>();
-                                for(Word w : clist){
-                                    String key = w.getCode() + w.getWord();
-                                    wordcheck.put(key, w);
-                                }
-                                handler.updateProgress(20);
-                                */
                                 Cursor cursorbackup = datasource.rawQuery("select * from " + backupTableName);
                                 List<Word> backuplist = Word.getList(cursorbackup);
                                 cursorbackup.close();
@@ -982,29 +964,6 @@ public class SetupImLoadDialog extends DialogFragment {
                                     recordcount++;
 
                                     datasource.addOrUpdateMappingRecord(imtype,w.getCode(),w.getWord(),w.getScore());
-                                    /*
-                                    // update record
-                                    String key = w.getCode() + w.getWord();
-
-                                    if(wordcheck.containsKey(key)){
-                                        try{
-                                            datasource.execSQL("update " + imtype + " set " + Lime.DB_COLUMN_SCORE + " = " + w.getScore()
-                                                            + " WHERE " + Lime.DB_COLUMN_CODE + " = '" + w.getCode() + "'"
-                                                            + " AND " + Lime.DB_COLUMN_WORD + " = '" + w.getWord() + "'"
-                                            );
-                                        }catch(Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }else{
-                                        try{
-                                            Word temp = wordcheck.get(key);
-                                            String insertsql = Word.getInsertQuery(imtype, temp);
-                                            datasource.execSQL(insertsql);
-                                        }catch(Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    */
                                     // Update Progress
                                     int progress =(int) ((double)recordcount / recordtotal   * 90 +10 ) ;
 
@@ -1014,14 +973,9 @@ public class SetupImLoadDialog extends DialogFragment {
                                     }
 
                                 }
-
-                             //   wordcheck.clear();
-
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
-
-                            //datasource.restoreUserRecordsStep2(imtype);
                             handler.updateProgress(100);
                         }
                     }
@@ -1032,7 +986,5 @@ public class SetupImLoadDialog extends DialogFragment {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-       // handler.startLoadingWindow(imtype);
-
     }
 }

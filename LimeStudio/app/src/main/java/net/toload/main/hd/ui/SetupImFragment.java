@@ -643,13 +643,10 @@ public class SetupImFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                         if(action != null){
                             if(action.equalsIgnoreCase(Lime.BACKUP)) {
-
                                 if(type.equalsIgnoreCase(Lime.LOCAL)){
                                     backupLocalDrive();
                                 }
-
                             }else if(action.equalsIgnoreCase(Lime.RESTORE)){
-
                                 if(type.equalsIgnoreCase(Lime.LOCAL)){
                                     restoreLocalDrive();
                                 }

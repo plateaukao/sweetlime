@@ -24,6 +24,7 @@
 
 package net.toload.main.hd;
 
+import android.app.Application;
 import android.os.Environment;
 
 import java.text.DecimalFormat;
@@ -34,7 +35,6 @@ import java.text.DecimalFormat;
 public class Lime {
 
     // Database Setting
-
     final public static String DATABASE_NAME = "lime.db";
     final public static String DATABASE_EXT = ".db";
     final public static String DATABASE_DEVICE_FOLDER =  Environment.getDataDirectory() + "/data/net.toload.main.hd/databases";
