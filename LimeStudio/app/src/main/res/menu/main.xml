@@ -1,0 +1,45 @@
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_preference"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/action_preference"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:orderInCategory="200"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reset"
+        android:title="@string/action_reset"
+        android:orderInCategory="300"
+        app:showAsAction="never" />
+</menu>

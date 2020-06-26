@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<Keyboard xmlns:limehd="http://schemas.android.com/apk/res/net.toload.main.hd"
+	limehd:keyWidth="10%p" limehd:horizontalGap="0px"
+	limehd:verticalGap="0px" limehd:keyHeight="@dimen/key_height">
+
+	<Row>
+		<Key limehd:codes="33" limehd:keyLabel="!"  limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="64" limehd:keyLabel="\@" />
+		<Key limehd:codes="35" limehd:keyLabel="\#" />
+		<Key limehd:codes="36" limehd:keyLabel="$" />
+		<Key limehd:codes="37" limehd:keyLabel="%" />
+		<Key limehd:codes="94" limehd:keyLabel="^" />
+		<Key limehd:codes="38" limehd:keyLabel="&amp;" />
+		<Key limehd:codes="42" limehd:keyLabel="*" />
+		<Key limehd:codes="40" limehd:keyLabel="(" />
+		<Key limehd:codes="41" limehd:keyLabel=")" limehd:keyEdgeFlags="right" />
+	</Row>
+
+	<Row>
+		<Key limehd:codes="81" limehd:keyLabel="Q" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="87" limehd:keyLabel="W" />
+		<Key limehd:codes="69" limehd:keyLabel="E" />
+		<Key limehd:codes="82" limehd:keyLabel="R" />
+		<Key limehd:codes="84" limehd:keyLabel="T" />
+		<Key limehd:codes="89" limehd:keyLabel="Y" />
+		<Key limehd:codes="85" limehd:keyLabel="U" />
+		<Key limehd:codes="73" limehd:keyLabel="I" />
+		<Key limehd:codes="79" limehd:keyLabel="O" />
+		<Key limehd:codes="80" limehd:keyLabel="P" limehd:keyEdgeFlags="right" />
+	</Row>
+
+	<Row>
+		<Key limehd:codes="65" limehd:keyLabel="A" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="83" limehd:keyLabel="S" />
+		<Key limehd:codes="68" limehd:keyLabel="D" />
+		<Key limehd:codes="70" limehd:keyLabel="F" />
+		<Key limehd:codes="71" limehd:keyLabel="G" />
+		<Key limehd:codes="72" limehd:keyLabel="H" />
+		<Key limehd:codes="74" limehd:keyLabel="J" />
+		<Key limehd:codes="75" limehd:keyLabel="K" />
+		<Key limehd:codes="76" limehd:keyLabel="L" />
+		<Key limehd:codes="58" limehd:keyLabel=":" limehd:keyEdgeFlags="right" />
+	</Row>
+
+
+	<Row>
+		<Key limehd:codes="-1" limehd:keyIcon="@drawable/sym_keyboard_shift_shifted"
+			 limehd:isModifier="true" limehd:isSticky="true" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="90" limehd:keyLabel="Z" />
+		<Key limehd:codes="88" limehd:keyLabel="X" />
+		<Key limehd:codes="67" limehd:keyLabel="C" />
+		<Key limehd:codes="86" limehd:keyLabel="V" />
+		<Key limehd:codes="66" limehd:keyLabel="B" />
+		<Key limehd:codes="78" limehd:keyLabel="N" />
+		<Key limehd:codes="77" limehd:keyLabel="M" />
+		<Key limehd:codes="34" limehd:keyLabel="&quot;"/>
+		<Key limehd:codes="-5" limehd:keyIcon="@drawable/sym_keyboard_delete_light" limehd:isModifier="true"
+			 limehd:keyEdgeFlags="right"	limehd:isRepeatable="true" />
+	</Row>
+
+
+	<Row limehd:rowEdgeFlags="bottom">
+		<Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true"
+			  	limehd:keyWidth="15%p" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="-9" 
+				limehd:keyLabel="EN" limehd:isModifier="true" 
+				limehd:keyWidth="10%p" 
+				/>
+		<Key limehd:codes="32" limehd:keyIcon="@drawable/sym_flat_keyboard_space"
+				limehd:keyWidth="15%p" limehd:isRepeatable="true" />
+		<Key limehd:codes="60" limehd:keyLabel="&lt;" limehd:keyWidth="10%p" />
+		<Key limehd:codes="62" limehd:keyLabel="&gt;" 
+								 limehd:popupKeyboard="@xml/popup_punctuation"  
+								limehd:keyWidth="10%p" />
+		<Key limehd:codes="63" limehd:keyLabel="\?" limehd:keyWidth="10%p" />
+		<Key limehd:codes="95" limehd:keyLabel="_" />
+		<Key limehd:codes="43" limehd:keyLabel="+" />
+		<Key limehd:codes="10" limehd:keyIcon="@drawable/sym_keyboard_return_light" limehd:isModifier="true"
+				limehd:keyEdgeFlags="right" />
+	</Row>
+</Keyboard>
+    

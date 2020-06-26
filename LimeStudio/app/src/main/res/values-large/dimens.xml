@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+<resources>
+    <dimen name="key_height">60dip</dimen>
+    <dimen name="mini_keyboard_fling_vertical_correction">-60dip</dimen>
+    <dimen name="phone_key_height">66dip</dimen>
+    <dimen name="candidate_stripe_height">34sp</dimen>
+    <dimen name="candidate_font_size">30sp</dimen>
+    <dimen name="candidate_number_font_size">15sp</dimen>
+    <dimen name="candidate_vertical_padding">12sp</dimen>
+    <dimen name="key_preview_height">135dp</dimen>
+    <dimen name="keyboard_bottom_padding">0.06in</dimen>
+    <dimen name="key_text_size">26dp</dimen>
+    <dimen name="label_text_size">26dp</dimen>
+    <dimen name="sub_label_text_size">22dp</dimen>
+    <dimen name="small_label_text_size">24dp</dimen>
+    <dimen name="composing_text_size">22sp</dimen>
+    <dimen name="notice_text_size">20sp</dimen>
+    <dimen name="keyboard_vertical_correction">-0.05in</dimen>
+    <dimen name="spacebar_vertical_correction">0dp</dimen>
+    <dimen name="spacebar_preview_text_size">26sp</dimen>
+    <dimen name="spacebar_preview_top_padding">20dp</dimen>
+ 	<dimen name="mini_keyboard_vertical_correction">-0.05in</dimen>
+
+    <!-- WB -->
+    <dimen name="wb_key_height">92dip</dimen>
+    
+</resources>

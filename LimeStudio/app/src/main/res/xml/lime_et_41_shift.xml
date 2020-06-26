@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<Keyboard xmlns:limehd="http://schemas.android.com/apk/res/net.toload.main.hd"
+	limehd:keyWidth="10%p" limehd:horizontalGap="0px"
+	limehd:verticalGap="0px" limehd:keyHeight="@dimen/key_height">
+
+	<Row>
+	<Key limehd:codes="33" limehd:keyLabel="!\n˙"  limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="64" limehd:keyLabel="\@\nˊ" />
+		<Key limehd:codes="35" limehd:keyLabel="\#\nˇ" />
+		<Key limehd:codes="36" limehd:keyLabel="$\nˋ" />
+		<Key limehd:codes="37" limehd:keyLabel="%" />
+		<Key limehd:codes="94" limehd:keyLabel="^" />
+		<Key limehd:codes="38" limehd:keyLabel="&amp;\nㄑ" />
+		<Key limehd:codes="42" limehd:keyLabel="*\nㄢ" />
+		<Key limehd:codes="40" limehd:keyLabel="(\nㄣ" />
+		<Key limehd:codes="41" limehd:keyLabel=")\nㄤ" limehd:keyEdgeFlags="right" />
+	</Row>
+
+
+	<Row>
+		<Key limehd:codes="81" limehd:keyLabel="Q\nㄟ" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="87" limehd:keyLabel="W\nㄝ" />
+		<Key limehd:codes="69" limehd:keyLabel="E\n一" />
+		<Key limehd:codes="82" limehd:keyLabel="R\nㄜ" />
+		<Key limehd:codes="84" limehd:keyLabel="T\nㄊ" />
+		<Key limehd:codes="89" limehd:keyLabel="Y\nㄡ" />
+		<Key limehd:codes="85" limehd:keyLabel="U\nㄩ" />
+		<Key limehd:codes="73" limehd:keyLabel="I\nㄞ" />
+		<Key limehd:codes="79" limehd:keyLabel="O\nㄛ" />
+		<Key limehd:codes="80" limehd:keyLabel="P\nㄆ" limehd:keyEdgeFlags="right" />
+	</Row>
+	<Row>
+		<Key limehd:codes="65" limehd:keyLabel="A\nㄚ" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="83" limehd:keyLabel="S\nㄙ" />
+		<Key limehd:codes="68" limehd:keyLabel="D\nㄉ" />
+		<Key limehd:codes="70" limehd:keyLabel="F\nㄈ" />
+		<Key limehd:codes="71" limehd:keyLabel="G\nㄐ" />
+		<Key limehd:codes="72" limehd:keyLabel="H\nㄏ" />
+		<Key limehd:codes="74" limehd:keyLabel="J\nㄖ" />
+		<Key limehd:codes="75" limehd:keyLabel="K\nㄎ" />
+		<Key limehd:codes="76" limehd:keyLabel="L\nㄌ" />
+		<Key limehd:codes="58" limehd:keyLabel=":\nㄗ" limehd:keyEdgeFlags="right" />
+	</Row>
+
+	<Row>
+		<Key limehd:codes="-1" limehd:keyIcon="@drawable/sym_keyboard_shift_shifted"
+			 limehd:isModifier="true" limehd:isSticky="true" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="90" limehd:keyLabel="Z\nㄠ" />
+		<Key limehd:codes="88" limehd:keyLabel="X\nㄨ" />
+		<Key limehd:codes="67" limehd:keyLabel="C\nㄒ" />
+		<Key limehd:codes="86" limehd:keyLabel="V\nㄍ" />
+		<Key limehd:codes="66" limehd:keyLabel="B\nㄅ" />
+		<Key limehd:codes="78" limehd:keyLabel="N\nㄋ" />
+		<Key limehd:codes="77" limehd:keyLabel="M\nㄇ" />
+		<Key limehd:codes="34" limehd:keyLabel="&quot;\nㄘ"/>
+		<Key limehd:codes="-5" limehd:keyIcon="@drawable/sym_keyboard_delete_light" limehd:isModifier="true"
+			 limehd:keyEdgeFlags="right"	limehd:isRepeatable="true" />
+	</Row>
+
+		<Key limehd:codes="44" limehd:keyLabel=",\nㄓ"/>
+		<Key limehd:codes="46" 
+				limehd:keyLabel=".\nㄔ"
+				 limehd:popupKeyboard="@xml/popup_c_punctuation"   
+				limehd:keyWidth="10%p" />
+		<Key limehd:codes="47" limehd:keyLabel="/\nㄕ" />
+		<Key limehd:codes="45" limehd:keyLabel="-\nㄥ" />
+		<Key limehd:codes="61" limehd:keyLabel="=\nㄦ" />
+
+	<Row limehd:rowEdgeFlags="bottom">
+		<Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true"
+			  	limehd:keyWidth="15%p" limehd:keyEdgeFlags="left" />
+		<Key limehd:codes="-9" 
+				limehd:keyLabel="EN"  limehd:isModifier="true" 
+				limehd:keyWidth="10%p" 
+				/>
+		<Key limehd:codes="32" limehd:keyIcon="@drawable/sym_flat_keyboard_space"
+				limehd:keyWidth="15%p" limehd:isRepeatable="true" />
+		<Key limehd:codes="60" limehd:keyLabel="&lt;\nㄓ" limehd:keyWidth="10%p" />
+		<Key limehd:codes="62" limehd:keyLabel="&gt;\nㄔ" 
+								 limehd:popupKeyboard="@xml/popup_punctuation"  
+								limehd:keyWidth="10%p" />
+		<Key limehd:codes="63" limehd:keyLabel="\?\nㄕ" limehd:keyWidth="10%p" />
+		<Key limehd:codes="95" limehd:keyLabel="_\nㄥ" />
+		<Key limehd:codes="43" limehd:keyLabel="+\nㄦ" />
+		<Key limehd:codes="10" limehd:keyIcon="@drawable/sym_keyboard_return_light" limehd:isModifier="true"
+				limehd:keyEdgeFlags="right" />
+	</Row>
+</Keyboard>
+    

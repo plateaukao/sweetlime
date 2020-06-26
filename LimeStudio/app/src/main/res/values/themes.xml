@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/jrywu/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
+<resources>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+  </style>
+
+  <style name="LIMETheme" parent="Theme.AppCompat.Light">
+  </style>
+
+  <style name="LIMETheme.Light">
+    <item name="LIMEKeyboardStyle">@style/LIMEKeyboard.Light</item>
+    <item name="LIMEBaseKeyboardStyle">@style/LIMEBaseKeyboard.Light</item>
+    <item name="LIMEKeyboardBaseView">@style/LIMEKeyboardBaseView.Light</item>
+    <item name="LIMEKeyboardLayout">@style/LIMEKeyboardLayout.Light</item>
+    <item name="LIMEPopupKeyboardLayout">@style/LIMEPopupKeyboardLayout.Light</item>
+    <item name="LIMECandidateView">@style/LIMECandidateView.Light</item>
+  </style>
+  <style name="LIMETheme.Dark">
+    <item name="LIMEKeyboardStyle">@style/LIMEKeyboard.Dark</item>
+    <item name="LIMEBaseKeyboardStyle">@style/LIMEBaseKeyboard.Dark</item>
+    <item name="LIMEKeyboardBaseView">@style/LIMEKeyboardBaseView.Dark</item>
+    <item name="LIMEKeyboardLayout">@style/LIMEKeyboardLayout.Dark</item>
+    <item name="LIMEPopupKeyboardLayout">@style/LIMEPopupKeyboardLayout.Dark</item>
+    <item name="LIMECandidateView">@style/LIMECandidateView.Dark</item>
+  </style>
+  <style name="LIMETheme.Pink">
+    <item name="LIMEKeyboardStyle">@style/LIMEKeyboard.Pink</item>
+    <item name="LIMEBaseKeyboardStyle">@style/LIMEBaseKeyboard.Pink</item>
+    <item name="LIMEKeyboardBaseView">@style/LIMEKeyboardBaseView.Pink</item>
+    <item name="LIMEKeyboardLayout">@style/LIMEKeyboardLayout.Pink</item>
+    <item name="LIMEPopupKeyboardLayout">@style/LIMEPopupKeyboardLayout.Pink</item>
+    <item name="LIMECandidateView">@style/LIMECandidateView.Pink</item>
+  </style>
+  <style name="LIMETheme.TechBlue">
+    <item name="LIMEKeyboardStyle">@style/LIMEKeyboard.TechBlue</item>
+    <item name="LIMEBaseKeyboardStyle">@style/LIMEBaseKeyboard.TechBlue</item>
+    <item name="LIMEKeyboardBaseView">@style/LIMEKeyboardBaseView.TechBlue</item>
+    <item name="LIMEKeyboardLayout">@style/LIMEKeyboardLayout.TechBlue</item>
+    <item name="LIMEPopupKeyboardLayout">@style/LIMEPopupKeyboardLayout.TechBlue</item>
+    <item name="LIMECandidateView">@style/LIMECandidateView.TechBlue</item>
+  </style>
+  <style name="LIMETheme.FashionPurple">
+    <item name="LIMEKeyboardStyle">@style/LIMEKeyboard.FashionPurple</item>
+    <item name="LIMEBaseKeyboardStyle">@style/LIMEBaseKeyboard.FashionPurple</item>
+    <item name="LIMEKeyboardBaseView">@style/LIMEKeyboardBaseView.FashionPurple</item>
+    <item name="LIMEKeyboardLayout">@style/LIMEKeyboardLayout.FashionPurple</item>
+    <item name="LIMEPopupKeyboardLayout">@style/LIMEPopupKeyboardLayout.FashionPurple</item>
+    <item name="LIMECandidateView">@style/LIMECandidateView.FashionPurple</item>
+  </style>
+  <style name="LIMETheme.RelaxGreen">
+    <item name="LIMEKeyboardStyle">@style/LIMEKeyboard.RelaxGreen</item>
+    <item name="LIMEBaseKeyboardStyle">@style/LIMEBaseKeyboard.RelaxGreen</item>
+    <item name="LIMEKeyboardBaseView">@style/LIMEKeyboardBaseView.RelaxGreen</item>
+    <item name="LIMEKeyboardLayout">@style/LIMEKeyboardLayout.RelaxGreen</item>
+    <item name="LIMEPopupKeyboardLayout">@style/LIMEPopupKeyboardLayout.RelaxGreen</item>
+    <item name="LIMECandidateView">@style/LIMECandidateView.RelaxGreen</item>
+  </style>
+</resources>

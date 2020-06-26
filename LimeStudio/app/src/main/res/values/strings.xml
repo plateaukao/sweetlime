@@ -1,0 +1,293 @@
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources>
+    <string name="app_name">萊姆輸入法</string>
+    <string name="app_setting">設定萊姆輸入法</string>
+
+    <string name="vpon_banner_id">8a8081824cfe92fa014d3707f493630b</string>
+
+    <string name="ad_unit_interstitial">ca-app-pub-6429718170873338/5892033402</string>
+    <string name="ad_unit_banner">ca-app-pub-6429718170873338/7028669804</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_share">Share</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="no_search_result">沒有任何符合的記錄</string>
+    <string name="insert_error">無法新增記錄，請檢查參數</string>
+    <string name="update_error">無法更新記錄，請檢查參數</string>
+
+    <string name="error_network_failed">這一個操作需要連線網際網路，請啟用相關設定</string>
+    <string name="error_restore_not_found">無法還原資料庫，找不到備份檔案</string>
+
+    <string name="global_remove">移除</string>
+    <string name="global_update">更新</string>
+    <string name="global_add">新增</string>
+
+    <string name="dialog_confirm">確認</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_close">關閉</string>
+
+    <string name="sdcard_transfer_message">升級資料庫並轉移至裝置空間</string>
+
+    <string name="action_adfree">贊助開發團隊</string>
+    <string name="action_reset">回復原始設定</string>
+    <string name="action_news">最新消息</string>
+    <string name="action_help">使用說明</string>
+    <string name="action_preference">喜好設定</string>
+
+    <string name="global_exit_title">離開萊姆設定程式</string>
+
+    <string name="setup_im_backup_message">資料庫備份中，請耐心等候 ...</string>
+    <string name="setup_im_restore_message">資料庫還原中，請耐心等候 ...</string>
+    <string name="setup_im_import_complete">資料庫匯入完成</string>
+    <string name="setup_im_backup_dropbox">Dropbox 備份</string>
+    <string name="setup_im_backup_dropbox_error_507">Dropbox 已沒有足夠的空間進行備份，請檢查</string>
+    <string name="setup_im_backup_google">Google 備份</string>
+    <string name="setup_im_backup_local">本地備份</string>
+    <string name="setup_im_database">備份/還原資料庫</string>
+    <string name="setup_im_database_description">備份完整資料庫至本地/雲端空間，或者由本地/雲端空間還原完整資料庫檔案</string>
+    <string name="setup_im_grant_permission">請授權儲存空間存取以啟用輸入法匯入與資料庫備份還原功能</string>
+    <string name="setup_im_grant_permission_button">授權儲存空間存取</string>
+    <string name="setup_im_download">下載輸入法</string>
+    <string name="setup_im_download_description">下載並匯入系統提供的輸入法，這一個操作需要連線網際網路，請啟用相關設定</string>
+    <string name="setup_im_import">新增輸入法</string>
+    <string name="setup_im_import_description">請選擇要匯入的檔案，系統支援標準 .CIN 格式、LIME 簡易字根表及 .LIME 輸入法備份檔</string>
+    <string name="setup_im_system_settings">啟動萊姆輸入法</string>
+    <string name="setup_im_system_selectLIME">選用萊姆輸入法</string>
+    <string name="setup_im_wizard_nextstep">下一步</string>
+    <string name="setup_im_system_settings_description">萊姆輸入法尚未啟用，請按下一步後，在系統鍵盤輸入法頁面啟用萊姆輸入法。完成後請按返回鍵繼續其他設定。</string>
+    <string name="setup_im_system_impicker_description">萊姆輸入法已啟用但尚未被選用，請按下方按鈕後，在系統鍵盤輸入法選擇頁選用萊姆輸入法。</string>
+    <string name="setup_im_import_standard">匯入自定字根表</string>
+    <string name="setup_im_import_reset">移除自定字根表</string>
+    <string name="setup_im_import_related">匯入關聯字庫</string>
+    <string name="setup_im_import_related_default">匯入預設字庫</string>
+    <string name="setup_im_import_related_default_confirm">請問您要匯入預設關聯字庫嗎?</string>
+    <string name="setup_im_restore_dropbox">Dropbox 還原</string>
+    <string name="setup_im_restore_google">Google 還原</string>
+    <string name="setup_im_download_old">下載舊版程式</string>
+    <string name="setup_im_download_old_summary">舊版程式與新版不相容, 請您下載完成後移除目前安裝的版本, 再至下載目錄取得並安裝舊版程式</string>
+    <string name="setup_im_download_old_version">下載 LIMEHD v3.9.1</string>
+    <string name="setup_im_download_old_version_confirm">請問您要下載 LIMEHD 3.9.1 版嗎?</string>
+    <string name="setup_im_download_old_version_hint">檔案下載路徑 :</string>
+    <string name="setup_im_restore_local">本地還原</string>
+
+    <string name="setup_im_load_custom">自定字根表</string>
+
+    <string name="setup_im_load_standard">匯入自定字根表</string>
+    <string name="setup_im_load_reset">移除自定字根表</string>
+
+    <string name="setup_im_related_title">安裝關聯字庫</string>
+    <string name="setup_im_related_custom">匯入關聯字庫</string>
+
+    <string name="setup_im_dialog_title">安裝輸入法</string>
+    <string name="setup_im_dialog_custom">匯入字根表</string>
+
+    <string name="setup_im_dialog_title_remove">移除輸入法</string>
+
+    <string name="setup_im_dialog_remove">移除輸入法資料表</string>
+
+    <string name="setup_im_dialog_remove_confirm">移除輸入法</string>
+    <string name="setup_im_dialog_remove_confirm_message">您確定要移除輸入法資料表嗎 ?</string>
+    <string name="setup_im_backup_learning_data">備份輸入法選字喜好</string>
+
+    <string name="setup_im_restore_learning_data">還原輸入法選字喜好</string>
+    <string name="setup_im_restore_learning_data_message">請問您是否要還原輸入法選字喜好 ?</string>
+
+    <!--<string name="setup_load_download_dayiuni_big5">安裝 Unicode 3+4 碼單字版 (BIG5字集)</string>-->
+    <string name="setup_load_download_dayiuni">安裝 Unicode 3+4 碼單字版</string>
+   <!-- <string name="setup_load_download_dayiunip_big5">安裝 Unicode 3+4 碼詞庫版 (BIG5字集)</string>-->
+    <string name="setup_load_download_dayiunip">安裝 Unicode 3+4 碼詞庫版</string>
+
+    <string name="setup_load_download">下載輸入法檔案</string>
+    <string name="setup_load_migrate_load">準備輸入法字根</string>
+    <string name="setup_load_migrate_import">匯入輸入法字根</string>
+    <string name="setup_load_migrate_rebuild_related">建立關連字根查詢表</string>
+    <string name="setup_load_import_finish">完成輸入法字根匯入</string>
+
+    <string name="reset_dialog_title">回復原始資料與設定</string>
+    <string name="reset_dialog_confirm">請問您要移除所有匯入的輸入法, 關聯字庫, 學習記錄並還原至系統初始設定嗎 ? 重置完成後請您重新開啟[萊姆輸入法]</string>
+    <string name="payment_dialog_title">贊助開發團隊</string>
+    <string name="payment_plan_1">USD 0.99 / 永久移除廣告</string>
+    <string name="payment_plan_2">USD 1.99 / 永久移除廣告</string>
+    <string name="payment_plan_3">USD 2.99 / 永久移除廣告</string>
+    <string name="payment_service_failed">Google Play 服務無法正常啟用，請稍後再試 !</string>
+    <string name="payment_service_success">感謝您對於 LIME 開發團隊的支持，我們會持續努力，提供更好的服務給所有的使用者 !!! \n\n 若程式下方仍顯示廣告區塊，請您完全退出萊姆輸入法設定程式後再重新進入。</string>
+
+    <string name="default_menu_initial">設定輸入法</string>
+    <string name="default_menu_related">管理關聯字庫</string>
+
+    <string name="im_input_method">輸入法</string>
+    <string name="im_custom">自定義</string>
+    <string name="im_array">行列</string>
+    <string name="im_array10">行列10</string>
+    <string name="im_cj">倉頡</string>
+    <string name="im_cj5">倉頡五代</string>
+    <string name="im_dayi">大易</string>
+    <string name="im_ecj">速成</string>
+    <string name="im_ez">輕鬆</string>
+    <string name="im_hs">華象直覺</string>
+    <string name="im_phonetic">注音</string>
+    <string name="im_phonetic_advanced">注音連打</string>
+    <string name="im_pinyin">拼音</string>
+    <string name="im_scj">快倉</string>
+    <string name="im_wb">筆順五碼</string>
+    <string name="related">關聯字庫</string>
+
+    <string name="manage_im_add">新增</string>
+    <string name="manage_im_edit">編輯</string>
+    <string name="manage_im_copy">複製</string>
+    <string name="manage_im_update">更新</string>
+    <string name="manage_im_cancel">取消</string>
+    <string name="manage_im_save">儲存</string>
+    <string name="manage_im_keyboard">請設定輸入法鍵盤</string>
+    <string name="manage_im_management">管理輸入法</string>
+    <string name="manage_im_move">搬移</string>
+    <string name="manage_im_remove">移除</string>
+    <string name="manage_im_reset">重置</string>
+    <string name="manage_im_search">檢索</string>
+    <string name="manage_im_previous">上一頁</string>
+    <string name="manage_im_next">下一頁</string>
+    <string name="manage_im_loading">讀取中 ...</string>
+    <string name="manage_im_word">文字</string>
+    <string name="manage_im_root">字根</string>
+
+    <string name="manage_related_management">管理關連字庫</string>
+    <string name="manage_related_add">新增</string>
+    <string name="manage_related_search">檢索</string>
+    <string name="manage_related_previous">上一頁</string>
+    <string name="manage_related_next">下一頁</string>
+    <string name="manage_related_pword">首字</string>
+    <string name="manage_related_cword">關聯文字</string>
+    <string name="manage_related_score">顯示優先序</string>
+    <string name="manage_related_cancel">取消</string>
+    <string name="manage_related_update">更新</string>
+    <string name="manage_related_remove">移除</string>
+    <string name="manage_related_save">儲存</string>
+    <string name="manage_related_loading">讀取中 ...</string>
+    <string name="manage_related_reset">重置</string>
+    <string name="manage_related_duplicated">關聯字重覆，無法儲存</string>
+    <string name="manage_related_format_error">關聯字建立錯誤，字碼格式不支援</string>
+
+    <string name="manage_related_dialog_edit">編輯內容</string>
+    <string name="manage_related_dialog_message">請問是否要儲存記錄並離開?</string>
+
+    <string name="manage_related_dialog_delete">刪除內容</string>
+    <string name="manage_related_dialog_delete_message">請問是否要刪除記錄並離開?</string>
+
+    <string name="manage_related_dialog_add">新增內容</string>
+    <string name="manage_related_dialog_add_message">請問是否要新增記錄並離開?</string>
+
+    <string name="manage_word_code">字根</string>
+    <string name="manage_word_code3r">三碼</string>
+    <string name="manage_word_word">文字</string>
+    <string name="manage_word_score">顯示優先序</string>
+
+    <string name="manage_select_keyboard">請選擇鍵盤</string>
+
+    <string name="manage_word_dialog_edit">編輯內容</string>
+    <string name="manage_word_dialog_message">請問是否要儲存記錄並離開?</string>
+
+    <string name="manage_word_dialog_delete">刪除內容</string>
+    <string name="manage_word_dialog_delete_message">請問是否要刪除記錄並離開?</string>
+
+    <string name="manage_word_dialog_add">新增內容</string>
+    <string name="manage_word_dialog_add_message">請問是否要新增記錄並離開?</string>
+
+    <string name="share_dialog_related_title">分享關聯字庫</string>
+    <string name="share_dialog_related_title_message">透過分享您可以將關聯字庫匯出並傳送給你的朋友，目前支援 limedb (資料庫) 格式</string>
+
+    <string name="share_dialog_title">分享輸入法</string>
+    <string name="share_dialog_title_message">透過分享您可以將輸入法匯出並傳送給你的朋友，目前支援 .lime (文字) 及 limedb (資料庫)，請選擇匯出格式?</string>
+
+    <string name="share_step_initial">準備資料中 ...</string>
+    <string name="share_step_write">寫入暫存檔 ...</string>
+
+    <string name="share_lime_cin">純文字格式</string>
+    <string name="share_lime_db">資料庫檔案</string>
+
+
+    <string name="import_dialog_related_title">匯入文字至關聯資料庫</string>
+
+    <string name="import_dialog_title">匯入文字至輸入法表格</string>
+    <string name="import_code_hint">\n\n請輸入字根檔案</string>
+    <string name="import_code_empty">您必需輸入字根</string>
+
+    <string name="import_related_success">成功建立關聯資料庫</string>
+    <string name="import_word_success">成功建立輸入法字根</string>
+
+
+    <string name="help_dialog_title">使用說明</string>
+    <string name="help_dialog_detail">
+        \n** 若輸入法運作異常請嚐試透過 [回復原始設定] 功能進行資料及設定的修正, 透過輸入法喜好設定關閉部份功能可提高輸入法運作效率。 \n
+        \n版本更新说明\n\n
+
+        5.2.1 問題修正\n\n
+
+        5.2.0 版本更新\n\n
+
+        - 修正浮動鍵盤顯示問題\n
+        - 修正選字列閃動及硬體鍵盤顯示\n
+        - 修正外部儲存空間權限問題\n
+        - 新增語音輸入快捷鍵\n
+        - 新增粉紅, 科技藍, 時尚紫及放鬆綠主題鍵盤\n\n
+
+        5.1.1 版本更新\n\n
+
+        - 回復原始設定\n
+        - 修正EMOJI查詢速度\n
+        - 避免儲存中文符號至關聯字庫\n\n
+
+        5.1.0 版本更新\n\n
+
+        - 增加 EMOJI 圖示\n
+        - 新增匯入預設關聯字庫\n
+        - 簡/繁體轉換狀態提示\n
+        - 舊版 LIMEHD 下載功能\n
+        - 新增 BIG5 字集注音及倉頡字根\n
+        - 修正 Android 6 對話框顯示問題\n\n
+
+        感謝大易輸入法發明者王贊傑先生，萊姆正式獲得使用授權\n\n
+
+		LIME中文輸入法Facebook粉絲專頁\n
+		http://facebook.com/limeime/\n\n
+		LIME 使用與操作說明\n
+		http://netkidz.net/blog/\nhttp://goo.gl/vtW1F\n\n
+
+		由於裝置種類繁多，目前尚無法兼顧到各種不同鍵盤及硬體配置，若程式尚未支援您的硬體設備還請見諒。若您對萊姆輸入法感興趣，歡迎加入開發或測試的行列亦歡迎您直接贊助開發團隊。\n
+    </string>
+
+    <string name="error_import_db">匯入失敗，可能是檔案毀損或格式錯誤，請再試一次</string>
+
+    <string name="error_set_active_im">請先下載輸入法或匯入字根檔</string>
+    <string name="title_activity_setup_im_google">SetupImGoogleActivity</string>
+
+    <string name="smart_chinese_input">smart_chinese_input</string>
+    <string name="preference_smart_chinese_input">開啟中文智慧選字</string>
+    <string name="preference_smart_chinese_input_message">部份輸入法可能會影響中英混打功能</string>
+
+</resources>

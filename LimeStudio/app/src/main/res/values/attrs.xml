@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources>
+    <declare-styleable name="KeyboardTheme">
+        <attr name="LIMEKeyboardStyle" format="reference" />
+        <attr name="LIMEBaseKeyboardStyle" format="reference" />
+        <attr name="LIMEKeyboardBaseView" format="reference" />
+        <attr name="LIMEKeyboardLayout" format="reference" />
+        <attr name="LIMEPopupKeyboardLayout" format="reference" />
+        <attr name="LIMECandidateView" format="reference" />
+
+    </declare-styleable>
+
+    <declare-styleable name="LIMEKeyboardBaseView">
+        <!-- Image for the key. This image needs to be a StateListDrawable, with the following
+             possible states: normal, pressed, checkable, checkable+pressed, checkable+checked,
+             checkable+checked+pressed. -->
+        <attr name="keyBackground" format="reference" />
+
+        <!-- Size of the text for character keys. -->
+        <attr name="keyTextSize" format="dimension" />
+
+        <!-- Size of the label text for custom keys with some text and no icon. -->
+        <attr name="labelTextSize" format="dimension" />
+
+        <!-- Size of the sub label text for custom keys with some text and no icon. -->
+        <attr name="subLabelTextSize" format="dimension" />
+
+        <!-- Size of the label text with sub-label for custom keys with some text and no icon. -->
+        <attr name="smallLabelTextSize" format="dimension" />
+
+        <!-- Top padding of normalkey space key preview popup for sliding IM switching. -->
+        <attr name="previewTopPadding" format="dimension" />
+        <attr name="spacePreviewTopPadding" format="dimension" />
+
+        <!-- Color to use for the label in a key. -->
+        <attr name="keyTextColorNormal" format="color" />
+        <attr name="keyTextColorPressed" format="color" />
+
+        <!-- Color to use for the label in a function key. -->
+        <attr name="functionKeyTextColorPressed" format="color" />
+        <attr name="functionKeyTextColorNormal" format="color" />
+
+        <!-- Color to use for the sub-label in a key. -->
+        <attr name="keySubLabelTextColorNormal" format="color" />
+        <attr name="keySubLabelTextColorPressed" format="color" />
+
+
+        <!-- Layout resource for key press feedback.-->
+        <attr name="keyPreviewLayout" format="reference" />
+
+        <!-- Vertical offset of the key press feedback from the key. -->
+        <attr name="keyPreviewOffset" format="dimension" />
+
+        <!-- Height of the key press feedback popup. -->
+        <attr name="keyPreviewHeight" format="dimension" />
+
+        <!-- Hysteresis distance for key debouncing -->
+        <attr name="keyHysteresisDistance" format="dimension" />
+
+        <!-- Amount to offset the touch Y coordinate by, for bias correction. -->
+        <attr name="verticalCorrection" format="dimension" />
+
+        <!-- Layout resource for popup keyboards. -->
+        <attr name="popupLayout" format="reference" />
+
+        <!-- popup hint icon. -->
+        <attr name="popupHint" format="reference" />
+
+        <attr name="shadowColor" format="color" />
+        <attr name="shadowRadius" format="float" />
+        <attr name="backgroundDimAmount" format="float" />
+
+        <attr name="keyTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+
+        <attr name="symbolColorScheme">
+            <flag name="white" value="0" />
+            <flag name="black" value="1" />
+        </attr>
+
+    </declare-styleable>
+
+    <declare-styleable name="LIMEKeyboard">
+        <!--Special key Icons for all keyboard -->
+        <attr name="spaceKeyIcon" format="reference" />
+        <attr name="spaceKeyPreviewIcon" format="reference" />
+        <attr name="enterKeyIcon" format="reference" />
+        <attr name="searchKeyIcon" format="reference" />
+        <attr name="doneKeyIcon" format="reference" />
+        <attr name="shiftKeyIcon" format="reference" />
+        <attr name="shiftKeyShiftedIcon" format="reference" />
+        <attr name="deleteKeyIcon" format="reference" />
+        <attr name="spaceKeyTextColor" format="color" />
+        <attr name="spaceKeyVerticalCorrection" format="dimension" />
+        <attr name="spaceKeySlidingTextSize" format="dimension" />
+        <attr name="spaceKeySlidingLeftArrow" format="reference" />
+        <attr name="spaceKeySlidingRightArrow" format="reference" />
+
+    </declare-styleable>
+
+    <declare-styleable name="LIMEBaseKeyboard">
+        <!-- Default width of a key, in pixels or percentage of display width. -->
+        <attr name="keyWidth" format="dimension|fraction" />
+        <!-- Default height of a key, in pixels or percentage of display width. -->
+        <attr name="keyHeight" format="dimension|fraction" />
+        <!-- Default horizontal gap between keys. -->
+        <attr name="horizontalGap" format="dimension|fraction" />
+        <!-- Default vertical gap between rows of keys. -->
+        <attr name="verticalGap" format="dimension|fraction" />
+        <!-- Arrow keyboard drawables -->
+        <attr name="drawableArrowUp" format="reference" />
+        <attr name="drawableArrowDown" format="reference" />
+        <attr name="drawableArrowRight" format="reference" />
+        <attr name="drawableArrowLeft" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="LIMEBaseKeyboard_Row">
+        <!-- Row edge flags. -->
+        <attr name="rowEdgeFlags">
+            <!-- Row is anchored to the top of the keyboard. -->
+            <flag name="top" value="4" />
+            <!-- Row is anchored to the bottom of the keyboard. -->
+            <flag name="bottom" value="8" />
+        </attr>
+        <!-- Mode of the keyboard. If the mode doesn't match the
+             requested keyboard mode, the row will be skipped. -->
+        <attr name="keyboardMode" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="LIMEBaseKeyboard_Key">
+        <!-- The unicode value or comma-separated values that this key outputs. -->
+        <attr name="codes" format="integer|string" />
+        <!-- The XML keyboard layout of any popup keyboard. -->
+        <attr name="popupKeyboard" format="reference" />
+        <!-- The characters to display in the popup keyboard. -->
+        <attr name="popupCharacters" format="string" />
+        <!-- Key edge flags. -->
+        <attr name="keyEdgeFlags">
+            <!-- Key is anchored to the left of the keyboard. -->
+            <flag name="left" value="1" />
+            <!-- Key is anchored to the right of the keyboard. -->
+            <flag name="right" value="2" />
+        </attr>
+        <!-- Whether this is a modifier key such as Alt or Shift. -->
+        <attr name="isModifier" format="boolean" />
+        <!-- Whether this is a toggle key. -->
+        <attr name="isSticky" format="boolean" />
+        <!-- Whether long-pressing on this key will make it repeat. -->
+        <attr name="isRepeatable" format="boolean" />
+        <!-- The icon to show in the popup preview. -->
+        <attr name="iconPreview" format="reference" />
+        <!-- The string of characters to output when this key is pressed. -->
+        <attr name="keyOutputText" format="string" />
+        <!-- The label to display on the key. -->
+        <attr name="keyLabel" format="string" />
+        <!-- The icon to display on the key instead of the label. -->
+        <attr name="keyIcon" format="reference" />
+        <!-- Mode of the keyboard. If the mode doesn't match the
+             requested keyboard mode, the key will be skipped. -->
+        <attr name="keyboardMode" />
+    </declare-styleable>
+
+    <declare-styleable name="LIMECandidateView">
+        <!-- drawable for current suggested candidate -->
+        <attr name="suggestHighlight" format="reference" />
+        <!-- drawable for voice input button in the right of empty candidate view   -->
+        <attr name="voiceInputIcon" format="reference" />
+        <attr name="ExpandButtonIcon" format="reference" />
+        <!-- drawable for expand button in the right of candidate view   -->
+        <attr name="closeButtonIcon" format="reference" />
+        <!-- color of  candidate view background  -->
+        <attr name="candidateBackground" format="color" />
+        <!-- color of  different types of candidates   -->
+        <attr name="candidateNormalTextColor" format="color" />
+        <attr name="candidateNormalTextHighlightColor" format="color" />
+        <attr name="composingCodeColor" format="color" />
+        <attr name="composingCodeHighlightColor" format="color" />
+        <!-- color of  spacer between candidate   -->
+        <attr name="spacerColor" format="color" />
+        <!-- color of  selection key display for physical keyboard   -->
+        <attr name="selKeyColor" format="color" />
+        <attr name="selKeyShiftedColor" format="color" />
+        <!-- color of  composing text view above candidate view   -->
+        <attr name="composingTextColor" format="color" />
+        <attr name="composingBackgroundColor" format="color" />
+    </declare-styleable>
+
+
+</resources>
+

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<net.toload.main.hd.candidate.CandidateViewContainer
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_transparent"
+			>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/embeddedComposing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/composing_text_size"
+        android:textColor="@color/second_foreground_light"
+        android:background="@color/composing_background_light"
+        android:minWidth="0dip"
+        android:gravity="top"
+        />
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:background="@color/third_background_light">
+
+    <view xmlns:android="http://schemas.android.com/apk/res/android"
+		    class="net.toload.main.hd.candidate.CandidateView"
+	        android:id="@+id/candidates"
+	        android:layout_width="0dp"
+	        android:layout_height="@dimen/candidate_stripe_height"
+	        android:layout_weight="1"
+	        android:background="@color/third_background_light"
+			/>
+
+     <LinearLayout
+            android:id="@+id/candidate_right_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/candidate_right"
+            android:contentDescription="@string/more_cand"
+            android:src="@drawable/ic_suggest_expander"
+            android:layout_width="@dimen/candidate_expand_button_width"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            />
+    </LinearLayout>
+    </LinearLayout>
+    
+</net.toload.main.hd.candidate.CandidateViewContainer>

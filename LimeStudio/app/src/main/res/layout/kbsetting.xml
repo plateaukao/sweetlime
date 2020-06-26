@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:alwaysDrawnWithCache="false"
+    android:isScrollContainer="true"
+    android:orientation="vertical"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:id="@+id/kbLinearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:paddingTop="10dp" >
+
+            <Button
+                android:id="@+id/btnBackToPreviousPage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/l3_im_setting_back" >
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ad_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp" >
+
+            <TextView
+                android:id="@+id/labMappingSettingTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/extendLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/extendLayout2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/extendLayout3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/extendLayout4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/l3_im_setting_source" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/labSource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:tag="5dp"
+                android:text="@string/l3_im_setting_version" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/labVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout06"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/l3_im_setting_total_amount" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/labTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout07"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/l3_im_setting_import_date" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/labImportDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:paddingTop="10dp" >
+
+            <Button
+                android:id="@+id/btnLoadMapping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/l3_im_setting_button_load" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnResetMapping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/l3_im_setting_button_reset" >
+            </Button>
+        </LinearLayout>
+
+        <!-- Setup Keyboard -->
+
+        <LinearLayout
+            android:id="@+id/LinearLayout09"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp" >
+
+            <TextView
+                android:id="@+id/txtKeyboardInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/l3_im_setting_select_keyboard" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/txtSelectKeyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/l3_im_setting_keyboard" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/labKeyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:paddingTop="10dp" >
+
+            <Button
+                android:id="@+id/btnSelectKeyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/l3_im_setting_button_select" >
+            </Button>
+        </LinearLayout>
+  
+    </LinearLayout>
+</ScrollView>	
+

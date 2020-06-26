@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources>
+    <integer name="config_delay_before_preview">5</integer>
+    <integer name="config_delay_after_preview">70</integer>
+    <integer name="config_preview_fade_in_anim_time">17</integer>
+    <integer name="config_preview_fade_out_anim_time">53</integer>
+    <integer name="config_mini_keyboard_fade_in_anim_time">0</integer>
+    <integer name="config_mini_keyboard_fade_out_anim_time">100</integer>
+    <integer name="config_delay_before_key_repeat_start">400</integer>
+    <integer name="config_key_repeat_interval">50</integer>
+    <integer name="config_long_press_key_timeout">400</integer>
+    <integer name="config_multi_tap_key_timeout">800</integer>
+    <integer name="reserved_columns_for_seperated_keyboard">2</integer>
+</resources>

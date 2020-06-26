@@ -1,0 +1,67 @@
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <dimen name="navigation_drawer_width">240dp</dimen>
+
+    <dimen name="max_height_for_fullscreen">1.4in</dimen>
+    <dimen name="phone_key_height">58dip</dimen>
+    <dimen name="key_height">46dip</dimen>
+    <dimen name="candidate_stripe_height">30sp</dimen>
+    <dimen name="candidate_vertical_padding">10sp</dimen>
+    <dimen name="candidate_number_font_size">14sp</dimen>
+    <dimen name="candidate_expand_button_width">42sp</dimen>
+    <dimen name="candidate_font_size">28sp</dimen>
+    <dimen name="keyboard_bottom_padding">0.06in</dimen>
+    <dimen name="key_text_size">21dp</dimen>
+    <dimen name="label_text_size">15dp</dimen>
+    <dimen name="sub_label_text_size">15dp</dimen>
+    <dimen name="small_label_text_size">19dp</dimen>
+    <dimen name="composing_text_size">18sp</dimen>
+    <dimen name="notice_text_size">18sp</dimen>
+    <dimen name="key_hysteresis_distance">0.05in</dimen>
+    <dimen name="keyboard_vertical_correction">-0.05in</dimen>
+    <dimen name="mini_keyboard_vertical_correction">-0.05in</dimen>
+    <dimen name="mini_keyboard_fling_vertical_correction">-46dip</dimen>
+    <dimen name="mini_keyboard_slide_allowance">0.553in</dimen>
+    <dimen name="spacebar_vertical_correction">4dip</dimen>
+    <dimen name="spacebar_preview_top_padding">22dp</dimen>
+    <dimen name="spacebar_preview_text_size">22sp</dimen>
+    <dimen name="preview_top_padding">0dip</dimen>
+    <dimen name="key_preview_height">110dp</dimen>
+    <dimen name="key_preview_text_size_large">40sp</dimen>
+    <dimen name="key_preview_offset">0.000in</dimen>
+    <dimen name="key_bottom_gap">0.035in</dimen>
+    <dimen name="key_horizontal_gap">0dp</dimen>
+    <dimen name="key_vertical_gap">0dp</dimen>
+
+    <!-- WB -->
+    <dimen name="wb_key_height">66dip</dimen>
+</resources>

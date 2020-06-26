@@ -1,0 +1,453 @@
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="net.toload.main.hd.ManageRelatedFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/scrollView">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SetupImFragment"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0.0"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:id="@+id/txtVersion"
+            android:layout_gravity="right" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/Setup_Wizard"
+        android:padding="5dp"
+        android:layout_gravity="top">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/setup_im_system_settings"
+            android:id="@+id/setup_im_system_settings" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/setup_im_system_settings_description"
+            android:id="@+id/setup_im_system_settings_description"
+            android:layout_marginBottom="5dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/setup_im_system_impicker_description"
+            android:id="@+id/setup_im_system_impicker_description"
+            android:layout_marginBottom="5dp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_im_wizard_nextstep"
+                    android:id="@+id/btnSetupImSystemSetting"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+            </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_im_system_selectLIME"
+                    android:id="@+id/btnSetupImSystemIMPicker"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+            </TableRow>
+        </TableLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/setup_im_grant_permission"
+            android:id="@+id/setup_im_grant_permission"
+            android:layout_marginBottom="5dp" />
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_im_grant_permission_button"
+                android:id="@+id/btnSetupImGrantPermission"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp" />
+        </TableRow>
+    </TableLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/SetupImList"
+        android:padding="5dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/setup_im_database"
+            android:id="@+id/textView4" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/setup_im_database_description"
+            android:id="@+id/textView6"
+            android:layout_marginBottom="5dp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_im_backup_local"
+                    android:id="@+id/btnSetupImBackupLocal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_im_restore_local"
+                    android:id="@+id/btnSetupImRestoreLocal"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+
+            </TableRow>
+
+        </TableLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/setup_im_import"
+            android:id="@+id/setup_im_input_im" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/setup_im_import_description"
+            android:id="@+id/btnSetupIm"
+            android:layout_marginBottom="5dp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_im_import_standard"
+                    android:id="@+id/btnSetupImImportStandard"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_im_import_related"
+                    android:id="@+id/btnSetupImImportRelated"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+            </TableRow>
+        </TableLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/setup_im_download"
+            android:id="@+id/textView3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/setup_im_download_description"
+            android:id="@+id/textView5"
+            android:layout_marginBottom="5dp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp" >
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_phonetic"
+                    android:id="@+id/btnSetupImPhonetic"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_cj"
+                    android:id="@+id/btnSetupImCj"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_cj5"
+                    android:id="@+id/btnSetupImCj5"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_scj"
+                    android:id="@+id/btnSetupImScj"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_ecj"
+                    android:id="@+id/btnSetupImEcj"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_dayi"
+                    android:id="@+id/btnSetupImDayi"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_ez"
+                    android:id="@+id/btnSetupImEz"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_array"
+                    android:id="@+id/btnSetupImArray"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_array10"
+                    android:id="@+id/btnSetupImArray10"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnSetupImHs"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:text="@string/im_hs"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:enabled="true"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/im_pinyin"
+                    android:id="@+id/btnSetupImPinyin"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnSetupImWb"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:enabled="true"
+                    android:text="@string/im_wb" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

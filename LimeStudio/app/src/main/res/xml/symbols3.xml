@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<Keyboard xmlns:limehd="http://schemas.android.com/apk/res/net.toload.main.hd"
+    limehd:keyWidth="10%p"
+    limehd:horizontalGap="0px"
+    limehd:verticalGap="0px"
+    limehd:keyHeight="@dimen/key_height"
+    >
+
+    <!--Row>
+        <Key limehd:codes="49" limehd:keyLabel="1" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="50" limehd:keyLabel="2"/>
+        <Key limehd:codes="51" limehd:keyLabel="3"/>
+        <Key limehd:codes="52" limehd:keyLabel="4"/>
+        <Key limehd:codes="53" limehd:keyLabel="5"/>
+        <Key limehd:codes="54" limehd:keyLabel="6"/>
+        <Key limehd:codes="55" limehd:keyLabel="7"/>
+        <Key limehd:codes="56" limehd:keyLabel="8"/>
+        <Key limehd:codes="57" limehd:keyLabel="9"/>
+        <Key limehd:codes="48" limehd:keyLabel="0" limehd:keyEdgeFlags="right"/>
+    </Row-->
+
+    <Row>
+        <Key limehd:keyLabel="【" limehd:keyEdgeFlags="left" />
+        <Key limehd:keyLabel="〈" />
+        <Key limehd:keyLabel="『" />
+        <Key limehd:keyLabel="「" />
+        <Key limehd:keyLabel="？" />
+        <Key limehd:keyLabel="：" />
+        <Key limehd:keyLabel="．" />
+        <Key limehd:keyLabel="◎" />
+        <Key limehd:keyLabel="＠" />
+        <Key limehd:keyLabel="☑" limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+    <Row>
+        <Key limehd:keyLabel="】" limehd:keyEdgeFlags="left" />
+        <Key limehd:keyLabel="〉" />
+        <Key limehd:keyLabel="』" />
+        <Key limehd:keyLabel="」" />
+        <Key limehd:keyLabel="！" />
+        <Key limehd:keyLabel="；" />
+        <Key limehd:keyLabel="、" />
+        <Key limehd:keyLabel="☒"/>
+        <Key limehd:keyLabel="　" />
+        <Key limehd:keyLabel="✔" limehd:keyEdgeFlags="right" />
+    </Row>
+    
+    <Row>
+        <Key limehd:codes="-15" limehd:keyLabel="3/3"
+                limehd:keyWidth="15%p" limehd:isModifier="true"
+                limehd:keyEdgeFlags="left"/>
+        <Key limehd:keyLabel="○" />
+        <Key limehd:keyLabel="●"/>
+        <Key limehd:keyLabel="➤"/>
+        <Key limehd:keyLabel="█"/>
+        <Key limehd:keyLabel="≠"/>
+        <Key limehd:keyLabel="≒" />
+        <Key limehd:keyLabel="㊣"/>
+        <Key limehd:codes="-5" limehd:keyIcon="@drawable/sym_keyboard_delete_light" limehd:isModifier="true"
+                limehd:keyWidth="15%p" limehd:keyEdgeFlags="right"
+                limehd:isRepeatable="true"/>
+    </Row>
+    
+    <Row limehd:rowEdgeFlags="bottom">
+        <Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true"
+                limehd:keyWidth="15%p" limehd:keyEdgeFlags="left" />
+        <Key limehd:codes="-2" limehd:isModifier="true" limehd:keyLabel="EN" limehd:keyWidth="10%p" />
+        <Key limehd:keyLabel="，" limehd:keyWidth="10%p"/>
+        <Key limehd:codes="32" limehd:keyIcon="@drawable/sym_keyboard_space_light"
+        	limehd:iconPreview="@drawable/sym_keyboard_feedback_space"
+        	limehd:keyWidth="30%p"
+                limehd:isRepeatable="true"/>
+        <Key  limehd:keyLabel="。" limehd:keyWidth="10%p" />
+        <Key limehd:codes="-10" limehd:isModifier="true" limehd:keyLabel="中"  limehd:keyWidth="10%p" />
+        <Key limehd:codes="10" limehd:keyIcon="@drawable/sym_keyboard_return_light" limehd:isModifier="true"
+                limehd:keyWidth="15%p" limehd:keyEdgeFlags="right" />
+    </Row>
+</Keyboard>

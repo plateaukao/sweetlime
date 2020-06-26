@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<Keyboard xmlns:limehd="http://schemas.android.com/apk/res/net.toload.main.hd"
+    limehd:keyWidth="10%p"
+    limehd:horizontalGap="0px"
+    limehd:verticalGap="0px"
+    limehd:keyHeight="@dimen/key_height"
+    >
+
+    <Row>
+        <Key
+            limehd:codes="49"
+            limehd:keyLabel="1\t儿\n|"
+            limehd:popupCharacters="-\n儿"
+            limehd:popupKeyboard="@xml/popup_template" />
+             limehd:keyEdgeFlags="left" />
+        <Key
+            limehd:codes="50"
+            limehd:keyLabel="2\t母\n車"
+            limehd:popupCharacters="=\n母"
+            limehd:popupKeyboard="@xml/popup_template" />
+        <Key
+            limehd:codes="51"
+            limehd:keyLabel="3\t匚\n糸"
+            limehd:popupCharacters="[\n匚"
+            limehd:popupKeyboard="@xml/popup_template" />
+        <Key
+            limehd:codes="52"
+            limehd:keyLabel="4\t]\n言"
+            limehd:popupCharacters="]\n]"
+            limehd:popupKeyboard="@xml/popup_template" />
+        <Key
+            limehd:codes="53"
+            limehd:keyLabel="5\tＬ\n貝"
+            limehd:popupCharacters="&apos;\nＬ"
+            limehd:popupKeyboard="@xml/popup_template" />
+        <Key
+            limehd:codes="54"
+            limehd:keyLabel="6\tㄏ\n雨"
+            limehd:popupCharacters="\\\nㄏ"
+            limehd:popupKeyboard="@xml/popup_template" />
+        <Key limehd:codes="55" limehd:keyLabel="7\nㄇ" />
+		<Key limehd:codes="56" limehd:keyLabel="8\n八" />
+		<Key limehd:codes="57" limehd:keyLabel="9\n耳" />
+		<Key limehd:codes="48" limehd:keyLabel="0\n鳥" limehd:keyEdgeFlags="right" />
+    </Row>
+    
+     <Row>
+       <Key limehd:codes="113" limehd:keyLabel="q\n手" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="119" limehd:keyLabel="w\n田"/>
+        <Key limehd:codes="101" limehd:keyLabel="e\n水"/>
+        <Key limehd:codes="114" limehd:keyLabel="r\n口"/>
+        <Key limehd:codes="116" limehd:keyLabel="t\n廿"/>
+        <Key limehd:codes="121" limehd:keyLabel="y\n、"/>
+        <Key limehd:codes="117" limehd:keyLabel="u\n山"/>
+        <Key limehd:codes="105" limehd:keyLabel="i\n戈"/>
+        <Key limehd:codes="111" limehd:keyLabel="o\n人"/>
+        <Key limehd:codes="112" limehd:keyLabel="p\n心" limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+         
+    <Row>
+        <Key limehd:codes="97" limehd:keyLabel="a\n日" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="115" limehd:keyLabel="s\n尸"/>
+        <Key limehd:codes="100" limehd:keyLabel="d\n木"/>
+        <Key limehd:codes="102" limehd:keyLabel="f\n火"/>
+        <Key limehd:codes="103" limehd:keyLabel="g\n土"/>
+        <Key limehd:codes="104" limehd:keyLabel="h\n竹"/>
+        <Key limehd:codes="106" limehd:keyLabel="j\n十"/>
+        <Key limehd:codes="107" limehd:keyLabel="k\n大"/>
+        <Key limehd:codes="108" limehd:keyLabel="l\n中" />
+        <Key limehd:codes="59"  limehd:keyLabel=";\n寸" limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+    <Row>
+        <Key limehd:codes="-1" limehd:keyIcon="@drawable/sym_keyboard_shift" limehd:isModifier="true"
+                limehd:keyWidth="15%p" limehd:isSticky="true" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="122" limehd:keyLabel="z\nＺ" />
+		<Key limehd:codes="120" limehd:keyLabel="x\n又" />
+		<Key limehd:codes="99" limehd:keyLabel="c\n金" />
+		<Key limehd:codes="118" limehd:keyLabel="v\n女" />
+		<Key limehd:codes="98" limehd:keyLabel="b\n月" />
+		<Key limehd:codes="110" limehd:keyLabel="n\n弓" />
+		<Key limehd:codes="109" limehd:keyLabel="m\n一" />
+        <Key limehd:codes="-5" limehd:keyIcon="@drawable/sym_keyboard_delete_light" limehd:isModifier="true"
+			limehd:keyWidth="15%p" limehd:keyEdgeFlags="right"
+			limehd:isRepeatable="true" />
+    </Row>
+    
+    <Row limehd:rowEdgeFlags="bottom">
+        <Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true" limehd:keyWidth="15%p" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="-9" limehd:keyLabel="EN"  limehd:isModifier="true" limehd:keyWidth="10%p" />
+        <Key limehd:codes="32" limehd:keyIcon="@drawable/sym_flat_keyboard_space"  limehd:keyWidth="25%p" limehd:isRepeatable="true"/>
+       <Key limehd:codes="44" limehd:keyLabel=",\n／" limehd:keyWidth="10%p" />
+		<Key limehd:codes="46" 
+				limehd:keyLabel=".\n＼"
+				 limehd:popupKeyboard="@xml/popup_c_punctuation"   
+				limehd:keyWidth="10%p" />
+		<Key limehd:codes="47" limehd:keyLabel="/\nㄥ" limehd:keyWidth="10%p" />
+        <Key limehd:codes="-2" limehd:keyLabel="123" limehd:isModifier="true"/>
+        <Key limehd:codes="10" limehd:keyIcon="@drawable/sym_keyboard_return_light" limehd:isModifier="true" limehd:keyWidth="10%p" limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+</Keyboard>
+    

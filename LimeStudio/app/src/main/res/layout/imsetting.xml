@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+    
+        <LinearLayout android:id="@+id/linearLayout1" android:layout_margin="10dp" 
+            android:orientation="vertical" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content" 
+            android:layout_gravity="fill_vertical">
+            
+			<TableLayout android:layout_width="match_parent" android:id="@+id/tableLayout4" android:layout_height="wrap_content">
+				<TableRow android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/ad_area">
+                </TableRow>
+			</TableLayout>
+			
+			<LinearLayout android:id="@+id/linearLayout2" android:layout_height="fill_parent" android:layout_width="fill_parent" android:gravity="center" android:layout_marginTop="10dip" android:layout_marginBottom="10dip" android:paddingTop="5dip" android:paddingBottom="5dip" android:layout_marginLeft="10dip" android:layout_marginRight="10dip">
+                <TextView android:id="@+id/textView1" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/l3_im_notice" android:textSize="@dimen/notice_text_size"></TextView>
+            </LinearLayout>
+			
+            <TableLayout android:id="@+id/tableLayout1" android:layout_height="fill_parent" android:layout_width="fill_parent">
+                <TableRow android:id="@+id/tableRow3" android:layout_height="wrap_content" android:layout_width="fill_parent">
+                    <Button android:layout_width="fill_parent" android:id="@+id/btnSetupCustom" android:text="@string/l3_manage_default" android:padding="5dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                    <Button android:layout_width="fill_parent" android:id="@+id/btnSetupPhonetic" android:text="@string/l3_manage_phonetic" android:padding="5dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                </TableRow>
+                <TableRow android:id="@+id/tableRow1" android:layout_height="wrap_content" android:layout_width="fill_parent">
+					<Button android:layout_height="wrap_content" android:id="@+id/btnSetupCJ" android:text="@string/l3_manage_cj" android:padding="5dp" android:layout_width="fill_parent" android:layout_weight="1" android:layout_margin="5dp"></Button>
+					<Button android:padding="5dp" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp" android:id="@+id/btnSetupCJ5" android:layout_height="wrap_content" android:text="@string/l3_manage_cj5"></Button>
+                </TableRow>
+                <TableRow android:id="@+id/tableRow5" android:layout_height="wrap_content" android:layout_width="fill_parent">
+                    <Button android:padding="5dp" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp" android:id="@+id/btnSetupSCJ" android:layout_height="wrap_content" android:text="@string/l3_manage_scj"></Button>
+					<Button android:layout_height="wrap_content" android:id="@+id/btnSetupECJ" android:text="@string/l3_manage_ecj" android:padding="5dp" android:layout_width="fill_parent" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                </TableRow>
+                <TableRow android:layout_height="fill_parent" android:id="@+id/tableRow2" android:layout_width="wrap_content">
+                    <Button android:id="@+id/btnSetupDayi" android:text="@string/l3_manage_dayi" android:padding="5dp" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                    <Button android:id="@+id/btnSetupEz" android:text="@string/l3_manage_eazy" android:padding="5dp" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                </TableRow>
+                <TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <Button android:layout_width="fill_parent" android:id="@+id/btnSetupArray" android:text="@string/l3_manage_array" android:padding="5dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                    <Button android:layout_width="fill_parent" android:id="@+id/btnSetupArray10" android:text="@string/l3_manage_array10" android:padding="5dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="5dp"></Button>
+                </TableRow>
+                <TableRow android:id="@+id/tableRow6" android:layout_height="wrap_content" android:layout_width="wrap_content">
+                    <Button android:layout_weight="1" android:id="@+id/btnSetupWb" android:layout_width="fill_parent" android:padding="5dp" android:text="@string/l3_manage_wb" android:layout_height="wrap_content" android:layout_margin="5dp" android:enabled="false"></Button>
+                    <Button android:layout_weight="1" android:id="@+id/btnSetupHs" android:layout_width="fill_parent" android:padding="5dp" android:layout_height="wrap_content" android:layout_margin="5dp" ></Button>
+                </TableRow>
+                <TableRow android:id="@+id/tableRow7" android:layout_width="wrap_content" android:layout_height="10pt">
+                    <Button android:layout_weight="1" android:id="@+id/btnSetupPinyin" android:layout_width="fill_parent" android:padding="5dp" android:text="@string/l3_manage_pinyin" android:layout_height="wrap_content" android:layout_margin="5dp" android:enabled="false"></Button>
+                    <Button android:layout_weight="1" android:layout_width="fill_parent" android:padding="5dp" android:layout_height="wrap_content" android:layout_margin="5dp" android:enabled="false"></Button>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
+

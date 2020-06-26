@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Image button description  -->
+    <string name="more_cand">Click for more candidates.</string>
+    <string name="close_cand">Close the popup candiates view.</string>
+
+    <!-- Title for Latin keyboard  -->
+    <string name="ime_name">LIME-HD</string>
+    <string name="ime_setting">LIME-HD 设定</string>
+    <string name="input_method">系统输入法切换</string>
+    <string name="experienced_device">开发测试装置</string>
+    <string name="license">版权声明</string>
+    <string name="license_detail">LIME-HD 是一个输入法框架程式，旨在提供 Android 装置中文输入法程式。\n组织或个人由网路自行下载之输入法字根及字典文档若有版权上的争议，请自行向原作者取得授权，本程式不负担其所产生的任何法律及版权上的责任。\n完整资讯请参考 LIME Project 网站上的版权说明  http://code.google.com/p/limeime/。</string>
+
+    <!-- Symbols that are commonly considered word separators in this language -->
+    <string name="word_separators">\u0020.,;:!?\n()[]*&amp;@{}/&lt;&gt;_+=|&quot;</string>
+    <string name="word_symbol_separators">\u0020?\n{}&lt;&gt;_+|&quot;</string>
+
+    <!-- Labels on soft keys -->
+    <string name="label_go_key">Go</string>
+    <string name="label_next_key">Next</string>
+    <string name="label_send_key">Send</string>
+    <string name="label_close_key">关闭</string>
+
+
+    <!-- LIME Loading -->
+    <string name="lime_setting_btn_load_local_notice">请选择 .LIME 或 .CIN 文档</string>
+    <string name="lime_setting_loading">资料载入期间请勿关闭本视窗或跳出程式，以免汇入失败</string>
+    <string name="lime_setting_select_root"> - back to /</string>
+    <string name="lime_setting_select_parent"> - back to ..</string>
+    <string name="lime_loading_cancel">取消</string>
+
+    <string name="lime_setting_notification_loading">准备资料汇入</string>
+    <string name="lime_setting_notification_failed">记录汇入失败</string>
+    <string name="lime_setting_notification_finish">记录汇入成功</string>
+    <string name="lime_setting_notification_related">开始建立关联字</string>
+    <string name="lime_setting_notification_loading_start">LIME</string>
+    <string name="lime_setting_notification_loading_end">已载入</string>
+    <string name="lime_setting_notification_loading_build">对照表</string>
+    <string name="lime_setting_notification_loading_import">字根</string>
+
+    <!-- TAB -->
+    <string name="lime_setting_db">对应表管理</string>
+    <string name="lime_setting_preference">喜好设定</string>
+    <string name="lime_setting_bluetooth">蓝牙键盘</string>
+
+
+    <!-- Preference -->
+    <string name="keyboard">键盘</string>
+    <string name="Similiar">关联字</string>
+    <string name="mapping">对应表</string>
+
+    <string name="keyboard_list">LIME输入法切换</string>
+
+    <string name="enable_emoji">开启 EMOJI 显示</string>
+    <string name="enable_emoji_summary">依字根或中文组字显示图示, 由于字型支援的差异所以部份图示可能无法正确显示</string>
+    <string name="enable_emoji_position">设定 EMOJI 候选列显示位置</string>
+    <string name="enable_emoji_position_dialog_title">设定显示位置</string>
+    <string name="persistent_language_mode">记忆中英模式</string>
+    <string name="persistent_language_mode_summary">下次切换前保持中英模式</string>
+    <string name="number_row_in_english">数字列英文键盘</string>
+    <string name="number_row_in_english_summary">在英文键盘显示数字列(5列键盘)</string>
+    <string name="disable_software_keyboard">关闭软体键盘显示</string>
+    <string name="fixed_candidate_view_display">选字列固定显示</string>
+    <string name="enable_transparent_candidate_view">选字列使用透明背景</string>
+
+    <string name="three_rows_remapping">3排键盘重对应</string>
+    <string name="three_rows_remapping_summary">对应 1234567890-;至 qwertyuiopv.</string>
+
+    <string name="physical_keyboard">实体键盘选项</string>
+    <string name="phonetic_keyboard">注音键盘选项</string>
+
+    <string name="prediction_category">英文关联字设定</string>
+    <string name="auto_cap">首字自动大写</string>
+    <string name="auto_cap_summary">英文段落输入首字自动大写</string>
+    <string name="quick_fixes">启用快速修正</string>
+    <string name="quick_fixes_summary">快速修正一般拼字错误</string>
+    <string name="auto_complete">启用自动完成</string>
+    <string name="auto_complete_summary">输入时选取“空白”及“符号”自动输入反白文字.</string>
+
+    <string name="im">输入法</string>
+    <string name="enable_english_dictionary">启用英文字典</string>
+    <string name="enable_english_dictionary_summary">当使用 英文 输入模式时，显示英文建议字</string>
+    <string name="enable_english_dictionary_physical_keyboard">实体键盘启用英文字典</string>
+    <string name="enable_english_dictionary_physical_keyboard_summary">实体键盘使用英文输入模式时，显示英文建议字</string>
+    <string name="im_reverse_lookup_list">输入法字根反查</string>
+    <string name="default_reverse_lookup_list">自建字根反查</string>
+    <string name="cj_reverse_lookup_list">仓颉字根反查</string>
+    <string name="scj_reverse_lookup_list">快仓字根反查</string>
+    <string name="dayi_reverse_lookup_list">大易字根反查</string>
+    <string name="bpmf_reverse_lookup_list">注音字根反查</string>
+    <string name="ez_reverse_lookup_list">轻松字根反查</string>
+    <string name="array_reverse_lookup_list">行列字根反查</string>
+    <string name="array10_reverse_lookup_list">行列10字根反查</string>
+    <string name="cj5_reverse_lookup_list">仓颉五代字根反查</string>
+    <string name="ecj_reverse_lookup_list">速成字根反查</string>
+    <string name="wb_reverse_lookup_list">笔顺五码字根反查</string>
+    <string name="hs_reverse_lookup_list">华象直觉字根反查</string>
+    <string name="pinyin_reverse_lookup_list">拼音字根反查</string>
+
+    <string name="reverse_lookup_notify">启用字根反查跳出提示</string>
+
+    <string name="han_convert_ts">繁转简</string>
+    <string name="han_convert_st">简转繁</string>
+    <string name="han_convert_notify">中文简/繁体转换提示</string>
+    <string name="han_convert_notify_summary">输入间隔时间超过60秒时提示转换的设定</string>
+    <string name="han_convert_option_list">中文简/繁体字码转换</string>
+    <string name="selkey_option_list">设定选字键预选顺序</string>
+
+
+    <string name="table_list">对应表选取</string>
+    <string name="similiar_list">建议字显示数量</string>
+    <string name="vibrate_on_keypress">打字震动</string>
+    <string name="sound_on_keypress">打字音效</string>
+    <string name="display_number_keypads">显示数字键盘</string>
+    <string name="display_number_keypads_summary">显示数字按钮于键盘上</string>
+    <string name="similiar_enable_switch">启用关联字典</string>
+    <string name="similiar_enable_switch_summary">启用关联字典功能</string>
+    <string name="candidate_switch">滑动选取</string>
+    <string name="candidate_switch_summary">滑动选取输入法建议文字</string>
+    <string name="candidate_suggestion">启动自建关联字</string>
+    <string name="candidate_suggestion_punctuation">启动自建关联字记忆符号</string>
+    <string name="candidate_suggestion_summary">依输入文字自动建立关联字</string>
+    <string name="learn_phrase">自动学习新词</string>
+    <string name="learn_phrase_summary">从常用关联字学习新词</string>
+
+    <string name="learning_switch">启动选取排序</string>
+    <string name="learning_switch_summary">依选取次数排序选字清单</string>
+    <string name="physical_keyboard_sort">启动实体键盘选取排序</string>
+    <string name="physical_keyboard_sort_summary">使用实体键键时依选取次数排序选字清单</string>
+    <string name="accept_number_index">启动数字对应</string>
+    <string name="accept_number_index_summary">允许使用数字为输入法字根</string>
+    <string name="accept_symbol_index">启动符号对应</string>
+    <string name="accept_symbol_index_summary">允许使用符号为输入法字根</string>
+    <string name="switch_english_mode_1">快速切换输入模式1</string>
+    <string name="switch_english_mode_summary_1">[SHIFT]+[SPACE] 键切换输入模式 (实体键盘)</string>
+    <string name="switch_english_mode_2">快速切换输入模式2</string>
+    <string name="switch_english_mode_summary_2">单按 [SHIFT] 键切换输入模式 (实体键盘)</string>
+
+
+    <!-- Changjei Keyboard, Standard Keyboard-->
+    <string name="typing_mode_english">切换输入模式 / 英文</string>
+    <string name="typing_mode_mixed">切换输入模式 / 混合</string>
+
+    <!-- Popup keyboard char sequences-->
+    <string name="chinese_punctuation">“”！？、。，</string>
+
+
+    <!-- Other Messages -->
+
+    <!-- Indicates that a word has been added to the dictionary -->
+    <string name="added_word"><xliff:g id="word">%s</xliff:g> : Saved</string>
+    <!-- Accented forms of "a" -->
+    <string name="alternates_for_a">aaaaaaa</string>
+    <!-- Accented forms of "e" -->
+    <string name="alternates_for_e">eeee</string>
+    <!-- Accented forms of "i" -->
+    <string name="alternates_for_i">iiii</string>
+    <!-- Accented forms of "o" -->
+    <string name="alternates_for_o">oooooœo</string>
+    <!-- Accented forms of "u" -->
+    <string name="alternates_for_u">uuuu</string>
+    <!-- Letters associated with "s" -->
+    <string name="alternates_for_s">§s</string>
+    <!-- Accented forms of "n" -->
+    <string name="alternates_for_n">n</string>
+    <!-- Accented forms of "c" -->
+    <string name="alternates_for_c">c</string>
+    <!-- Accented forms of "y" -->
+    <string name="alternates_for_y">yy</string>
+    <!-- Symbols that are commonly considered word separators in this language -->
+    <!-- Symbols that are sentence separators, for purposes of making it hug the last sentence. -->
+    <string name="sentence_separators">.,;:!?</string>
+    <!-- Accented characters related to "d" -->
+    <string name="alternates_for_d"></string>
+    <!-- Accented characters related to "r" -->
+    <string name="alternates_for_r"></string>
+    <!-- Accented characters related to "t" -->
+    <string name="alternates_for_t"></string>
+    <!-- Accented characters related to "z" -->
+    <string name="alternates_for_z"></string>
+    <!-- Accented characters related to "l" -->
+    <string name="alternates_for_l"></string>
+    <!-- Accented characters related to "g" -->
+    <string name="alternates_for_g"></string>
+
+    <string name="alternates_for_slash">,</string>
+
+    <!-- Label for soft enter key when it performs DONE action.  Must be short to fit on key! -->
+    <string name="label_done_key">Done</string>
+    <!-- Label for "switch to symbols" key.  Must be short to fit on key! -->
+    <string name="label_symbol_key">123</string>
+    <!-- Label for "switch to numeric" key.  Must be short to fit on key! -->
+    <string name="label_alpha_key">ABC</string>
+    <!-- Label for ALT modifier key.  Must be short to fit on key! -->
+    <string name="label_alt_key">ALT</string>
+
+    <!-- popular web domains for the locale - most popular, displayed on the keyboard -->
+    <string name="popular_domain_0">".com"</string>
+    <string name="popular_domain_1">".net"</string>
+    <string name="popular_domain_2">".tw"</string>
+    <string name="popular_domain_3">".org"</string>
+    <string name="popular_domain_4">".gov"</string>
+    <string name="popular_domain_5">".edu"</string>
+
+    <!-- Han Converter Options -->
+    <string-array name="han_convert_options">
+        <item>无</item>
+        <item>繁转简</item>
+        <item>简转繁</item>
+    </string-array>
+
+    <string-array name="emoji_display_position_title">
+        <item>第 2 候选字后显示</item>
+        <item>第 3 候选字后显示</item>
+        <item>第 4 候选字后显示</item>
+        <item>第 5 候选字后显示</item>
+        <item>第 6 候选字后显示</item>
+        <item>第 7 候选字后显示</item>
+        <item>第 8 候选字后显示</item>
+        <item>第 9 候选字后显示</item>
+        <item>第 10候选字后显示</item>
+    </string-array>
+
+    <string-array name="emoji_display_position">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="han_convert_options_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- IM Selkey Options List -->
+    <string-array name="selkey_options">
+        <item>第一选字键选混打模式英文</item>
+        <item>第一选字键选第一顺位中文字</item>
+        <item>第一选字键选第二顺位中文字</item>
+    </string-array>
+
+    <!-- Physical keyboard options List -->
+    <string-array name="physical_keyboard_options">
+        <item>一般键盘</item>
+        <item>Desire Z</item>
+        <item>ChaCha</item>
+        <item>Milestone</item>
+        <item>Milestone 2</item>
+        <item>Milestone 3</item>
+        <item>XPERIA PRO</item>
+    </string-array>
+
+    <string-array name="phonetic_keyboard_type">
+        <item>标准</item>
+        <item>倚天41键</item>
+        <item>倚天26键 (英文键盘)</item>
+        <item>倚天26键 (符号键盘)</item>
+        <item>许氏 (英文键盘)</item>
+        <item>许氏 (符号键盘)</item>
+    </string-array>
+
+    <!-- IM Reverse Lookup List -->
+    <string-array name="im_reverse_lookup">
+        <item>无</item>
+        <item>自建</item>
+        <item>仓颉</item>
+        <item>快仓</item>
+        <item>仓颉五代</item>
+        <item>速成</item>
+        <item>大易</item>
+        <item>注音</item>
+        <item>轻松</item>
+        <item>行列</item>
+        <item>行列10</item>
+        <item>笔顺五码</item>
+        <item>华象直觉</item>
+        <item>拼音</item>
+    </string-array>
+    <string-array name="im_reverse_lookup_codes">
+        <item>none</item>
+        <item>custom</item>
+        <item>cj</item>
+        <item>scj</item>
+        <item>cj5</item>
+        <item>ecj</item>
+        <item>dayi</item>
+        <item>phonetic</item>
+        <item>ez</item>
+        <item>array</item>
+        <item>array10</item>
+        <item>wb</item>
+        <item>hs</item>
+        <item>pinyin</item>
+    </string-array>
+    <!-- Keyboard Selection List -->
+    <string-array name="keyboard">
+        <item>自建输入法</item>
+        <item>仓颉输入法</item>
+        <item>快仓输入法</item>
+        <item>仓颉五代输入法</item>
+        <item>速成输入法</item>
+        <item>大易输入法</item>
+        <item>注音输入法</item>
+        <item>轻松输入法</item>
+        <item>行列输入法</item>
+        <item>行列10输入法</item>
+        <item>笔顺五码输入法</item>
+        <item>华象直觉输入法</item>
+        <item>拼音输入法</item>
+    </string-array>
+    <!-- Keyboard short name List -->
+    <string-array name="keyboardShortname">
+        <item>自建</item>
+        <item>仓颉</item>
+        <item>快仓</item>
+        <item>仓颉五代</item>
+        <item>速成</item>
+        <item>大易</item>
+        <item>注音</item>
+        <item>轻松</item>
+        <item>行列</item>
+        <item>行列10</item>
+        <item>笔顺五码</item>
+        <item>华象直觉</item>
+        <item>拼音</item>
+    </string-array>
+    <string-array name="keyboard_defaultstate">
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+        <item>true</item>
+    </string-array>
+    <string-array name="keyboard_codes">
+        <item>custom</item>
+        <item>cj</item>
+        <item>scj</item>
+        <item>cj5</item>
+        <item>ecj</item>
+        <item>dayi</item>
+        <item>phonetic</item>
+        <item>ez</item>
+        <item>array</item>
+        <item>array10</item>
+        <item>wb</item>
+        <item>hs</item>
+        <item>pinyin</item>
+    </string-array>
+    <string-array name="table_codes">
+        <item>custom</item>
+        <item>cj</item>
+        <item>scj</item>
+        <item>cj5</item>
+        <item>ecj</item>
+        <item>dayi</item>
+        <item>phonetic</item>
+        <item>ez</item>
+        <item>array</item>
+        <item>array10</item>
+        <item>wb</item>
+        <item>hs</item>
+        <item>pinyin</item>
+        <item>related</item>
+        <item>dictionary</item>
+    </string-array>
+
+    <string-array name="similiar_codes">
+        <item>0</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+    </string-array>
+
+    <!-- Table Selection list -->
+    <string-array name="table">
+        <item>自建/电话</item>
+        <item>仓颉</item>
+        <item>快仓</item>
+        <item>仓颉五代</item>
+        <item>速成</item>
+        <item>大易</item>
+        <item>注音</item>
+        <item>轻松</item>
+        <item>行列</item>
+        <item>行列10</item>
+        <item>笔顺五码</item>
+        <item>华象直觉</item>
+        <item>拼音</item>
+        <item>预载关联字</item>
+        <item>英文字典</item>
+    </string-array>
+
+    <!-- Version 3 String Set -->
+    <string name="l3_message_initial_required">请初始化 LIME 数据库_</string>
+
+    <string name="l3_tab_initial">初始数据库</string>
+    <string name="l3_tab_initial_error">下载失败，请确认装置已连上网路.</string>
+    <string name="l3_tab_initial_message">请点选 [预载数据库] OR [空白数据库] 键下载 LIME 数据库或点选 [还原数据库] 键由备份文档中还原</string>
+    <string name="l3_initial_btn_load_empty_db">空白数据库</string>
+    <string name="l3_initial_btn_load_phonetic_only_db">仅含注音数据库</string>
+    <!--<string name="l3_initial_btn_load_phonetic_hs_only_db">仅含注音+华象直觉数据库</string>
+    --><string name="l3_initial_btn_load_preload_db">预载数据库 \n注音, 仓颉, 仓颉五代 \n快仓, 大易, 轻松　　\n行列, 行列 １０　 　</string>
+    <string name="l3_initial_btn_reset_db">重置数据库</string>
+    <string name="l3_initial_btn_store_to_sdcard">请问您要变更数据库的储存位置至 SDCARD 吗? 在部份机种上可能会产生效能不佳的问题。</string>
+    <string name="l3_initial_btn_store_to_device">请问您要变更数据库的储存位置至装置吗? </string>
+    <string name="l3_initial_btn_store_device">装置空间</string>
+    <string name="l3_initial_btn_store_sdcard">SDCARD</string>
+
+    <string name="l3_tab_manage">输入法管理</string>
+    <string name="l3_manage_default">自建</string>
+    <string name="l3_manage_phonetic">注音</string>
+    <string name="l3_manage_phonetic_adv">注音连打</string>
+    <string name="l3_manage_cj">仓颉</string>
+    <string name="l3_manage_cj5">仓颉五代</string>
+    <string name="l3_manage_ecj">速成</string>
+    <string name="l3_manage_scj">快仓</string>
+    <string name="l3_manage_dayi">大易</string>
+    <string name="l3_manage_eazy">轻松</string>
+    <string name="l3_manage_array">行列</string>
+    <string name="l3_manage_array10">行列10</string>
+    <string name="l3_manage_wb">笔顺五码</string>
+    <string name="l3_manage_hs">华象直觉</string>
+    <string name="l3_manage_pinyin">拼音</string>
+
+    <string name="l3_tab_preference">喜好设定</string>
+
+    <string name="l3_dbservice_download_start">正在取得预载数据库, 这一个动作会持续一至数分钟，请您耐心等候.</string>
+    <string name="l3_dbservice_download_start_empty">正在取得空白数据库, 这一个动作会持续一至数分钟，请您耐心等候.</string>
+    <string name="l3_dbservice_download_initial">正在初始化数据库.</string>
+    <string name="l3_dbservice_download_loaded">数据库已成功载入.</string>
+    <string name="l3_dbservice_download_convert">输入法进行转换中…</string>
+
+    <string name="l3_message_table_downloading">下载字根档…</string>
+    <string name="l3_message_database_reset_confirm">您是否要移除数据库?</string>
+    <string name="l3_message_table_reset_confirm">您是否要清除所有记录?</string>
+    <string name="l3_message_table_download_confirm">资料载入期间请勿关闭本视窗或跳出程式，以免汇入失败，您是否要下载字根档?</string>
+    <string name="l3_message_table_abort_confirm">您是否要中断载入字根档?</string>
+    <string name="l3_initial_download_database">下载数据库</string>
+    <string name="l3_initial_database_failed">操作失败! 请您稍后再试，请检查数据库是否载入完全!</string>
+    <string name="l3_initial_download_failed">资料转换错误, 请重置数据库再重新下载!</string>
+    <string name="l3_initial_download_write_sdcard_failed">请确定SDCARD已挂载, 重置数据库再重新下载!</string>
+    <string name="l3_initial_backup_database">备份数据库</string>
+    <string name="l3_initial_backup_start">开始备份数据库</string>
+    <string name="l3_initial_backup_end">数据库备份完成</string>
+    <string name="l3_initial_backup_confirm">您是否要备份数据库?</string>
+    <string name="l3_initial_backup_error">数据库备份失败</string>
+    <string name="l3_initial_restore_database">还原数据库</string>
+    <string name="l3_initial_restore_error">还原失败, 请确定备份文档存在.</string>
+    <string name="l3_initial_restore_confirm">您是否要还原数据库?</string>
+    <string name="l3_initial_restore_start">开始还原数据库</string>
+    <string name="l3_initial_restore_end">数据库还原完成</string>
+
+    <string name="l3_initial_cloud_backup_database">Google Drive备份</string>
+    <string name="l3_initial_cloud_backup_start">开始Google Drive数据库备份</string>
+    <string name="l3_initial_cloud_backup_end">Google Drive数据库备份完成</string>
+    <string name="l3_initial_cloud_backup_confirm">您是否要备份数据库至Google Drive?</string>
+    <string name="l3_initial_cloud_backup_error">数据库不存在，无法进行备份.</string>
+    <string name="l3_initial_cloud_restore_database">Google Drive还原</string>
+    <string name="l3_initial_cloud_restore_error">Google Drive 还原失败.</string>
+    <string name="l3_initial_cloud_restore_confirm">您是否要由 Google Drive还原数据库?</string>
+    <string name="l3_initial_cloud_restore_start">开始还原Google Drive数据库</string>
+    <string name="l3_initial_cloud_restore_end">Google Drive数据库还原完成</string>
+    <string name="l3_initial_cloud_failed">Google Drive服务暂时无法连接，请稍后再试</string>
+
+    <string name="l3_initial_dropbox_backup_database">Dropbox 备份</string>
+    <string name="l3_initial_dropbox_downloading">Dropbox 备份档下载中 </string>
+    <string name="l3_initial_dropbox_uploading">Dropbox 备份档上传中 </string>
+    <string name="l3_initial_dropbox_backup_start">开始Dropbox数据库备份</string>
+    <string name="l3_initial_dropbox_backup_end">Dropbox数据库备份完成</string>
+    <string name="l3_initial_dropbox_backup_confirm">您是否要备份数据库至Dropbox?</string>
+    <string name="l3_initial_dropbox_backup_error">数据库不存在，无法进行备份.</string>
+    <string name="l3_initial_dropbox_restore_database">Dropbox 还原</string>
+    <string name="l3_initial_dropbox_restore_error">Dropbox 备份不存在. 请先进行Dropbox 备份</string>
+    <string name="l3_initial_dropbox_restore_confirm">您是否要由Dropbox还原数据库?</string>
+    <string name="l3_initial_dropbox_restore_start">开始还原Dropbox数据库</string>
+    <string name="l3_initial_dropbox_restore_end">Dropbox数据库还原完成</string>
+    <string name="l3_initial_dropbox_failed">Dropbox服务暂时无法连接，请稍后再试</string>
+    <string name="l3_initial_dropbox_canceled">Dropbox动作已取消，请稍后再试</string>
+    <string name="l3_initial_dropbox_authetication_failed">Dropbox认证失败，请稍后再试</string>
+    <string name="l3_initial_dropbox_large">文档过大无法上传Dropbox</string>
+
+
+    <string name="l3_im_setting_select_keyboard">请选择输入法键盘显示</string>
+    <string name="l3_im_setting_back">回到上一页</string>
+    <string name="l3_im_setting_title">对应表设定</string>
+    <string name="l3_im_setting_source">来源: </string>
+    <string name="l3_im_setting_keyboard">键盘: </string>
+    <string name="l3_im_setting_version">版本: </string>
+    <string name="l3_im_setting_total_amount">字数: </string>
+    <string name="l3_im_setting_import_date">状态: </string>
+    <string name="l3_im_setting_button_load">汇入字根档</string>
+    <string name="l3_im_setting_button_reset">移除字根档</string>
+    <string name="l3_im_setting_button_select">选择键盘对应</string>
+
+    <string name="l3_im_download_from_dayi">安装 OpenVanilla 大易字根</string>
+    <string name="l3_im_download_from_dayi_start">开始下载 OpenVanilla 大易字根</string>
+    <string name="l3_im_download_from_dayi_install">开始安装 OpenVanilla 大易字根</string>
+
+    <string name="l3_im_download_from_phonetic_big5">安装 OpenVanilla 注音字根 (BIG5字集)</string>
+
+    <string name="l3_im_download_from_phonetic">安装 OpenVanilla 注音字根</string>
+    <string name="l3_im_download_from_phonetic_start">开始下载 OpenVanilla 注音字根</string>
+    <string name="l3_im_download_from_phonetic_install">开始安装 OpenVanilla 注音字根</string>
+
+    <string name="l3_im_download_from_phonetic_adv_big5">安装注音连打字根 (BIG5字集)</string>
+
+    <string name="l3_im_download_from_phonetic_adv">安装注音连打字根</string>
+    <string name="l3_im_download_from_phonetic_adv_start">开始下载注音连打字根</string>
+    <string name="l3_im_download_from_phonetic_adv_install">开始安装注音连打字根</string>
+    <string name="l3_im_download_from_phonetic_adv_warning">文档容量较大系统会需要比较长的时间进行资料汇入</string>
+
+    <string name="l3_im_download_from_phonetic_cns">正体注音 CNS11643 字根，由于装置及操作系统差异，部份字型可能无法正确显示</string>
+    <string name="l3_im_download_from_phonetic_cns_start">开始下载注音CNS11643字根</string>
+    <string name="l3_im_download_from_phonetic_cns_install">开始安装注音CNS11643字根</string>
+    <string name="l3_im_download_from_phonetic_cns_warning">文档容量较大系统会需要比较长的时间进行资料汇入</string>
+
+    <string name="l3_im_download_from_cj_cns">正体仓颉 CNS11643 字根，由于装置及操作系统差异，部份字型可能无法正确显示</string>
+    <string name="l3_im_download_from_cj_cns_start">开始下载仓颉CNS11643字根</string>
+    <string name="l3_im_download_from_cj_cns_install">开始安装仓颉CNS11643字根</string>
+
+    <string name="l3_im_download_from_cj_big5">安装仓颉字根 (BIG5字集)</string>
+    <string name="l3_im_download_from_cj">安装仓颉字根</string>
+    <string name="l3_im_download_from_cj_start">开始下载仓颉字根</string>
+    <string name="l3_im_download_from_cj_install">开始安装仓颉字根</string>
+
+    <string name="l3_im_download_from_cj5">安装仓颉五代字根</string>
+    <string name="l3_im_download_from_cj5_start">开始下载仓颉五代字根</string>
+    <string name="l3_im_download_from_cj5_install">开始安装仓颉五代字根</string>
+
+    <string name="l3_im_download_from_ecj">安装简易速成</string>
+    <string name="l3_im_download_from_ecj_start">开始下载简易速成字根</string>
+    <string name="l3_im_download_from_ecj_install">开始安装简易速成字根</string>
+
+    <string name="l3_im_download_from_scj">安装快仓字根</string>
+    <string name="l3_im_download_from_scj_start">开始下载快仓字根</string>
+    <string name="l3_im_download_from_scj_install">开始安装快仓字根</string>
+
+    <string name="l3_im_download_from_array">安装老刀行列字根</string>
+    <string name="l3_im_download_from_array_start">开始下载老刀行列字根</string>
+    <string name="l3_im_download_from_array_install">开始安装老刀行列字根</string>
+
+    <string name="l3_im_download_from_array10">安装老刀行列10字根</string>
+    <string name="l3_im_download_from_array10_start">开始老刀下载行列10字根</string>
+    <string name="l3_im_download_from_array10_install">开始安装老刀行列10字根</string>
+
+    <string name="l3_im_download_from_ez">安装轻松字根</string>
+    <string name="l3_im_download_from_ez_start">开始下载轻松字根</string>
+    <string name="l3_im_download_from_ez_install">开始安装轻松字根</string>
+
+
+    <string name="l3_im_download_from_cjk_phonetic">安装注音字根</string>
+    <string name="l3_im_download_from_cjk_phonetic_start">开始下载注音字根</string>
+    <string name="l3_im_download_from_cjk_phonetic_install">开始安装注音字根</string>
+
+    <string name="l3_im_download_from_cjk_pinyin">安装拼音字根</string>
+    <string name="l3_im_download_from_cjk_pinyin_start">开始下载拼音字根</string>
+    <string name="l3_im_download_from_cjk_pinyin_install">开始安装拼音字根</string>
+
+    <string name="l3_im_download_from_cjk_ecj">安装速成字根</string>
+    <string name="l3_im_download_from_cjk_ecj_start">开始下载速成字根</string>
+    <string name="l3_im_download_from_cjk_ecj_install">开始安装速成字根</string>
+
+    <string name="l3_im_download_from_cjk_cj">安装仓颉字根</string>
+    <string name="l3_im_download_from_cjk_cj_start">开始下载仓颉字根</string>
+    <string name="l3_im_download_from_cjk_cj_install">开始安装仓颉字根</string>
+
+    <string name="l3_im_download_from_cjk_hk_ecj">安装速成香港字字根</string>
+    <string name="l3_im_download_from_cjk_hk_ecj_start">开始下载速成香港字字根</string>
+    <string name="l3_im_download_from_cjk_hk_ecj_install">开始安装速成香港字字根</string>
+
+    <string name="l3_im_download_from_cjk_hk_cj">安装仓颉香港字字根</string>
+    <string name="l3_im_download_from_cjk_hk_cj_start">开始下载仓颉香港字字根</string>
+    <string name="l3_im_download_from_cjk_hk_cj_install">开始安装仓颉香港字字根</string>
+
+
+    <string name="l3_im_download_from_pinyin_big5">安装拼音字根</string>
+    <string name="l3_im_download_from_pinyin_big5_start">开始下载拼音字根BIG5字集版本</string>
+    <string name="l3_im_download_from_pinyin_big5_install">开始安装拼音字根BIG5字集版本</string>
+
+    <string name="l3_im_download_from_pinyin_gb">安装拼音字根简体字集版本</string>
+    <string name="l3_im_download_from_pinyin_gb_start">开始下载拼音字根简体字集版本</string>
+    <string name="l3_im_download_from_pinyin_gb_install">开始安装拼音字根简体字集版本</string>
+
+
+    <string name="l3_im_download_from_hs">华象完整版\n华象直觉输入法发明人陈华伟制作\nTel:(07)2223133 手机：0933616029\nhs.h123@msa.hinet.net</string>
+    <string name="l3_im_download_from_hs_v1">华象一版</string>
+    <string name="l3_im_download_from_hs_v2">华象二版</string>
+    <string name="l3_im_download_from_hs_v3">华象三版</string>
+    <string name="l3_im_download_from_hs_start">开始下载华象直觉字根</string>
+    <string name="l3_im_download_from_hs_install">开始安装华象直觉字根</string>
+
+    <string name="l3_im_download_from_wb">安装笔顺五码字根\n香港长者资讯天地提供</string>
+    <string name="l3_im_download_from_wb_start">开始下载笔顺五码字根</string>
+    <string name="l3_im_download_from_wb_install">开始安装笔顺五码字根</string>
+
+    <string name="l3_im_database_error">数据库操作错误，请稍待一会重新操作。</string>
+
+    <string name="l3_database_loading">数据库载入中，请稍待…</string>
+    <string name="l3_database_not_exist">数据库不存在，请先下载数据库</string>
+
+    <string name="l3_tab_bluetooth">蓝牙设定</string>
+
+    <string name="l3_im_notice">为了节省记忆体使用空间，我们强烈建议您清空不常使用的输入法字根，或使用空白数据库来载入个别输入法字根档。</string>
+
+    <string name="hide_software_keyboard_typing_with_physical">自动隐藏软键盘</string>
+    <string name="hide_software_keyboard_typing_with_physical_summary">以实体键盘打字时隐藏软键盘，S-PEN使用者请勿勾选</string>
+
+    <string name="split_keyboard">分离键盘</string>
+
+    <string name="merge_keyboard">合并键盘</string>
+
+    <string name="voice_input">启动语音输入…</string>
+
+    <string name="show_arrow_keys">显示方向键</string>
+    <string-array name="show_arrow_keys_options">
+        <item>无</item>
+        <item>软键盘上方</item>
+        <item>软键盘下方</item>
+    </string-array>
+
+
+    <string-array name="split_keyboard_options">
+        <item>关闭</item>
+        <item>开启</item>
+        <item>仅横向开启</item>
+    </string-array>
+
+    <string name="keyboard_themes">键盘样式</string>
+        <string-array name="keyboard_themes_options">
+            <item>浅色</item>
+            <item>深色</item>
+            <item>粉紅</item>
+            <item>科技蓝</item>
+            <item>时尚紫</item>
+            <item>放松绿</item>
+    </string-array>
+
+    <string-array name="keyboard_themes_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+
+    <!-- AD Message -->
+    <string name="ad_zippy">蓝芽键盘测试支援\nZIPPY BT-540 蓝芽一对六键盘 - http://www.zippy.com (Sam Lin/sam_lin@hotmail.com)</string>
+
+
+    <!-- Version 3 UI and Theme String Set -->
+    <!-- Candi/Composing Font Size Options List -->
+    <string name="font_size">字型大小</string>
+    <string name="keyboard_size">键盘大小</string>
+    <string-array name="five_size_scale_options">
+        <item>特大</item>
+        <item>大</item>
+        <item>一般</item>
+        <item>小</item>
+        <item>特小</item>
+    </string-array>
+
+    <!-- Vibrate level Options List -->
+    <string name="vibrate_level">震动强度</string>
+    <string-array name="vibrate_level_options">
+        <item>特弱</item>
+        <item>弱</item>
+        <item>中</item>
+        <item>强</item>
+        <item>特强</item>
+    </string-array>
+    <string name="auto_chinese_symbol">自动中文标点模式</string>
+    <string name="auto_chinese_symbol_summary">无候选字词时显示中文标点选项</string>
+
+    <!-- 自动上屏设定 -->
+    <string name="auto_commit">电话键盘自动上屏</string>
+    <string name="auto_commit_summary">当输入字根符合设定数则自动送出组字</string>
+    <string-array name="auto_commit_labels">
+        <item>无</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="auto_commit_values">
+        <item>0</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string name="disable_physical_selkey_option">关闭实体键盘选字键</string>
+
+    <string name="reset_db_note">若文字无法正确输入，建议您重置数据库并重新下载或汇入字根文档.</string>
+
+    <string-array name="selkey_options_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="five_size_scale_values">
+        <item>1.2</item>
+        <item>1.1</item>
+        <item>1</item>
+        <item>0.9</item>
+        <item>0.8</item>
+    </string-array>
+    <string-array name="phonetic_keyboard_type_values">
+        <item>standard</item>
+        <item>eten</item>
+        <item>eten26</item>
+        <item>eten26_symbol</item>
+        <item>hsu</item>
+        <item>hsu_symbol</item>
+    </string-array>
+    <string-array name="physical_keyboard_options_values">
+        <item>normal_keyboard</item>
+        <item>desireZ</item>
+        <item>chacha</item>
+        <item>milestone</item>
+        <item>milestone2</item>
+        <item>milestone3</item>
+        <item>xperiapro</item>
+    </string-array>
+    <string-array name="show_arrow_keys_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="split_keyboard_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="vibrate_level_values">
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+    </string-array>
+
+</resources>

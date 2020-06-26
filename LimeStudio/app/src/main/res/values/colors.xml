@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See thek
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+<resources>
+    <!--common colors-->
+    <color name="color_white">#FFFFFFFF</color>
+    <color name="color_black">#FF000000</color>
+    <color name="color_transparent">#00FFFFFF</color>
+    <color name="color_common_green_hl">#FF4DB6AC</color>
+    <color name="color_common_light_green_hl">#FF80CBC4</color>
+    <color name="color_common_orange_hl">#FFFBB732</color>
+    <color name="color_common_light_orange_hl">#FFF29238</color>
+
+    <!-- colors for light theme -->
+
+    <color name="keyboard_background_light">#FFC8C8C8</color>
+    <color name="second_background_light">#FFE1E1E1</color>
+    <color name="second_background_light_fl">#FFFBFBFB</color>
+    <color name="third_background_light">#FFFAFAFA</color>
+    <color name="composing_background_light">#E0E1E1E1</color>
+
+
+    <color name="candidate_spacer">#FF101010</color>
+    <color name="candidate_selection_keys">#CC5E5A80</color>
+
+    <color name="foreground_light">#FF0F0F0F</color>
+    <color name="second_foreground_light">#FF717171</color>
+    <color name="third_foreground_light">#FF7D7D7D</color>
+
+
+    <!-- colors for dark theme -->
+    <color name="keyboard_background_dark">#FF373737</color>
+    <color name="background_dark">#FF141414</color>
+    <color name="second_background_dark">#FF212121</color>
+    <color name="composing_background_dark">#E0141414</color>
+
+    <color name="foreground_dark">#FFF7F7F7</color>
+    <color name="candidate_foreground_dark">#FFCFD8DC</color>
+    <color name="second_foreground_dark">#FF6B6B6B</color>
+    <color name="third_foreground_dark">#FF717171</color>
+
+
+
+    <!-- colors for pink theme -->
+    <color name="pink_hl">#FFC74A72</color>
+    <color name="keyboard_background_pink">#FFFAD5E5</color>
+    <color name="candidate_background_pink">#FFFEF3F7</color>
+    <color name="composing_background_pink">#E0FAD5E5</color>
+    <color name="second_background_pink">#FFF49AC1</color>
+    <color name="second_background_pink_hl">#FFF173AC</color>
+
+    <!-- colors for tech blue theme -->
+    <color name="tech_blue_hl">#FF4167B0</color>
+    <color name="keyboard_background_tech_blue">#FFC5DBEC</color>
+    <color name="candidate_background_tech_blue">#FFD8E7F3</color>
+    <color name="composing_background_tech_blue">#E0B2CFE6</color>
+    <color name="second_background_tech_blue">#FF9BC5E4</color>
+    <color name="second_background_tech_blue_hl">#FF6699CC</color>
+    <color name="foreground_tech_blue">#FF314453</color>
+    <color name="second_foreground_tech_blue">#FF4E6677</color>
+
+    <!-- colors for fashion purple  theme -->
+    <color name="fashion_purple_hl">#FF45196F</color>
+    <color name="keyboard_background_fashion_purple">#FFB0ACD5</color>
+    <color name="candidate_background_fashion_purple">#FFEFEDFF</color>
+    <color name="composing_background_fashion_purple">#E0B0ACD4</color>
+    <color name="second_background_fashion_purple">#FFB28ABF</color>
+    <color name="second_background_fashion_purple_hl">#FF8F53A1</color>
+    <color name="foreground_fashion_purple">#FFEEEEEE</color>
+    <color name="second_foreground_fashion_purple">#FF45196F</color>
+
+    <!-- colors for relax green  theme -->
+    <color name="relax_green_hl">#FF006838</color>
+    <color name="keyboard_background_relax_green">#FF8DC63F</color>
+    <color name="candidate_background_relax_green">#FFF2F5D5</color>
+    <color name="composing_background_relax_green">#E0D7DF23</color>
+    <color name="second_background_relax_green">#FF39B54A</color>
+    <color name="second_background_relax_green_hl">#FF009444</color>
+    <color name="foreground_relax_green">#FF003A17</color>
+    <color name="second_foreground_relax_green">#FF009444</color>
+
+
+    <color name="background_score">#88333333</color>
+
+
+</resources>

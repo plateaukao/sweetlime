@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<Keyboard xmlns:limehd="http://schemas.android.com/apk/res/net.toload.main.hd"
+    limehd:keyWidth="20%p"
+    limehd:horizontalGap="0px"
+    limehd:verticalGap="0px"
+    limehd:keyHeight="@dimen/phone_key_height"
+    >
+
+    <Row>
+        <Key limehd:codes="-2" limehd:keyLabel="123" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="49" limehd:iconPreview="@drawable/phone_1_l" limehd:keyIcon="@drawable/phone_1"/>
+        <Key limehd:codes="50,65,66,67" limehd:iconPreview="@drawable/phone_2_l" limehd:keyIcon="@drawable/phone_2"/>
+        <Key limehd:codes="51,68,69,70" limehd:iconPreview="@drawable/phone_3_l" limehd:keyIcon="@drawable/phone_3"/>
+        <Key limehd:codes="-5" limehd:keyIcon="@drawable/sym_keyboard_delete_light" limehd:isModifier="true"  limehd:keyEdgeFlags="right" limehd:isRepeatable="true"/>
+    </Row>
+    
+    <Row>
+        <Key limehd:codes="-9" limehd:keyLabel="中" limehd:isModifier="true"  limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="52,71,72,73" limehd:iconPreview="@drawable/phone_4_l" limehd:keyIcon="@drawable/phone_4"/>
+        <Key limehd:codes="53,74,75,76" limehd:iconPreview="@drawable/phone_5_l" limehd:keyIcon="@drawable/phone_5"/>
+        <Key limehd:codes="54,77,78,79" limehd:iconPreview="@drawable/phone_6_l" limehd:keyIcon="@drawable/phone_6"/>
+        <Key limehd:codes="61,43,45,42,47" limehd:iconPreview="@drawable/phone_cal_l" limehd:keyIcon="@drawable/phone_cal" limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+    <Row>
+        <Key limehd:codes="-1" limehd:keyIcon="@drawable/sym_keyboard_shift_shifted"
+                limehd:isSticky="true" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="55,80,81,82,83" limehd:iconPreview="@drawable/phone_7_l" limehd:keyIcon="@drawable/phone_7"/>
+        <Key limehd:codes="56,84,85,86" limehd:iconPreview="@drawable/phone_8_l" limehd:keyIcon="@drawable/phone_8"/>
+        <Key limehd:codes="57,87,88,89,89" limehd:iconPreview="@drawable/phone_9_l" limehd:keyIcon="@drawable/phone_9"/>
+        <Key limehd:codes="32" limehd:keyIcon="@drawable/sym_flat_keyboard_space" limehd:isRepeatable="true" limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+    <Row limehd:rowEdgeFlags="bottom">
+        <Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="40,41,91,93" limehd:iconPreview="@drawable/phone_left_l" limehd:keyIcon="@drawable/phone_left"/>
+        <Key limehd:codes="48,126,94,123,125" limehd:iconPreview="@drawable/phone_0_l" limehd:keyIcon="@drawable/phone_0"/>
+        <Key limehd:codes="44,59,63,92,46" limehd:iconPreview="@drawable/phone_right_l" limehd:keyIcon="@drawable/phone_right"/>
+        <Key limehd:codes="10" limehd:keyIcon="@drawable/sym_keyboard_return_light" limehd:isModifier="true"  limehd:keyEdgeFlags="right"/>
+    </Row>
+    
+</Keyboard>
+    

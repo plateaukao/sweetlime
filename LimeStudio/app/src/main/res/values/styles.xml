@@ -1,0 +1,509 @@
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources>
+
+    <style name="LIMEKeyboard">
+        <item name="spaceKeyVerticalCorrection">@dimen/spacebar_vertical_correction</item>
+        <item name="spaceKeySlidingTextSize">@dimen/spacebar_preview_text_size</item>
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_light</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_light</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_light</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_light</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_light</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted</item>
+        <item name="spaceKeyTextColor">@color/second_foreground_light</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next</item>
+    </style>
+    <style name="LIMEKeyboard.Light" parent = "LIMEKeyboard">
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_light</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_light</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_light</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_light</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_light</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted</item>
+        <item name="spaceKeyTextColor">@color/second_foreground_light</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next</item>
+    </style>
+    <style name="LIMEKeyboard.Dark" parent = "LIMEKeyboard">
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_dark</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space_white</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_dark</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_dark</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_dark</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_dark</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted</item>
+        <item name="spaceKeyTextColor">@color/third_foreground_dark</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next</item>
+    </style>
+
+    <style name="LIMEKeyboard.Pink" parent = "LIMEKeyboard">
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_white</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space_white</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_white</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_white</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_white</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_white</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift_pink</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted_pink</item>
+        <item name="spaceKeyTextColor">@color/color_white</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous_white</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next_white</item>
+    </style>
+
+    <style name="LIMEKeyboard.TechBlue" parent = "LIMEKeyboard">
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_white</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space_white</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_white</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_white</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_white</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_white</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift_tech_blue</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted_tech_blue</item>
+        <item name="spaceKeyTextColor">@color/color_white</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous_white</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next_white</item>
+    </style>
+
+    <style name="LIMEKeyboard.FashionPurple" parent = "LIMEKeyboard">
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_white</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space_white</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_white</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_white</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_white</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_white</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift_fashion_purple</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted_fashion_purple</item>
+        <item name="spaceKeyTextColor">@color/color_white</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous_white</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next_white</item>
+    </style>
+
+
+    <style name="LIMEKeyboard.RelaxGreen" parent = "LIMEKeyboard">
+        <item name="spaceKeyIcon">@drawable/sym_keyboard_space_white</item>
+        <item name="spaceKeyPreviewIcon">@drawable/sym_flat_keyboard_space_white</item>
+        <item name="enterKeyIcon">@drawable/sym_keyboard_return_white</item>
+        <item name="searchKeyIcon">@drawable/sym_keyboard_search_white</item>
+        <item name ="doneKeyIcon">@drawable/sym_keyboard_done_white</item>
+        <item name ="deleteKeyIcon">@drawable/sym_keyboard_delete_white</item>
+        <item name ="shiftKeyIcon">@drawable/sym_keyboard_shift_relax_green</item>
+        <item name ="shiftKeyShiftedIcon">@drawable/sym_keyboard_shift_shifted_relax_green</item>
+        <item name="spaceKeyTextColor">@color/color_white</item>
+        <item name="spaceKeySlidingLeftArrow">@drawable/sym_keyboard_previous_white</item>
+        <item name="spaceKeySlidingRightArrow">@drawable/sym_keyboard_next_white</item>
+    </style>
+
+    <style name="LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_light</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_light</item>
+    </style>
+    <style name="LIMEKeyboardLayout.Light" parent = "LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_light</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_light</item>
+    </style>
+    <style name="LIMEKeyboardLayout.Dark" parent = "LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_dark</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_dark</item>
+    </style>
+    <style name="LIMEKeyboardLayout.Pink" parent = "LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_pink</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_pink</item>
+    </style>
+    <style name="LIMEKeyboardLayout.TechBlue" parent = "LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_tech_blue</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_tech_blue</item>
+    </style>
+    <style name="LIMEKeyboardLayout.FashionPurple" parent = "LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_fashion_purple</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_fashion_purple</item>
+    </style>
+    <style name="LIMEKeyboardLayout.RelaxGreen" parent = "LIMEKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_background_relax_green</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_relax_green</item>
+    </style>
+
+    <style name="LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_light</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_light</item>
+    </style>
+    <style name="LIMEPopupKeyboardLayout.Light" parent = "LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_light</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_light</item>
+    </style>
+    <style name="LIMEPopupKeyboardLayout.Dark" parent = "LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_dark</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_dark</item>
+    </style>
+    <style name="LIMEPopupKeyboardLayout.Pink" parent = "LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_pink</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_pink</item>
+    </style>
+    <style name="LIMEPopupKeyboardLayout.TechBlue" parent = "LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_tech_blue</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_tech_blue</item>
+    </style>
+    <style name="LIMEPopupKeyboardLayout.FashionPurple" parent = "LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_fashion_purple</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_fashion_purple</item>
+    </style>
+    <style name="LIMEPopupKeyboardLayout.RelaxGreen" parent = "LIMEPopupKeyboardLayout">
+        <item name="android:background">@drawable/keyboard_popup_panel_background_relax_green</item>
+        <item name="android:keyBackground">@drawable/btn_keyboard_key_relax_green</item>
+    </style>
+
+    <style name="LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_light</item>
+        <item name="android:background">@drawable/keyboard_background_light</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_light</item>
+        <item name="keyTextSize">@dimen/key_text_size</item>
+        <item name="popupHint">@drawable/hint_popup</item>
+
+        <item name="keyTextColorNormal">@color/foreground_light</item>
+        <item name="keyTextColorPressed">@color/color_common_green_hl</item>
+
+        <item name="functionKeyTextColorNormal">@color/second_foreground_light</item>
+        <item name="functionKeyTextColorPressed">@color/color_common_light_green_hl</item>
+
+        <item name="keySubLabelTextColorNormal">@color/third_foreground_light</item>
+        <item name="keySubLabelTextColorPressed">@color/color_common_light_green_hl</item>
+
+        <item name="keyPreviewOffset">@dimen/key_preview_offset</item>
+        <item name="keyPreviewHeight">@dimen/key_preview_height</item>
+        <item name="labelTextSize">@dimen/label_text_size</item>
+        <item name="subLabelTextSize">@dimen/sub_label_text_size</item>
+        <item name="smallLabelTextSize">@dimen/small_label_text_size</item>
+        <item name="popupLayout">@layout/keyboard_popup</item>
+        <item name="keyHysteresisDistance">@dimen/key_hysteresis_distance</item>
+        <item name="verticalCorrection">@dimen/keyboard_vertical_correction</item>
+        <item name="spacePreviewTopPadding">@dimen/spacebar_preview_top_padding</item>
+        <item name="previewTopPadding">@dimen/preview_top_padding</item>
+
+        <item name="shadowColor">#BB000000</item>
+        <item name="shadowRadius">0</item>
+        <item name="backgroundDimAmount">0.5</item>
+        <item name="symbolColorScheme">white</item>
+    </style>
+    <style name="LIMEKeyboardBaseView.Light" parent = "LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_light</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_light</item>
+        <item name="popupHint">@drawable/hint_popup</item>
+
+        <item name="keyTextColorNormal">@color/foreground_light</item>
+        <item name="keyTextColorPressed">@color/color_common_green_hl</item>
+
+        <item name="functionKeyTextColorNormal">@color/second_foreground_light</item>
+        <item name="functionKeyTextColorPressed">@color/color_common_light_green_hl</item>
+
+        <item name="keySubLabelTextColorNormal">@color/third_foreground_light</item>
+        <item name="keySubLabelTextColorPressed">@color/color_common_light_green_hl</item>
+
+    </style>
+
+    <style name="LIMEKeyboardBaseView.Dark" parent = "LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_dark</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_dark</item>
+        <item name="popupHint">@drawable/hint_popup_dark</item>
+
+        <item name="keyTextColorNormal">@color/foreground_dark</item>
+        <item name="keyTextColorPressed">@color/color_common_green_hl</item>
+
+        <item name="functionKeyTextColorNormal">@color/third_foreground_dark</item>
+        <item name="functionKeyTextColorPressed">@color/color_common_light_green_hl</item>
+
+        <item name="keySubLabelTextColorNormal">@color/second_foreground_dark</item>
+        <item name="keySubLabelTextColorPressed">@color/color_common_light_green_hl</item>
+    </style>
+
+    <style name="LIMEKeyboardBaseView.Pink" parent = "LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_pink</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_pink</item>
+        <item name="popupHint">@drawable/hint_popup_dark</item>
+
+        <item name="keyTextColorNormal">@color/color_white</item>
+        <item name="keyTextColorPressed">@color/color_white</item>
+
+        <item name="functionKeyTextColorNormal">@color/color_white</item>
+        <item name="functionKeyTextColorPressed">@color/color_white</item>
+
+        <item name="keySubLabelTextColorNormal">@color/pink_hl</item>
+        <item name="keySubLabelTextColorPressed">@color/color_white</item>
+    </style>
+
+    <style name="LIMEKeyboardBaseView.TechBlue" parent = "LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_tech_blue</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_tech_blue</item>
+        <item name="popupHint">@drawable/hint_popup_dark</item>
+
+        <item name="keyTextColorNormal">@color/foreground_tech_blue</item>
+        <item name="keyTextColorPressed">@color/color_white</item>
+
+        <item name="functionKeyTextColorNormal">@color/color_white</item>
+        <item name="functionKeyTextColorPressed">@color/color_white</item>
+
+        <item name="keySubLabelTextColorNormal">@color/color_white</item>
+        <item name="keySubLabelTextColorPressed">@color/color_white</item>
+    </style>
+
+    <style name="LIMEKeyboardBaseView.FashionPurple" parent = "LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_fashion_purple</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_fashion_purple</item>
+        <item name="popupHint">@drawable/hint_popup_dark</item>
+
+        <item name="keyTextColorNormal">@color/foreground_fashion_purple</item>
+        <item name="keyTextColorPressed">@color/color_white</item>
+
+        <item name="functionKeyTextColorNormal">@color/color_white</item>
+        <item name="functionKeyTextColorPressed">@color/color_white</item>
+
+        <item name="keySubLabelTextColorNormal">@color/color_white</item>
+        <item name="keySubLabelTextColorPressed">@color/color_white</item>
+    </style>
+
+    <style name="LIMEKeyboardBaseView.RelaxGreen" parent = "LIMEKeyboardBaseView">
+        <item name="keyPreviewLayout">@layout/key_preview_relax_green</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_relax_green</item>
+        <item name="popupHint">@drawable/hint_popup_dark</item>
+
+        <item name="keyTextColorNormal">@color/foreground_relax_green</item>
+        <item name="keyTextColorPressed">@color/color_white</item>
+
+        <item name="functionKeyTextColorNormal">@color/color_white</item>
+        <item name="functionKeyTextColorPressed">@color/color_white</item>
+
+        <item name="keySubLabelTextColorNormal">@color/color_white</item>
+        <item name="keySubLabelTextColorPressed">@color/color_white</item>
+    </style>
+
+    <style name="MiniKeyboardAnimation">
+        <item name="android:windowEnterAnimation">@anim/mini_keyboard_fadein</item>
+        <item name="android:windowExitAnimation">@anim/mini_keyboard_fadeout</item>
+    </style>
+
+    <style name="LIMEBaseKeyboard">
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_light</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_light</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_light</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_light</item>>
+    </style>
+    <style name="LIMEBaseKeyboard.Light" parent = "LIMEBaseKeyboard">
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_light</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_light</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_light</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_light</item>>
+    </style>
+    <style name="LIMEBaseKeyboard.Dark" parent = "LIMEBaseKeyboard">
+
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_dark</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_dark</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_dark</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_dark</item>
+    </style>
+
+    <style name="LIMEBaseKeyboard.Pink" parent = "LIMEBaseKeyboard">
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_white</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_white</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_white</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_white</item>
+    </style>
+
+    <style name="LIMEBaseKeyboard.TechBlue" parent = "LIMEBaseKeyboard">
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_white</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_white</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_white</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_white</item>
+    </style>
+
+    <style name="LIMEBaseKeyboard.FashionPurple" parent = "LIMEBaseKeyboard">
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_white</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_white</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_white</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_white</item>
+    </style>
+
+    <style name="LIMEBaseKeyboard.RelaxGreen" parent = "LIMEBaseKeyboard">
+        <item name="drawableArrowUp">@drawable/sym_keyboard_up_white</item>
+        <item name="drawableArrowDown">@drawable/sym_keyboard_down_white</item>
+        <item name="drawableArrowRight">@drawable/sym_keyboard_right_white</item>
+        <item name="drawableArrowLeft">@drawable/sym_keyboard_left_white</item>
+    </style>
+
+    <style name="LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_hl</item>
+        <item name="voiceInputIcon">@drawable/sym_keyboard_voice_light</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_light</item>
+        <item name="closeButtonIcon">@drawable/btn_close</item>
+
+        <item name="candidateBackground">@color/third_background_light</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/foreground_light</item>
+        <item name="candidateNormalTextHighlightColor">@color/foreground_light</item>
+        <item name="composingCodeColor">@color/color_common_green_hl</item>
+        <item name="composingCodeHighlightColor">@color/third_background_light</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/candidate_spacer</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/foreground_light</item>
+        <item name="selKeyShiftedColor">@color/color_common_green_hl</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/second_foreground_light</item>
+        <item name="composingBackgroundColor">@color/composing_background_light</item>
+    </style>
+    <style name="LIMECandidateView.Light"  parent = "LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_hl</item>
+        <item name="voiceInputIcon">@drawable/btn_voice_light</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_light</item>
+        <item name="closeButtonIcon">@drawable/btn_close</item>
+
+        <item name="candidateBackground">@color/third_background_light</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/foreground_light</item>
+        <item name="candidateNormalTextHighlightColor">@color/third_background_light</item>
+        <item name="composingCodeColor">@color/color_common_green_hl</item>
+        <item name="composingCodeHighlightColor">@color/third_background_light</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/candidate_spacer</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/foreground_light</item>
+        <item name="selKeyShiftedColor">@color/color_common_green_hl</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/second_foreground_light</item>
+        <item name="composingBackgroundColor">@color/composing_background_light</item>
+    </style>
+    <style name="LIMECandidateView.Dark"  parent = "LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_hl</item>
+        <item name="voiceInputIcon">@drawable/btn_voice_dark</item>
+        <item name="candidateBackground">@color/background_dark</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_dark</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/candidate_foreground_dark</item>
+        <item name="candidateNormalTextHighlightColor">@color/candidate_foreground_dark</item>
+        <item name="composingCodeColor">@color/third_background_light</item>
+        <item name="composingCodeHighlightColor">@color/third_background_light</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/third_background_light</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/third_background_light</item>
+        <item name="selKeyShiftedColor">@color/composing_background_light</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/candidate_foreground_dark</item>
+        <item name="composingBackgroundColor">@color/composing_background_dark</item>
+    </style>
+    <style name="LIMECandidateView.Pink"  parent = "LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_pink</item>
+        <item name="voiceInputIcon">@drawable/btn_voice_pink</item>
+        <item name="candidateBackground">@color/candidate_background_pink</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_pink</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/color_black</item>
+        <item name="candidateNormalTextHighlightColor">@color/color_white</item>
+        <item name="composingCodeColor">@color/pink_hl</item>
+        <item name="composingCodeHighlightColor">@color/color_white</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/pink_hl</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/color_black</item>
+        <item name="selKeyShiftedColor">@color/pink_hl</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/pink_hl</item>
+        <item name="composingBackgroundColor">@color/composing_background_pink</item>
+    </style>
+
+    <style name="LIMECandidateView.TechBlue"  parent = "LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_tech_blue</item>
+        <item name="voiceInputIcon">@drawable/btn_voice_tech_blue</item>
+        <item name="candidateBackground">@color/candidate_background_tech_blue</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_tech_blue</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/color_black</item>
+        <item name="candidateNormalTextHighlightColor">@color/color_white</item>
+        <item name="composingCodeColor">@color/second_foreground_tech_blue</item>
+        <item name="composingCodeHighlightColor">@color/color_white</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/foreground_tech_blue</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/color_black</item>
+        <item name="selKeyShiftedColor">@color/tech_blue_hl</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/tech_blue_hl</item>
+        <item name="composingBackgroundColor">@color/composing_background_tech_blue</item>
+    </style>
+
+    <style name="LIMECandidateView.RelaxGreen"  parent = "LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_relax_green</item>
+        <item name="voiceInputIcon">@drawable/btn_voice_relax_green</item>
+        <item name="candidateBackground">@color/candidate_background_relax_green</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_relax_green</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/color_black</item>
+        <item name="candidateNormalTextHighlightColor">@color/color_white</item>
+        <item name="composingCodeColor">@color/second_background_relax_green_hl</item>
+        <item name="composingCodeHighlightColor">@color/color_white</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/foreground_relax_green</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/color_black</item>
+        <item name="selKeyShiftedColor">@color/second_background_relax_green_hl</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/relax_green_hl</item>
+        <item name="composingBackgroundColor">@color/composing_background_relax_green</item>
+    </style>
+
+    <style name="LIMECandidateView.FashionPurple"  parent = "LIMECandidateView">
+        <item name="suggestHighlight">@drawable/ic_suggest_scroll_background_fashion_purple</item>
+        <item name="voiceInputIcon">@drawable/btn_voice_fashion_purple</item>
+        <item name="candidateBackground">@color/candidate_background_fashion_purple</item>
+        <item name="ExpandButtonIcon">@drawable/btn_expand_fashion_purple</item>
+        <!-- color of  different types of candidates   -->
+        <item name="candidateNormalTextColor">@color/color_black</item>
+        <item name="candidateNormalTextHighlightColor">@color/color_white</item>
+        <item name="composingCodeColor">@color/second_background_fashion_purple</item>
+        <item name="composingCodeHighlightColor">@color/color_white</item>
+        <!-- color of  spacer between candidate   -->
+        <item name="spacerColor">@color/second_background_fashion_purple</item>
+        <!-- color of  selection key display for physical keyboard   -->
+        <item name="selKeyColor">@color/color_black</item>
+        <item name="selKeyShiftedColor">@color/fashion_purple_hl</item>
+        <!-- color of  composing text view above candidate view   -->
+        <item name="composingTextColor">@color/fashion_purple_hl</item>
+        <item name="composingBackgroundColor">@color/composing_background_fashion_purple</item>
+    </style>
+
+    <style name="Theme.AppCompat.Transparent" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+</resources>

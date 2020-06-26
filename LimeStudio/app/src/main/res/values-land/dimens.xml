@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  *
+  ~  **    Copyright 2015, The LimeIME Open Source Project
+  ~  **
+  ~  **    Project Url: http://github.com/lime-ime/limeime/
+  ~  **                 http://android.toload.net/
+  ~  **
+  ~  **    This program is free software: you can redistribute it and/or modify
+  ~  **    it under the terms of the GNU General Public License as published by
+  ~  **    the Free Software Foundation, either version 3 of the License, or
+  ~  **    (at your option) any later version.
+  ~  *
+  ~  **    This program is distributed in the hope that it will be useful,
+  ~  **    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  **    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  **    GNU General Public License for more details.
+  ~  *
+  ~  **    You should have received a copy of the GNU General Public License
+  ~  **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  *
+  ~  */
+  -->
+
+<resources>
+    <dimen name="key_height">36dip</dimen>
+    <dimen name="key_preview_height">95dp</dimen>
+    <dimen name="mini_keyboard_fling_vertical_correction">-36dip</dimen>
+    <dimen name="candidate_stripe_height">32sp</dimen>
+    <dimen name="candidate_vertical_padding">8sp</dimen>
+    <dimen name="candidate_font_size">28sp</dimen>
+    <dimen name="candidate_number_font_size">14sp</dimen>
+
+    <dimen name="composing_text_size">18sp</dimen>
+
+    <dimen name="spacebar_preview_top_padding">8dip</dimen>
+    <dimen name="preview_top_padding">0dip</dimen>
+    <!-- WB -->
+    <dimen name="wb_key_height">48dip</dimen>
+    
+</resources>
