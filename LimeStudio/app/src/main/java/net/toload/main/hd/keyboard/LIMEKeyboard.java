@@ -99,27 +99,17 @@ public class LIMEKeyboard extends LIMEBaseKeyboard {
     private static final int OPACITY_FULLY_OPAQUE = 255;
     
     private Context mContext;
-    private final Resources mRes;
-    //private final int mMode;
     private LIMEKeyboardSwitcher mKeyboardSwitcher;
     
-   // public LIMEKeyboard(Context context, int xmlLayoutResId) {
-   // 	this(context, xmlLayoutResId, 0, 1, false);
-   // }
-
     public LIMEKeyboard(Context context, int xmlLayoutResId, int mode, float keySizeScale, int showArrowKeys, int splitKeyboard ) {
         super(context, xmlLayoutResId, mode, keySizeScale, showArrowKeys, splitKeyboard);
-        if(DEBUG)
-            Log.i(TAG, "LIMEKeyboard()");
-        mRes = context.getResources();
+        if(DEBUG) Log.i(TAG, "LIMEKeyboard()");
     }
 
 
 
     private void loadThemedIcons(Context context){
-
-        if(DEBUG)
-            Log.i(TAG, "loadThemedIcons()");
+        if(DEBUG) Log.i(TAG, "loadThemedIcons()");
 
         mContext = context;
 
@@ -260,10 +250,6 @@ public class LIMEKeyboard extends LIMEBaseKeyboard {
         }
     }
     
-    void setImeOptions(Resources res, int options) {
-    	setImeOptions(res, LIMEKeyboardSwitcher.MODE_TEXT, options);
-    }
-    
     public void setImeOptions(Resources res, int mode, int options) {
         if (mEnterKey != null) {
             // Reset some of the rarely used attributes.
@@ -386,12 +372,7 @@ public class LIMEKeyboard extends LIMEBaseKeyboard {
         }
         return mSpaceDragLastDiff > 0 ? 1 : -1;
     }
-   /* private int getTextSizeFromTheme(int style, int defValue) {
-        TypedArray array = mContext.getTheme().obtainStyledAttributes(
-                style, new int[] { android.R.attr.textSize });
-        int textSize = array.getDimensionPixelSize(array.getResourceId(0, 0), defValue);
-        return textSize;
-    }*/
+
     private void setDefaultBounds(Drawable drawable) {
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
     }
@@ -449,20 +430,9 @@ public class LIMEKeyboard extends LIMEBaseKeyboard {
          */
         @Override
         public boolean isInside(int x, int y) {
-//        	 final int code = codes[0];
-//             if (code == KEYCODE_SHIFT ||
-//                     code == KEYCODE_DELETE) {
-//                 y -= height / 10;
-//                 if (code == KEYCODE_SHIFT) x += width / 6;
-//                 if (code == KEYCODE_DELETE) x -= width / 6;
-//             }
-//              if (code == KEYCODE_DONE) y  -= 10;
-              
-           
             return	LIMEKeyboard.this.isInside(this, x, y);
-            
-            //return super.isInside(x,  y);
         }
+
         boolean isInsideSuper(int x, int y) {
             return super.isInside(x, y);
         }

@@ -184,30 +184,9 @@ public class LIMEPreferenceManager {
 	
 	
 	public boolean getFixedCandidateViewDisplay(){
-
 		return true;
-		/*SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-		// force user to checked the fixed_candidate_view_display setting
-		boolean forceactive = sp.getBoolean("fixed_candidate_view_display_force", true);
-		if(forceactive){
-			sp.edit().putBoolean("fixed_candidate_view_display_force", false).commit();
-			sp.edit().putBoolean("fixed_candidate_view_display", true).commit();
-		}
-
-		return sp.getBoolean("fixed_candidate_view_display", true);  //Jeremy '15,6,4 set default to  true.*/
 	}
 
-	/*public boolean getEnableTransparentCandidateView(){
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return sp.getBoolean("enable_transparent_candidate_view", false);
-	}*/
-
-	public boolean getDisableSoftwareKeyboard(){
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return sp.getBoolean("disable_software_keyboard", false);
-	}
-	
 	public boolean getLearnRelatedWord(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return sp.getBoolean("candidate_suggestion", true);

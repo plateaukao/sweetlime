@@ -35,7 +35,6 @@
         android:orientation="horizontal" 
         android:background="@color/color_white">
        
-
         <net.toload.main.hd.candidate.CandidateView
             android:id="@+id/candidatesView"
             android:layout_width="0dp"

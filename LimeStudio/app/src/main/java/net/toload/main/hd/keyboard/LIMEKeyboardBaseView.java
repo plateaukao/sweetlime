@@ -77,7 +77,7 @@ import java.util.WeakHashMap;
 @SuppressLint("UseSparseArrays")
 public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy {
     private static final String TAG = "LIMEKeyboardBaseView";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static final int NOT_A_TOUCH_COORDINATE = -1;
 
@@ -997,21 +997,15 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 // For characters, use large font. For labels like "Done", use small font.
                 final int labelSize;
 
+                /*
                 if (DEBUG)
                     Log.i(TAG, "onBufferDraw():" + label
                             + " keySizeScale = " + mKeyboard.getKeySizeScale() + " "
                             + " labelSizeScale = " + key.getLabelSizeScale());
-                //Jeremy '11,8,11, Extended for sub-label display
-                //Jeremy '11,9,4 Scale label size
+                 */
+
                 float keySizeScale = mKeyboard.getKeySizeScale();
                 float labelSizeScale = key.getLabelSizeScale();
-
-                //Jeremy '12,6,7 moved to LIMEbasekeyboard
-                /*if(key.height < mKeyboard.getKeyHeight())  //Jeremy '12,5,21 scaled the label size if the key height is smaller than default key height
-					labelSizeScale =  (float)(key.height) / (float)(mKeyboard.getKeyHeight());
-
-				if(key.width < mKeyboard.getKeyWidth())  //Jeremy '12,5,26 scaled the label size if the key width is smaller than default key width
-					labelSizeScale *=  (float)(key.width) / (float)(mKeyboard.getKeyWidth());*/
 
                 boolean hasSubLabel = label.contains("\n");
                 boolean hasSecondSubLabel = false;

@@ -510,25 +510,16 @@ public class LIMEKeyboardSwitcher {
     
     public void toggleChinese() {
 	   mIsChinese = !mIsChinese;
-	   
 	   	if(mIsChinese){
-	   		
 	    	this.setKeyboardMode(imtype, 0, mImeOptions, true, mIsSymbols, mIsShifted);
-	    	
    		}else{
-   			
 	    	this.setKeyboardMode(imtype, mMode, mImeOptions, false, mIsSymbols, mIsShifted);
-	    	
 		}
     }
     
    public void toggleSymbols() {
-
-    	if(mIsChinese)
-        	this.setKeyboardMode(imtype, 0, mImeOptions, true, !mIsSymbols, false);
-    	else
-        	this.setKeyboardMode(imtype, mMode, mImeOptions, false, !mIsSymbols, false);
-
+    	if(mIsChinese) this.setKeyboardMode(imtype, 0, mImeOptions, true, !mIsSymbols, false);
+    	else this.setKeyboardMode(imtype, mMode, mImeOptions, false, !mIsSymbols, false);
     }
 	public void switchSymbols() {
 		switch (mCurrentSymbolsKeyboard){

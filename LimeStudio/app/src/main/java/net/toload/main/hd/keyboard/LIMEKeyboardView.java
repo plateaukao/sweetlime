@@ -35,7 +35,7 @@ import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
 public class LIMEKeyboardView extends LIMEKeyboardBaseView {
-	static final boolean DEBUG = false;
+	static final boolean DEBUG = true;
 	static final String TAG = "LIMEKeyboardView";
 
 	public static final int KEYCODE_OPTIONS = -100;

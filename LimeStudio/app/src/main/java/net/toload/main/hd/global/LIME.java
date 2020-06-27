@@ -31,7 +31,6 @@ public class LIME {
 	
 	public static final String LIME_SDCARD_FOLDER = Environment.getExternalStorageDirectory() + "/limehd/";
 	public static String getLimeDataRootFolder(){ return Environment.getDataDirectory() + "/data/"+LIME.PACKAGE_NAME; }
-	//public static final String DATABASE_SOURCE_HS = "hs.lime";
 	public static final String DATABASE_RELATIVE_FOLDER = "/databases";
 	public static final String DATABASE_NAME = "lime.db";
 	public static final String DATABASE_JOURNAL = "lime.db-journal";
@@ -40,8 +39,4 @@ public class LIME {
 	public static final String SHARED_PREFS_BACKUP_NAME=  "shared_prefs.bak";
 	public final static int SEARCHSRV_RESET_CACHE_SIZE = 256;
 	public final static int LIMEDB_CACHE_SIZE = 1024;
-
-	// ADMOB
-	public final static String publisher = "ca-app-pub-6429718170873338/7028669804";
-
 }
