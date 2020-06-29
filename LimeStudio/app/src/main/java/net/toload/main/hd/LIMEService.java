@@ -81,7 +81,7 @@ import java.util.Locale;
 public class LIMEService extends InputMethodService implements
         LIMEKeyboardBaseView.OnKeyboardActionListener {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = "LIMEService";
 
     private static Thread queryThread; // queryThread for no-blocking I/O  Jeremy '15,6,1
@@ -1650,8 +1650,11 @@ public class LIMEService extends InputMethodService implements
             if (!(!hasPhysicalKeyPressed && hasDistinctMultitouch))
                 handleShift();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DONE) {// long press on options and shift
-            handleClose();
-            // Jeremy '12,5,21 process the arrow keys on soft keyboard
+            // Daniel
+            // change to show system input method picker
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showInputMethodPicker();
+            //handleClose();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_UP) {
             keyDownUp(KeyEvent.KEYCODE_DPAD_UP, hasCandidatesShown);
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DOWN) {
@@ -2574,9 +2577,9 @@ public class LIMEService extends InputMethodService implements
             mCandidateList.clear();
 
         if (mFixedCandidateViewOn) {
-            mCandidateViewInInputView.forceHide();
+            //mCandidateViewInInputView.forceHide();
         } else {
-            hideCandidateView();
+            //hideCandidateView();
         }
     }
 

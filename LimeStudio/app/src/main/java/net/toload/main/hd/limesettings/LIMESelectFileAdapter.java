@@ -93,7 +93,4 @@ public class LIMESelectFileAdapter extends BaseAdapter {
 		TextView filename;
 		TextView detail;
 	}
-
-	
-
 }
