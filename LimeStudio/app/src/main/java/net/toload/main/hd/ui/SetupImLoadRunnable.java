@@ -177,7 +177,6 @@ public class SetupImLoadRunnable implements Runnable{
             tempfile = downloadRemoteFile(mContext, url);
         }
 
-
         // Load DB
         handler.updateProgress(activity.getResources().getString(R.string.setup_load_migrate_load));
         dbsrv.importMapping(tempfile, imtype);
@@ -202,19 +201,6 @@ public class SetupImLoadRunnable implements Runnable{
                 if (userRecordsCount == 0) return;
 
                 try {
-                    // Load backuptable records
-                                /*
-                                Cursor cursorsource = datasource.rawQuery("select * from " + imtype);
-                                List<Word> clist = Word.getList(cursorsource);
-                                cursorsource.close();
-
-                                HashMap<String, Word> wordcheck = new HashMap<String, Word>();
-                                for(Word w : clist){
-                                    String key = w.getCode() + w.getWord();
-                                    wordcheck.put(key, w);
-                                }
-                                handler.updateProgress(20);
-                                */
                     Cursor cursorbackup = datasource.rawQuery("select * from " + backupTableName);
                     List<Word> backuplist = Word.getList(cursorbackup);
                     cursorbackup.close();
@@ -228,29 +214,6 @@ public class SetupImLoadRunnable implements Runnable{
                         recordcount++;
 
                         datasource.addOrUpdateMappingRecord(imtype,w.getCode(),w.getWord(),w.getScore());
-                                    /*
-                                    // update record
-                                    String key = w.getCode() + w.getWord();
-
-                                    if(wordcheck.containsKey(key)){
-                                        try{
-                                            datasource.execSQL("update " + imtype + " set " + Lime.DB_COLUMN_SCORE + " = " + w.getScore()
-                                                            + " WHERE " + Lime.DB_COLUMN_CODE + " = '" + w.getCode() + "'"
-                                                            + " AND " + Lime.DB_COLUMN_WORD + " = '" + w.getWord() + "'"
-                                            );
-                                        }catch(Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }else{
-                                        try{
-                                            Word temp = wordcheck.get(key);
-                                            String insertsql = Word.getInsertQuery(imtype, temp);
-                                            datasource.execSQL(insertsql);
-                                        }catch(Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    */
                         // Update Progress
                         int progress =(int) ((double)recordcount / recordtotal   * 90 +10 ) ;
 
@@ -260,14 +223,9 @@ public class SetupImLoadRunnable implements Runnable{
                         }
 
                     }
-
-                    //   wordcheck.clear();
-
                 }catch(Exception e){
                     e.printStackTrace();
                 }
-
-               // datasource.restoreUserRecordsStep2(imtype);
                 handler.updateProgress(100);
             }
         }
@@ -275,56 +233,6 @@ public class SetupImLoadRunnable implements Runnable{
         handler.finishLoading(imtype);
         handler.initialImButtons();
 
-    }
-
-    public int migrateDb(File tempfile, String imtype){
-
-        List<Word> results = null;
-
-        String sourcedbfile = Lime.DATABASE_FOLDER_EXTERNAL + imtype;
-
-        handler.updateProgress(activity.getResources().getString(R.string.setup_load_migrate_load));
-        DBServer.decompressFile(tempfile, Lime.DATABASE_FOLDER_EXTERNAL, imtype, true);
-        SQLiteDatabase sourcedb = SQLiteDatabase.openDatabase(sourcedbfile, null, //SQLiteDatabase.OPEN_READWRITE |   //redundant
-                SQLiteDatabase.NO_LOCALIZED_COLLATORS);
-        results = loadWord(sourcedb, imtype);
-        sourcedb.close();
-
-
-        // Remove Imtype and related info
-        try {
-            dbsrv.resetMapping(imtype);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        int total = results.size();
-        int c = 0;
-
-        //datasource.open();
-        datasource.beginTransaction();
-
-        for(Word w: results){
-            c++;
-            String insert = Word.getInsertQuery(imtype, w);
-            datasource.add(insert);
-            if(c % 100 == 0){
-                int p = (c * 100 / total);
-                handler.updateProgress(activity.getResources().getString(R.string.setup_load_migrate_import) + " " + p + "%");
-            }
-        }
-        datasource.endTransaction();
-        return results.size();
-
-        //datasource.close();
-        /*
-        try {
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
-
-        //return 0;
     }
 
     public List<Word> loadWord(SQLiteDatabase sourcedb, String code) {
@@ -356,12 +264,6 @@ public class SetupImLoadRunnable implements Runnable{
         removeImInfo(im, field);
 
         datasource.insert("im", cv);
-        /*try {
-            datasource.open();
-            datasource.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
     }
 
     private void setIMKeyboardOnDB(String im, String value, String keyboard) {
@@ -383,7 +285,6 @@ public class SetupImLoadRunnable implements Runnable{
         datasource.remove(removeString);
 
     }
-
 
     @Deprecated public synchronized void setIMKeyboard(String im, String value,  String keyboard) {
         try{
@@ -524,6 +425,4 @@ public class SetupImLoadRunnable implements Runnable{
         }
         return null;
     }
-
-
 }

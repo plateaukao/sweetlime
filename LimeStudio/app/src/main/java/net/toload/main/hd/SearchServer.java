@@ -54,24 +54,14 @@ public class SearchServer {
     private static final String TAG = "LIME.SearchServer";
     private static LimeDB dbadapter = null;
 
-    //Jeremy '12,5,1 shared single LIMEDB object
-    //Jeremy '12,4,6 Combine updatedb and quierydb into db,
-    //Jeremy '12,4,7 move db open/close back to LimeDB
-
-    //Jeremy '12,6,9 make run-time suggestion phrase
     private static final boolean doRunTimeSuggestion = true;
 
     private static List<Mapping> scorelist = null;
 
-    //Jeremy '15,6,2 preserve the exact match mapping with the code user typed.
     private static List<List<Pair<Mapping, String>>> suggestionLoL;
     private static Stack<Pair<Mapping, String>> bestSuggestionStack;
     private static String lastCode; // preserved the last code queried from LIMEService
 
-    private static String confirmedBestSuggestion = null;
-    private static String lastConfirmedBestSuggestion = null;
-
-    //Jeremy '15,6,21
     private static int maxCodeLength = 4;
 
     private static boolean mResetCache;
@@ -84,11 +74,9 @@ public class SearchServer {
     private LIMEPreferenceManager mLIMEPref;
 
     private static boolean isPhysicalKeyboardPressed; // Sync to LIMEService and LIMEDB
-    //Jeremy '11,6,10
     private static boolean hasNumberMapping;
     private static boolean hasSymbolMapping;
 
-    //Jeremy '11,6,6
     private HashMap<String, String> selKeyMap = new HashMap<>();
 
     private static ConcurrentHashMap<String, List<Mapping>> cache = null;
@@ -102,19 +90,12 @@ public class SearchServer {
 
     private Context mContext = null;
 
-    // deprecated and using exact match stack to get real code length now. Jerey '15,6,2
-    //private static List<Pair<Integer, Integer>> codeLengthMap = new LinkedList<>();
-
     public SearchServer(Context context) {
-
-
         this.mContext = context;
 
         mLIMEPref = new LIMEPreferenceManager(mContext.getApplicationContext());
         if (dbadapter == null) dbadapter = new LimeDB(mContext);
         initialCache();
-
-
     }
 
     public static void resetCache(boolean resetCache) {
@@ -143,7 +124,6 @@ public class SearchServer {
             prefetchCache(numberMapping, symbolMapping);
         }
 
-        //Jeremy '15,6,21 set max code length
         if (tablename.startsWith("cj")) {
             maxCodeLength = 5;
         }
@@ -181,19 +161,15 @@ public class SearchServer {
             }
         };
         prefetchThread.start();
-
     }
 
 
     //TODO: Should cache related phrase 15,6,8 Jeremy
-    public List<Mapping> getRelatedPhrase(String word, boolean getAllRecords) throws RemoteException {
-
+    public List<Mapping> getRelatedPhrase(String word, boolean getAllRecords) {
         return dbadapter.getRelatedPhrase(word, getAllRecords);
     }
 
-    //Add by jeremy '10, 4,1
-    public void getCodeListStringFromWord(final String word) throws RemoteException {
-
+    public void getCodeListStringFromWord(final String word) {
         String result = dbadapter.getCodeListStringByWord(word);
         if (result != null && !result.equals("")) {
             LIMEUtilities.showNotification(
@@ -203,7 +179,6 @@ public class SearchServer {
                 Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     private String cacheKey(String code) {
@@ -234,8 +209,6 @@ public class SearchServer {
         }
         suggestionLoL.clear();
         if (bestSuggestionStack != null) bestSuggestionStack.clear();
-        confirmedBestSuggestion = null;
-        lastConfirmedBestSuggestion = null;
         abandonPhraseSuggestion =abandonSuggestion;
     }
 
@@ -363,21 +336,6 @@ public class SearchServer {
             if (DEBUG || dumpRunTimeSuggestion)
                 Log.i(TAG, "makeRunTimeSuggestion() no exact match on complete code = " + code + ", time elapsed = " + (System.currentTimeMillis() - startTime));
 
-            /*
-            // if confirmed best suggestion found and contains last confirmed best suggestion (double confirm) remove all other list not start with last confirmed best suggestion
-            if( lastConfirmedBestSuggestion!=null && confirmedBestSuggestion!=null
-                    &&lastConfirmedBestSuggestion.length()>1 && confirmedBestSuggestion.startsWith(lastConfirmedBestSuggestion)){
-                Iterator<List<Pair<Mapping,String>>> it = suggestionLoL.iterator();
-                while (it.hasNext()) {
-                     List<Pair<Mapping,String>> item = it.next();
-                    if(item.isEmpty()|| !item.get(item.size()-1).first.getWord().startsWith(lastConfirmedBestSuggestion)){
-                        it.remove();
-                    }
-                }
-            }
-            */
-
-
             int highestScore = 0, highestRelatedScore = 0, i = 0, highestScoreIndex = 0;
             //iterate all previous exact match mapping and check for exact match on remaining code.
             List<List<Pair<Mapping, String>>> suggestionLoLSnapShot = new LinkedList<>(suggestionLoL);
@@ -500,64 +458,7 @@ public class SearchServer {
                 bestSuggestionStack.push(bestSuggestionList.get(bestSuggestionList.size() - 1));
             }
         }
-        /*
-        //find confirmed best suggestion with longest common string
-        if (bestSuggestionStack != null && !bestSuggestionStack.isEmpty() && bestSuggestionStack.size() > 1) {
-            for (int i = bestSuggestionStack.size() - 1; i > 0; i--) {
-                if (code.length() - bestSuggestionStack.get(i).first.getCode().length() > maxCodeLength) {
-                    String lastBestSuggestion = bestSuggestionStack.get(i - 1).first.getWord(), bestSuggestion = bestSuggestionStack.get(i).first.getWord();
-                    if (lastBestSuggestion != null &&
-                            lastBestSuggestion.length() > 1 && bestSuggestion.length() >= lastBestSuggestion.length()) {
-                        String tempBestSuggestion = lcs(lastBestSuggestion, bestSuggestion);
-                        if (confirmedBestSuggestion == null) {
-                            confirmedBestSuggestion = tempBestSuggestion;
-                        } else if (lastConfirmedBestSuggestion == null
-                                || tempBestSuggestion.length() > lastConfirmedBestSuggestion.length()) {
-                            lastConfirmedBestSuggestion = confirmedBestSuggestion;
-                            confirmedBestSuggestion = tempBestSuggestion;
-                        }
-                    }
-                    break;
-                }
-            }
-            if ((DEBUG || dumpRunTimeSuggestion)) {
-                if (lastConfirmedBestSuggestion != null)
-                    Log.i(TAG, "makeRunTimeSuggestion() last confirmed best suggestion = " + lastConfirmedBestSuggestion);
-                if (confirmedBestSuggestion != null)
-                    Log.i(TAG, "makeRunTimeSuggestion() confirmed best suggestion = " + confirmedBestSuggestion);
-                if (!bestSuggestionStack.isEmpty()) {
-                    int i = 0;
-                    for (Pair<Mapping, String> it : bestSuggestionStack) {
-                        Log.i(TAG, "makeRunTimeSuggestion() best suggestion stack (" + (i) + ")= " + bestSuggestionStack.get(i).first.getWord());
-                        i++;
-                    }
-                }
-            }
-        }
-        */
-
-        // dump suggestion list of list
-        if ((DEBUG || dumpRunTimeSuggestion) &&
-                suggestionLoL != null && !suggestionLoL.isEmpty()) {
-            for (int i = 0; i < suggestionLoL.size(); i++) {
-                if (suggestionLoL.get(i) != null && !suggestionLoL.get(i).isEmpty()) {
-                    for (int j = 0; j < suggestionLoL.get(i).size(); j++) {
-                        //Log.i(TAG, "makeRunTimeSuggestion() suggestionLoL(" + i + ")(" + j + "): word="
-                        //        + suggestionLoL.get(i).get(j).first.getWord() + ", code=" + suggestionLoL.get(i).get(j).second
-                        //        + ", base score=" + suggestionLoL.get(i).get(j).first.getBasescore()
-                        //        + ", average base score=" + suggestionLoL.get(i).get(j).first.getBasescore() / suggestionLoL.get(i).get(j).first.getWord().length()
-                        //        + ", score=" + suggestionLoL.get(i).get(j).first.getScore());
-                    }
-                }
-            }
-
-            //Log.i(TAG,"makeRunTimeSuggestion() time elapsed = " +  (System.currentTimeMillis()- startTime ) );
-        }
     }
-
-    /*
-    *   return longest common substring with recursive method.
-     */
 
     private String lcs(String a, String b) {
         int aLen = a.length();
@@ -574,9 +475,6 @@ public class SearchServer {
         }
     }
 
-    /*
-    * Jeremy '15,7,12 synchronized the method called from LIMEService only
-    */
     public synchronized List<Mapping> getMappingByCode(String code, boolean softkeyboard, boolean getAllRecords) throws RemoteException {
         return getMappingByCode(code, softkeyboard, getAllRecords, false);
     }

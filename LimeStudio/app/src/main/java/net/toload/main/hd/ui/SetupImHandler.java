@@ -41,9 +41,6 @@ public class SetupImHandler extends Handler {
         String action = msg.getData().getString("action");
         String type = msg.getData().getString("type");
 
-        //Log.i("LIME", "action: " + action);
-        //Log.i("LIME", "type: " + type);
-
         if(action != null && action.equalsIgnoreCase("progress")){
             if(type != null){
                 if(type.equalsIgnoreCase("showSpinner")){
@@ -96,8 +93,6 @@ public class SetupImHandler extends Handler {
         m.getData().putString("type", "cancel");
         this.sendMessageDelayed(m, 1);
     }
-
-
 
     public void showProgress(boolean spinnerStyle, String message) {
 

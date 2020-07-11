@@ -2491,12 +2491,8 @@ public class LIMEService extends InputMethodService implements
 
                     if (committedCandidate != null && hasMappingList) {
                         if (queryThread != null && queryThread.isAlive()) queryThread.interrupt();
-                        try {
-                            if(!committedCandidate.isEmojiRecord() && !committedCandidate.isChinesePunctuationSymbolRecord()){
-                                list.addAll(SearchSrv.getRelatedPhrase(committedCandidate.getWord(), getAllRecords));
-                            }
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
+                        if(!committedCandidate.isEmojiRecord() && !committedCandidate.isChinesePunctuationSymbolRecord()){
+                            list.addAll(SearchSrv.getRelatedPhrase(committedCandidate.getWord(), getAllRecords));
                         }
 
                         if (list.size() > 0) {
