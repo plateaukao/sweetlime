@@ -27,23 +27,23 @@ package net.toload.main.hd.ui;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +60,10 @@ import net.toload.main.hd.global.LIMEUtilities;
 import net.toload.main.hd.limedb.LimeDB;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -673,20 +677,57 @@ public class SetupImFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == Lime.PAYMENT_REQUEST_CODE) {
-            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-            //int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
-            //String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
-
-            this.getActivity();
-            if (resultCode == Activity.RESULT_OK) {
-                mLIMEPref.setParameter(Lime.PAYMENT_FLAG, true);
-                showToastMessage(getResources().getString(R.string.payment_service_success), Toast.LENGTH_LONG);
-                //Log.i("LIME", "purchasing complete " + new Date() + " / " + purchaseData);
+        if (requestCode == RESTORE_FILE_REQUEST_CODE) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+            if (data != null) {
+                Uri uri = data.getData();
+                Log.i(TAG, "Uri: " + uri.toString());
+                restorethread = new Thread(new SetupImRestoreRunnable(this, handler, getFilePathFromUri(uri)));
+                restorethread.start();
             }
         }
-
     }
+
+    public String getFilePathFromUri(Uri uri) {
+        String fileName = Lime.DATABASE_BACKUP_NAME;
+        File file = new File(this.getContext().getExternalCacheDir(), fileName);
+        try (OutputStream outputStream = new FileOutputStream(file);
+             InputStream inputStream = getContext().getContentResolver().openInputStream(uri))
+        {
+            file.createNewFile();
+            copyFile(inputStream, outputStream); //Simply reads input to output stream
+            outputStream.flush();
+        } catch (Exception exception) {
+            // TODO
+        }
+
+        return file.getAbsolutePath();
+    }
+
+    private static void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+    }
+
+    private String getFilePath(Uri uri) {
+        String filePath;
+        if (uri != null && "content".equals(uri.getScheme())) {
+            Cursor cursor = this.getContext().getContentResolver().query(uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
+            cursor.moveToFirst();
+            filePath = cursor.getString(0);
+            cursor.close();
+        } else {
+            filePath = uri.getPath();
+        }
+        return filePath;
+    }
+
 
 
     public void backupLocalDrive(){
@@ -712,9 +753,19 @@ public class SetupImFragment extends Fragment {
             if(restorethread != null && restorethread.isAlive()){
                 handler.removeCallbacks(restorethread);
             }
-            restorethread = new Thread(new SetupImRestoreRunnable(this, handler, type));
-            restorethread.start();
+            launchRestoreFilePicker();
+            //restorethread = new Thread(new SetupImRestoreRunnable(this, handler, type));
+            //restorethread.start();
         }
+    }
+
+    final static int RESTORE_FILE_REQUEST_CODE = 0421;
+    private void launchRestoreFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/zip");
+
+        startActivityForResult(intent, RESTORE_FILE_REQUEST_CODE);
     }
 
     public void showToastMessage(String msg, int length) {

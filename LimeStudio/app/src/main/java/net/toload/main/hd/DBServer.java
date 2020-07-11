@@ -27,6 +27,8 @@ package net.toload.main.hd;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
@@ -177,12 +179,6 @@ public class  DBServer {
 		}
 	}
 
-
-	public int getLoadingMappingCount() {
-		return datasource.getCount();
-	}
-
-
 	public static void backupDatabase() throws RemoteException {
 		if (DEBUG)
 			Log.i(TAG, "backupDatabase()");
@@ -229,22 +225,12 @@ public class  DBServer {
 		if( fileSharedPrefsBackup!=null && fileSharedPrefsBackup.exists() ) fileSharedPrefsBackup.delete();
 	}
 
-	public static void restoreDatabase() throws RemoteException {
-		File externalFilesDir = ContextCompat.getExternalFilesDirs(ctx, null)[0];
-		restoreDatabase(externalFilesDir.getAbsolutePath() + File.separator + LIME.DATABASE_BACKUP_NAME);
-	}
-
 	public static void restoreDatabase(String srcFilePath) throws RemoteException {
-
 		File check = new File(srcFilePath);
 
 		if(check.exists()){
-
-			//showNotificationMessage(ctx.getText(R.string.l3_initial_restore_start) + "");
-			//mLIMEPref.holdDatabaseCoonection(true);
 			datasource.holdDBConnection(); //Jeremy '15,5,23
 			closeDatabse();
-
 			try {
 				LIMEUtilities.unzip(srcFilePath, LIME.getLimeDataRootFolder(), true);
 			} catch (Exception e) {
@@ -272,9 +258,7 @@ public class  DBServer {
 
 		}else{
 			showNotificationMessage(ctx.getText(R.string.error_restore_not_found) + "");
-
 		}
-
 	}
 
 	public static void backupDefaultSharedPreference(File sharePrefs) {

@@ -27,7 +27,6 @@ package net.toload.main.hd.ui;
 import android.os.RemoteException;
 
 import net.toload.main.hd.DBServer;
-import net.toload.main.hd.Lime;
 import net.toload.main.hd.R;
 import net.toload.main.hd.SearchServer;
 
@@ -37,17 +36,17 @@ import net.toload.main.hd.SearchServer;
 public class SetupImRestoreRunnable implements Runnable {
 
     // Global
-    private String mType;
     private SetupImFragment mFragment;
     private SearchServer SearchSrv;
+    private String filePath;
 
     private SetupImHandler mHandler;
 
-    public SetupImRestoreRunnable(SetupImFragment fragment, SetupImHandler handler, String type) {
+    public SetupImRestoreRunnable(SetupImFragment fragment, SetupImHandler handler, String filePath) {
         this.mHandler = handler;
-        this.mType = type;
         this.mFragment = fragment;
         this.SearchSrv = new SearchServer(this.mFragment.getActivity());
+        this.filePath= filePath;
     }
 
     @Override
@@ -56,21 +55,16 @@ public class SetupImRestoreRunnable implements Runnable {
     }
 
     public void run() {
-
         // Clean the cache before restore the data
         this.SearchSrv.initialCache();
 
-        switch (mType) {
-            case Lime.LOCAL:
-                try {
-                    mHandler.showProgress(true, this.mFragment.getResources().getString(R.string.setup_im_restore_message));
-                    DBServer.restoreDatabase();
-                    mHandler.cancelProgress();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                break;
+        mHandler.showProgress(true, this.mFragment.getResources().getString(R.string.setup_im_restore_message));
+        try {
+            DBServer.restoreDatabase(filePath);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
+        mHandler.cancelProgress();
     }
 }
 
