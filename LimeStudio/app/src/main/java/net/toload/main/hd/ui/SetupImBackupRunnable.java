@@ -24,6 +24,7 @@
 
 package net.toload.main.hd.ui;
 
+import android.net.Uri;
 import android.os.RemoteException;
 
 import net.toload.main.hd.DBServer;
@@ -31,17 +32,14 @@ import net.toload.main.hd.Lime;
 import net.toload.main.hd.R;
 
 public class SetupImBackupRunnable implements Runnable {
-
-    // Global
-    private String mType;
     private SetupImFragment mFragment;
-
     private SetupImHandler mHandler;
+    private Uri folderUri;
 
-    public SetupImBackupRunnable(SetupImFragment fragment, SetupImHandler handler, String type) {
-        this.mHandler = handler;
-        this.mType = type;
-        this.mFragment = fragment;
+    public SetupImBackupRunnable(SetupImFragment fragment, SetupImHandler handler, Uri uri) {
+        mHandler = handler;
+        mFragment = fragment;
+        folderUri = uri;
     }
 
     @Override
@@ -51,22 +49,14 @@ public class SetupImBackupRunnable implements Runnable {
 
     @Override
     public void run() {
-
         mHandler.showProgress(true, this.mFragment.getResources().getString(R.string.setup_im_backup_message));
-        // Preparing the file to be backup
-        if (mType.equals(Lime.LOCAL) || mType.equals(Lime.GOOGLE) || mType.equals(Lime.DROPBOX)) {
-            try {
-                DBServer.backupDatabase();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+        try {
+            DBServer.backupDatabase(folderUri);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
-        switch (mType) {
-            default:
-                DBServer.showNotificationMessage(mFragment.getResources().getString(R.string.l3_initial_backup_end));
-                mHandler.cancelProgress();
-                break;
-        }
+        DBServer.showNotificationMessage(mFragment.getResources().getString(R.string.l3_initial_backup_end));
+        mHandler.cancelProgress();
     }
 }

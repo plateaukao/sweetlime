@@ -67,6 +67,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -407,7 +409,6 @@ public class SetupImFragment extends Fragment {
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_CUSTOM, handler);
                         dialog.show(ft, "loadimdialog");
-
                     }
                 });
 
@@ -677,18 +678,23 @@ public class SetupImFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
         if (requestCode == RESTORE_FILE_REQUEST_CODE) {
-            // The document selected by the user won't be returned in the intent.
-            // Instead, a URI to that document will be contained in the return intent
-            // provided to this method as a parameter.
-            // Pull that URI using resultData.getData().
+            Uri uri = data.getData();
+            Log.i(TAG, "Uri: " + uri.toString());
+            restorethread = new Thread(new SetupImRestoreRunnable(this, handler, getFilePathFromUri(uri)));
+            restorethread.start();
+        } else if (requestCode == BACKUP_FILE_REQUEST_CODE) {
+            Uri treeUri = data.getData();
             if (data != null) {
-                Uri uri = data.getData();
-                Log.i(TAG, "Uri: " + uri.toString());
-                restorethread = new Thread(new SetupImRestoreRunnable(this, handler, getFilePathFromUri(uri)));
-                restorethread.start();
+                backupthread = new Thread(new SetupImBackupRunnable(this, handler, treeUri));
+                backupthread.start();
             }
         }
+
     }
 
     public String getFilePathFromUri(Uri uri) {
@@ -739,7 +745,6 @@ public class SetupImFragment extends Fragment {
     }
 
     public void initialThreadTask(String action, String type) {
-
         // Default Setting
         mLIMEPref.setParameter("dbtarget", Lime.DEVICE);
 
@@ -747,16 +752,21 @@ public class SetupImFragment extends Fragment {
             if(backupthread != null && backupthread.isAlive()){
                 handler.removeCallbacks(backupthread);
             }
-            backupthread = new Thread(new SetupImBackupRunnable(this, handler, type));
-            backupthread.start();
+            //backupthread = new Thread(new SetupImBackupRunnable(this, handler, type));
+            //backupthread.start();
+            launchBackupFilePicker();
         }else if(action.equals(Lime.RESTORE)){
             if(restorethread != null && restorethread.isAlive()){
                 handler.removeCallbacks(restorethread);
             }
             launchRestoreFilePicker();
-            //restorethread = new Thread(new SetupImRestoreRunnable(this, handler, type));
-            //restorethread.start();
         }
+    }
+
+    final static int BACKUP_FILE_REQUEST_CODE = 10421;
+    private void launchBackupFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        startActivityForResult(intent, BACKUP_FILE_REQUEST_CODE);
     }
 
     final static int RESTORE_FILE_REQUEST_CODE = 0421;

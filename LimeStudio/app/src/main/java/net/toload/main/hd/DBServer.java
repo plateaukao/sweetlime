@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 
 import net.toload.main.hd.data.KeyboardObj;
@@ -52,6 +53,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -79,19 +81,6 @@ public class  DBServer {
 
 	protected static Context ctx = null;
 
-	// Monitoring thread.
-	//	private Thread thread = null;
-
-	//	public class DBServiceImpl extends IDBService.Stub {
-	//
-	//		Context ctx = null;
-	//		//private Thread thread = null;
-	//
-	//		DBServiceImpl(Context ctx) {
-	//			this.ctx = ctx;
-	//			mLIMEPref = new LIMEPreferenceManager(ctx);
-	//			loadLimeDB();
-	//		}
 	public DBServer(Context context) {
 		DBServer.ctx = context;
 		mLIMEPref = new LIMEPreferenceManager(ctx);
@@ -99,12 +88,6 @@ public class  DBServer {
 		if (datasource == null)
 			datasource = new LimeDB(ctx);
 	}
-/* deprecated by jeremy '12,5,2
-	public void loadLimeDB(){	
-		if(datasource==null)
-			datasource = new LimeDB(ctx); 
-	}
-*/
 
 	public void loadMapping(String filename, String tablename, LIMEProgressListener progressListener) throws RemoteException {
 
@@ -173,15 +156,77 @@ public class  DBServer {
 		}
 		else {
 			int count = datasource.importDb(unzipFilePaths.get(0), imtype);
-			//mLIMEPref.setResetCacheFlag(true);
 			resetCache();
 			return count;
 		}
 	}
 
+	public static void backupDatabase(Uri uri) throws RemoteException {
+		if (DEBUG) Log.i(TAG, "backupDatabase()");
+
+		File limedir = ContextCompat.getExternalFilesDirs(ctx, null)[0];
+
+		if (!limedir.exists()) {
+			limedir.mkdirs();
+		}
+
+		//backup shared preferences
+		File fileSharedPrefsBackup = new File(LIME.getLimeDataRootFolder(), LIME.SHARED_PREFS_BACKUP_NAME);
+		if(fileSharedPrefsBackup.exists())  fileSharedPrefsBackup.delete();
+		backupDefaultSharedPreference(fileSharedPrefsBackup);
+
+		// create backup file list.
+		List<String> backupFileList = new ArrayList<>();
+		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_NAME);
+		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_JOURNAL);
+		backupFileList.add(LIME.SHARED_PREFS_BACKUP_NAME);
+
+		// hold database connection and close database.
+		//mLIMEPref.holdDatabaseCoonection(true);
+		datasource.holdDBConnection(); //Jeremy '15,5,23
+		closeDatabse();
+
+		//ready to zip backup file list
+		try {
+			LIMEUtilities.zip(
+					limedir.getAbsolutePath() + File.separator + LIME.DATABASE_BACKUP_NAME, backupFileList,
+					LIME.getLimeDataRootFolder(),
+					true
+			);
+
+			DocumentFile pickedDir = DocumentFile.fromTreeUri(ctx, uri);
+			DocumentFile backupFile = pickedDir.createFile("application/zip", "backup.zip");
+			File file = new File(limedir, LIME.DATABASE_BACKUP_NAME);
+			FileInputStream fileInputStream = new FileInputStream(file);
+			OutputStream fileOutputStream = ctx.getContentResolver().openOutputStream(backupFile.getUri());
+			copyFile(fileInputStream, fileOutputStream);
+			file.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+			showNotificationMessage(ctx.getText(R.string.l3_initial_backup_error) + "");
+		} finally {
+			showNotificationMessage(ctx.getText(R.string.l3_initial_backup_end) + "");
+		}
+
+		// backup finished.  unhold the database connection and false reopen the database.
+		datasource.unHoldDBConnection(); //Jeremy '15,5,23
+		//mLIMEPref.holdDatabaseConnection(false);
+		datasource.openDBConnection(true);
+
+		//cleanup the shared preference backup file.
+		if( fileSharedPrefsBackup!=null && fileSharedPrefsBackup.exists() ) fileSharedPrefsBackup.delete();
+	}
+
+	private static void copyFile(InputStream in, OutputStream out) throws IOException {
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = in.read(buf)) > 0) {
+			out.write(buf, 0, len);
+		}
+	}
+
 	public static void backupDatabase() throws RemoteException {
-		if (DEBUG)
-			Log.i(TAG, "backupDatabase()");
+		if (DEBUG) Log.i(TAG, "backupDatabase()");
 
 		//File limedir = new File(LIME.LIME_SDCARD_FOLDER + File.separator);
 		File limedir = ContextCompat.getExternalFilesDirs(ctx, null)[0];
@@ -285,7 +330,6 @@ public class  DBServer {
 				ex.printStackTrace();
 			}
 		}
-
 	}
 
 
@@ -595,45 +639,6 @@ public class  DBServer {
 		if(remoteFileDownloading) return 0;
 		else return datasource.getProgressPercentageDone();
 	}
-/*
-	@Deprecated //by Jeremy '12,6,6
-	public void forceUpgrad() throws RemoteException {
-		//if (datasource == null) {loadLimeDB();}
-		datasource.forceUpgrade();
-	}*/
-
-	//	}
-
-
-	//	public IBinder onBind(Intent arg0) {
-	//		return new DBServiceImpl(this);
-	//	}
-	//
-	//	/*
-	//	 * (non-Javadoc)
-	//	 * 
-	//	 * @see android.app.Service#onCreate()
-	//	 */
-	//	
-	//	public void onCreate() {
-	//		super.onCreate();
-	//	}
-	//
-	//	/*
-	//	 * (non-Javadoc)
-	//	 * 
-	//	 * @see android.app.Service#onDestroy()
-	//	 */
-	//	
-	//	public void onDestroy() {
-	//		if (datasource != null) {
-	//			datasource.close();
-	//			datasource = null;
-	//
-	//		}
-	//		notificationMgr.cancelAll();
-	//		super.onDestroy();
-	//	}
 
 	//Jeremy '12,4,23 rewriting using alert notification builder in LIME utilities to replace the deprecated method
 	public static void showNotificationMessage(String message) {
