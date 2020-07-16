@@ -556,7 +556,6 @@ public class LIMEService extends InputMethodService implements
             return;
         }
 
-
         //Jeremy '12,5,29 override the fixCanddiateMode setting in Landscape mode (in landscape mode the candidate bar is always not fixed).
         boolean fixedCandidateMode = mLIMEPref.getFixedCandidateViewDisplay();
 
@@ -2832,7 +2831,6 @@ public class LIMEService extends InputMethodService implements
                 mCandidateViewInInputView.setSuggestions(null,false);  // reset the candiate view if it's force hided before
             }
         }
-
 
         mHasShift = false;
         updateShiftKeyState(getCurrentInputEditorInfo());

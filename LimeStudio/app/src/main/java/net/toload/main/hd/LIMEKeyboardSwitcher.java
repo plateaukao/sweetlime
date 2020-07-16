@@ -24,9 +24,8 @@
 
 package net.toload.main.hd;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.content.Context;
+import android.util.Log;
 
 import net.toload.main.hd.data.ImObj;
 import net.toload.main.hd.data.KeyboardObj;
@@ -34,8 +33,9 @@ import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.keyboard.LIMEKeyboard;
 import net.toload.main.hd.keyboard.LIMEKeyboardView;
 
-import android.content.Context;
-import android.util.Log;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LIMEKeyboardSwitcher {
 	
@@ -450,17 +450,11 @@ public class LIMEKeyboardSwitcher {
     		
 	    	if(mInputView == null) return;
 	        
-	        
 	        LIMEKeyboard keyboard = getKeyboard(kid);
-	
-	       // mCurrentId = kid;
+			keyboard.setShiftLocked(keyboard.isShiftLocked());
+			keyboard.setShifted(mIsShifted);
 	        mInputView.setKeyboard(keyboard);
 
-			assert keyboard != null;
-			keyboard.setShiftLocked(keyboard.isShiftLocked());
-	        keyboard.setShifted(mIsShifted);
-	        mInputView.setKeyboard(mInputView.getKeyboard()); //instead of invalidateAllKeys();
-	        
 	        keyboard.setImeOptions(mThemedContext.getResources(), mMode, imeOptions);
     	}
     }
