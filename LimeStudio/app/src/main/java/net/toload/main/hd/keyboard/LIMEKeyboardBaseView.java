@@ -202,7 +202,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
     private int mKeyboardVerticalGap;
 
     // Key preview popup
-    private TextView mPreviewText;
     private PopupWindow mPreviewPopup;
     private int mPreviewTextSizeLarge;
     private int[] mOffsetInWindow;
@@ -312,17 +311,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             LIMEKeyboardBaseView mLIMEKeyboardBaseView = mLIMEKeyboardBaseViewWeakReference.get();
             if(mLIMEKeyboardBaseView == null) return;
             switch (msg.what) {
-                case MSG_POPUP_PREVIEW:
-                    if(DEBUG) Log.i(TAG, "handleMessage()  MSG_POPUP_PREVIEW");
-                    mLIMEKeyboardBaseView.showKey(msg.arg1, (PointerTracker) msg.obj);
-                    break;
-                case MSG_DISMISS_PREVIEW:
-                    if(DEBUG) Log.i(TAG, "handleMessage()  MSG_DISMISS_PREVIEW");
-                    mLIMEKeyboardBaseView.mPreviewText.setVisibility(INVISIBLE);
-                    if(mLIMEKeyboardBaseView.mPreviewPopup.isShowing())
-                        mLIMEKeyboardBaseView.mPreviewPopup.dismiss();
-
-                    break;
                 case MSG_REPEAT_KEY: {
                     if(DEBUG) Log.i(TAG, "handleMessage()  MSG_REPEAT_KEY");
                     final PointerTracker tracker = (PointerTracker) msg.obj;
@@ -336,57 +324,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                     mLIMEKeyboardBaseView.openPopupIfRequired(msg.arg1, tracker);
                     break;
                 }
-                case MSG_SHOW_PREVIEW: {
-                    if(DEBUG) Log.i(TAG, "handleMessage()  MSG_SHOW_PREVIEW");
-                    final PointerTracker tracker = (PointerTracker) msg.obj;
-                    if(!tracker.isSpaceKey(msg.arg1))
-                        mLIMEKeyboardBaseView.startKeyPreviewFadeInAnimation();
-                    mLIMEKeyboardBaseView.mPreviewText.setVisibility(VISIBLE);
-                    break;
-                }
             }
-        }
-
-        public void showPreview(long delay, int keyIndex, PointerTracker tracker){
-            if(DEBUG)
-                Log.i(TAG,"UIHandler.showPreview() delay = "+delay);
-            LIMEKeyboardBaseView mLIMEKeyboardBaseView = mLIMEKeyboardBaseViewWeakReference.get();
-            sendMessageDelayed(obtainMessage(MSG_SHOW_PREVIEW, keyIndex, 0, tracker), delay);
-
-        }
-        public void popupPreview(long delay, int keyIndex, PointerTracker tracker) {
-            if(DEBUG)
-                Log.i(TAG, "UIHandler.popupPreview() delay="+delay + "; keyIndex = "+ keyIndex);
-            LIMEKeyboardBaseView mLIMEKeyboardBaseView = mLIMEKeyboardBaseViewWeakReference.get();
-            if(mLIMEKeyboardBaseView == null) return;
-            removeMessages(MSG_POPUP_PREVIEW);
-            if (mLIMEKeyboardBaseView.mPreviewPopup.isShowing() && mLIMEKeyboardBaseView.mPreviewText.getVisibility() == VISIBLE) {
-                // Show right away, if it's already visible and finger is moving around
-                mLIMEKeyboardBaseView.showKey(keyIndex, tracker);
-            } else {
-                sendMessageDelayed(obtainMessage(MSG_POPUP_PREVIEW, keyIndex, 0, tracker), delay);
-            }
-        }
-
-        public void cancelPopupPreview() {
-            if(DEBUG)
-                Log.i(TAG, "UIHandler.cancelPopupPreview()");
-            removeMessages(MSG_POPUP_PREVIEW);
-        }
-
-        public void dismissPreview(long delay) {
-            if(DEBUG)
-                Log.i(TAG, "UIHandler.dismissPreview() delay=" + delay);
-            LIMEKeyboardBaseView mLIMEKeyboardBaseView = mLIMEKeyboardBaseViewWeakReference.get();
-            if(mLIMEKeyboardBaseView != null) mLIMEKeyboardBaseView.startKeyPreviewFadeOutAnimation();
-            sendMessageDelayed(obtainMessage(MSG_DISMISS_PREVIEW), delay);
-
-        }
-
-        public void cancelDismissPreview() {
-            if(DEBUG)
-                Log.i(TAG, "UIHandler.cancelDismissPreview()");
-            removeMessages(MSG_DISMISS_PREVIEW);
         }
 
         public void startKeyRepeatTimer(long delay, int keyIndex, PointerTracker tracker) {
@@ -429,8 +367,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
 
         public void cancelAllMessages() {
             cancelKeyTimers();
-            cancelPopupPreview();
-            cancelDismissPreview();
         }
     }
 
@@ -491,15 +427,19 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
     }
     private void startKeyPreviewFadeInAnimation()
     {
+        /* Daniel
         mKeyPreviewFadeInAnimator.reset();
         mPreviewText.clearAnimation();
         mPreviewText.startAnimation(mKeyPreviewFadeInAnimator);
+         */
     }
     private void startKeyPreviewFadeOutAnimation()
     {
+        /* Daniel
         mKeyPreviewFadeOutAnimator.reset();
         mPreviewText.clearAnimation();
         mPreviewText.startAnimation(mKeyPreviewFadeOutAnimator);
+         */
     }
 
     public LIMEKeyboardBaseView(Context context, AttributeSet attrs) {
@@ -631,22 +571,14 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
 
         isAPIpre8 = android.os.Build.VERSION.SDK_INT < 8;  //Jeremy '11,8,7 detect API level and disable multi-touch API for API leve 7
 
-
         isLargeScreen = true; //large || xlarge;  //Force turn off fling selection now.
-
 
         mPreviewPopup = new PopupWindow(context);
         if (previewLayout != 0) {
-            mPreviewText = (TextView) inflate.inflate(previewLayout, null);
-            if(mtHardwareAcceleratedDrawingEnabled)
-                mPreviewText.setLayerType(View.LAYER_TYPE_HARDWARE,null);
             mKeyPreviewFadeInAnimator = AnimationUtils.loadAnimation(mContext,R.anim.key_preview_fadein);
             mKeyPreviewFadeOutAnimator = AnimationUtils.loadAnimation(mContext,R.anim.key_preview_fadeout);
 
             mPreviewTextSizeLarge = (int) res.getDimension(R.dimen.key_preview_text_size_large);
-            mPreviewPopup.setContentView(mPreviewText);
-            mPreviewPopup.setBackgroundDrawable(null);
-
         } else {
             mShowPreview = false;
         }
@@ -750,12 +682,8 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
      * @see #getKeyboard()
      */
     public void setKeyboard(LIMEBaseKeyboard keyboard) {
-        if (mKeyboard != null) {
-            dismissKeyPreview();
-        }
         // Remove any pending messages, except dismissing preview
         mHandler.cancelKeyTimers();
-        mHandler.cancelPopupPreview();
         mKeyboard = keyboard;
         //LatinImeLogger.onSetKeyboard(keyboard);
         mKeys = mKeyDetector.setKeyboard(keyboard, -getPaddingLeft(),
@@ -1202,126 +1130,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         mDirtyRect.setEmpty();
     }
 
-    // TODO: clean up this method.
-    private void dismissKeyPreview() {
-        if(DEBUG)
-            Log.i(TAG,"dismissKeyPreview() ");
-        for (PointerTracker tracker : mPointerTrackers)
-            tracker.updateKey(NOT_A_KEY);
-        showPreview(NOT_A_KEY, null);
-    }
-
-    public void showPreview(int keyIndex, PointerTracker tracker) {
-
-        int oldKeyIndex = mOldPreviewKeyIndex;
-        mOldPreviewKeyIndex = keyIndex;
-        final PopupWindow previewPopup = mPreviewPopup;
-
-        if(DEBUG)
-            Log.i(TAG,"showPreview() keyIndex =" + keyIndex + ", oldKeyIndex = " + oldKeyIndex);
-
-        final boolean hidePreviewOrShowSpaceKeyPreview = (tracker == null) || tracker.isSpaceKey(keyIndex) || tracker.isSpaceKey(oldKeyIndex);
-        // If key changed and preview is on or the key is space (language switch is enabled)
-        if (oldKeyIndex != keyIndex  && mShowPreview
-                || (hidePreviewOrShowSpaceKeyPreview)){
-            if (keyIndex == NOT_A_KEY) {
-                mHandler.dismissPreview(mDelayAfterPreview);
-            } else if (tracker != null) {
-                mHandler.popupPreview(0, keyIndex, tracker);
-            }
-        }
-    }
-
-    private void showKey(final int keyIndex, PointerTracker tracker) {
-        if(DEBUG)
-            Log.i(TAG,"showKey() keyIndex =" + keyIndex);
-        final PopupWindow previewPopup = mPreviewPopup;
-        Key key = tracker.getKey(keyIndex);
-        if (key == null)
-            return;
-        // Should not draw hint icon in key preview
-        if (key.icon != null && !hasPopupKeyboard(key)  || key.codes[0]==' ' ) {
-            mPreviewText.setCompoundDrawables(null,
-                    key.iconPreview != null ? key.iconPreview : key.icon, null, null);
-            mPreviewText.setText(null);
-        } else if(key.label !=null) {
-            mPreviewText.setCompoundDrawables(null, null, null, null);
-            mPreviewText.setText(adjustCase(tracker.getPreviewText(key)));
-            if (key.label.length() > 1 && key.codes.length < 2) {
-                mPreviewText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mKeyTextSize
-                        * key.getLabelSizeScale() * mKeyboard.getKeySizeScale()); //Jeremy '12,6,7 scale the preview key text size
-                mPreviewText.setTypeface(Typeface.DEFAULT_BOLD);
-            } else {
-                mPreviewText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mPreviewTextSizeLarge
-                        * key.getLabelSizeScale() * mKeyboard.getKeySizeScale());//Jeremy '12,6,7 scale the preview key text size
-                mPreviewText.setTypeface(mKeyTextStyle);
-            }
-        }
-        mPreviewText.setPadding (mPreviewText.getPaddingLeft(),  //Jeremy '15,7,13
-                ((key.codes[0] == ' ') ? mSpacePreviewTopPadding : mPreviewTopPadding),
-                mPreviewText.getPaddingRight(), 0);
-        mPreviewText.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-        int popupWidth = Math.max(mPreviewText.getMeasuredWidth(), key.width
-                + mPreviewText.getPaddingLeft() + mPreviewText.getPaddingRight());
-        //Jeremy '15,7,13 minus key.height from popupHeight if it's space key for sliding IM switching preview
-        final int popupHeight = (int) (mPreviewHeight * mKeyboard.getKeySizeScale() - (( key.codes[0] == ' ')? key.height :0) ) ;
-
-        LayoutParams lp = mPreviewText.getLayoutParams();
-        if (lp != null) {
-            lp.width = popupWidth;
-            lp.height = popupHeight;
-        }
-
-        int popupPreviewX = key.x - (popupWidth - key.width) / 2;
-        //Jeremy '15,7,13 add key.height to cover whole key if it's not space key
-        int popupPreviewY = (key.y +  (( key.codes[0] == ' ')?0: key.height) - popupHeight + mPreviewOffset);
-
-        //mHandler.cancelDismissPreview();
-        if (mOffsetInWindow == null) {
-            mOffsetInWindow = new int[2];
-            getLocationInWindow(mOffsetInWindow);
-            mOffsetInWindow[0] += mPopupPreviewOffsetX; // Offset may be zero
-            mOffsetInWindow[1] += mPopupPreviewOffsetY; // Offset may be zero
-            int[] windowLocation = new int[2];
-            getLocationOnScreen(windowLocation);
-            mWindowY = windowLocation[1];
-        }
-        // Set the preview background state
-        mPreviewText.getBackground().setState(
-                key.popupResId != 0 ? LONG_PRESSABLE_STATE_SET : EMPTY_STATE_SET);
-        popupPreviewX += mOffsetInWindow[0];
-        popupPreviewY += mOffsetInWindow[1];
-
-        // If the popup cannot be shown above the key, put it on the side
-        if (popupPreviewY + mWindowY < 0) {
-            // If the key you're pressing is on the left side of the keyboard, show the popup on
-            // the right, offset by enough to see at least one key to the left/right.
-            if (key.x + key.width <= getWidth() / 2) {
-                popupPreviewX += (int) (key.width * 2.5);
-            } else {
-                popupPreviewX -= (int) (key.width * 2.5);
-            }
-            popupPreviewY += popupHeight;
-        }
-
-        if (previewPopup.isShowing()) {
-            previewPopup.update(popupPreviewX, popupPreviewY, popupWidth, popupHeight);
-        } else {
-            previewPopup.setWidth(popupWidth);
-            previewPopup.setHeight(popupHeight);
-            previewPopup.showAtLocation(mMiniKeyboardParent, Gravity.NO_GRAVITY,
-                    popupPreviewX, popupPreviewY);
-
-        }
-        // Record popup preview position to display mini-keyboard later at the same positon
-        mPopupPreviewDisplayedY = popupPreviewY;
-        //Jeremy '16, 7, 30 Add delay before show preview to avoid ghost image when moving last location to current.
-
-        mHandler.showPreview(mDelayBeforePreview, keyIndex, tracker);
-
-    }
-
     /**
      * Requests a redraw of the entire keyboard. Calling {@link #invalidate} is not sufficient
      * because the keyboard renders the keys to an off-screen buffer and an invalidate() only
@@ -1355,6 +1163,11 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 key.x + key.width + getPaddingLeft(), key.y + key.height + getPaddingTop());
     }
 
+    @Override
+    public void showPreview(int keyIndex, PointerTracker tracker) {
+
+    }
+
     private boolean openPopupIfRequired(int keyIndex, PointerTracker tracker) {
         // Check if we have a popup layout specified first.
         if (mPopupLayout == 0) {
@@ -1366,7 +1179,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             return false;
         boolean result = onLongPress(popupKey);
         if (result) {
-            dismissKeyPreview();
             mMiniKeyboardTrackerId = tracker.mPointerId;
             // Mark this tracker "already processed" and remove it from the pointer queue
             tracker.setAlreadyProcessed();
@@ -1658,7 +1470,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         // Gesture detector must be enabled only when mini-keyboard is not on the screen.
         if (mMiniKeyboard == null
                 && mGestureDetector != null && mGestureDetector.onTouchEvent(me)) {
-            dismissKeyPreview();
             mHandler.cancelKeyTimers();
             return true;
         }
@@ -1775,7 +1586,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             Log.i(TAG,"closing()");
 
         mHandler.cancelAllMessages();
-        dismissKeyPreview();
         dismissPopupKeyboard();
         mBuffer = null;
         mCanvas = null;

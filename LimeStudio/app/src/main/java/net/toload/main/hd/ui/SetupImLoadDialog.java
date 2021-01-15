@@ -615,8 +615,7 @@ public class SetupImLoadDialog extends DialogFragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 File f = flist.get(position);
                 if(f.isDirectory()){
                     listview.setAdapter(getAdapter(f));
@@ -626,7 +625,6 @@ public class SetupImLoadDialog extends DialogFragment {
                     dialog.dismiss();
                 }
             }
-
         });
         dialog.show();
     }

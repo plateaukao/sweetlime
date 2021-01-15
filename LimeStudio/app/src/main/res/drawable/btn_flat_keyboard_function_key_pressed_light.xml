@@ -44,7 +44,7 @@
 
     <stroke
         android:width="2dp"
-        android:color="@color/keyboard_background_light"
+        android:color="#000000"
         />
 
 </shape>

@@ -416,7 +416,6 @@ public class PointerTracker {
         if (DEBUG_MOVE)
             debugLog("onCancelEvent(): ", x, y);
         mHandler.cancelKeyTimers();
-        mHandler.cancelPopupPreview();
         showKeyPreviewAndUpdateKey(NOT_A_KEY);
         mIsInSlidingKeyInput = false;
         int keyIndex = mKeyState.getKeyIndex();
