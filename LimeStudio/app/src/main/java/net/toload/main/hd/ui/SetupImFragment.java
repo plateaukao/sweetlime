@@ -105,17 +105,6 @@ public class SetupImFragment extends Fragment {
 
     // Default IME
     Button btnSetupImPhonetic;
-    Button btnSetupImCj;
-    Button btnSetupImCj5;
-    Button btnSetupImScj;
-    Button btnSetupImEcj;
-    Button btnSetupImDayi;
-    Button btnSetupImEz;
-    Button btnSetupImArray;
-    Button btnSetupImArray10;
-    Button btnSetupImHs;
-    Button btnSetupImWb;
-    Button btnSetupImPinyin;
 
     // Backup Restore
     Button btnSetupImBackupLocal;
@@ -247,17 +236,6 @@ public class SetupImFragment extends Fragment {
         btnSetupImImportStandard = (Button) rootView.findViewById(R.id.btnSetupImImportStandard);
         btnSetupImImportRelated = (Button) rootView.findViewById(R.id.btnSetupImImportRelated);
         btnSetupImPhonetic = (Button) rootView.findViewById(R.id.btnSetupImPhonetic);
-        btnSetupImCj = (Button) rootView.findViewById(R.id.btnSetupImCj);
-        btnSetupImCj5 = (Button) rootView.findViewById(R.id.btnSetupImCj5);
-        btnSetupImScj = (Button) rootView.findViewById(R.id.btnSetupImScj);
-        btnSetupImEcj = (Button) rootView.findViewById(R.id.btnSetupImEcj);
-        btnSetupImDayi = (Button) rootView.findViewById(R.id.btnSetupImDayi);
-        btnSetupImEz = (Button) rootView.findViewById(R.id.btnSetupImEz);
-        btnSetupImArray = (Button) rootView.findViewById(R.id.btnSetupImArray);
-        btnSetupImArray10 = (Button) rootView.findViewById(R.id.btnSetupImArray10);
-        btnSetupImHs = (Button) rootView.findViewById(R.id.btnSetupImHs);
-        btnSetupImWb = (Button) rootView.findViewById(R.id.btnSetupImWb);
-        btnSetupImPinyin = (Button) rootView.findViewById(R.id.btnSetupImPinyin);
 
         // Backup and Restore Setting
         btnSetupImBackupLocal = (Button) rootView.findViewById(R.id.btnSetupImBackupLocal);
@@ -441,196 +419,6 @@ public class SetupImFragment extends Fragment {
                 });
 
 
-                if(check.get(Lime.DB_TABLE_CJ) != null){
-                    btnSetupImCj.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImCj.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImCj.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImCj.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImCj.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_CJ, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-
-
-                if(check.get(Lime.DB_TABLE_CJ5) != null){
-                    btnSetupImCj5.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImCj5.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImCj5.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImCj5.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImCj5.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_CJ5, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_SCJ) != null){
-                    btnSetupImScj.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImScj.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImScj.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImScj.setTypeface(null, Typeface.BOLD);
-                }
-                btnSetupImScj.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_SCJ, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_ECJ) != null){
-                    btnSetupImEcj.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImEcj.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImEcj.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImEcj.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImEcj.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_ECJ, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_DAYI) != null){
-                    btnSetupImDayi.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImDayi.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImDayi.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImDayi.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImDayi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_DAYI, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_EZ) != null){
-                    btnSetupImEz.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImEz.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImEz.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImEz.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImEz.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_EZ, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_ARRAY) != null){
-                    btnSetupImArray.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImArray.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImArray.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImArray.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImArray.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_ARRAY, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_ARRAY10) != null){
-                    btnSetupImArray10.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImArray10.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImArray10.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImArray10.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImArray10.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_ARRAY10, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-
-                if(check.get(Lime.DB_TABLE_HS) != null){
-                    btnSetupImHs.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImHs.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImHs.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImHs.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImHs.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_HS, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_WB) != null){
-                    btnSetupImWb.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImWb.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImWb.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImWb.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImWb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_WB, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-                if(check.get(Lime.DB_TABLE_PINYIN) != null){
-                    btnSetupImPinyin.setAlpha(Lime.HALF_ALPHA_VALUE);
-                    btnSetupImPinyin.setTypeface(null, Typeface.ITALIC);
-                }else {
-                    btnSetupImPinyin.setAlpha(Lime.NORMAL_ALPHA_VALUE);
-                    btnSetupImPinyin.setTypeface(null, Typeface.BOLD);
-                }
-
-                btnSetupImPinyin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        SetupImLoadDialog dialog = SetupImLoadDialog.newInstance(Lime.DB_TABLE_PINYIN, handler);
-                        dialog.show(ft, "loadimdialog");
-                    }
-                });
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -799,40 +587,6 @@ public class SetupImFragment extends Fragment {
     }
 
     public void finishProgress(final String imtype) {
-
         cancelProgress();
-
-        /*boolean check = datasource.checkBackuptable(imtype);
-        if(check){
-
-            AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-            alertDialog.setTitle(activity.getResources().getString(R.string.setup_im_restore_learning_data));
-            alertDialog.setMessage(activity.getResources().getString(R.string.setup_im_restore_learning_data_message));
-            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, activity.getResources().getString(R.string.dialog_confirm),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            showProgress(true, activity.getResources().getString(R.string.setup_im_restore_learning_data));
-
-                            new Thread() {
-
-                                @Override
-                                public void run() {
-                                    datasource.restoreUserRecords(imtype);
-                                    cancelProgress();
-                                }
-                            }.start();
-                        }
-                    });
-            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, activity.getResources().getString(R.string.dialog_cancel),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-        }else{
-            handler.cancelProgress();
-        }*/
     }
 }
