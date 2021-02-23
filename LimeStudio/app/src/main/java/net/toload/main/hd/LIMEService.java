@@ -1649,7 +1649,10 @@ public class LIMEService extends InputMethodService implements
             if (!(!hasPhysicalKeyPressed && hasDistinctMultitouch))
                 handleShift();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DONE) {// long press on options and shift
-            handleClose();
+            // Daniel
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showInputMethodPicker();
+            //handleClose();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_UP) {
             keyDownUp(KeyEvent.KEYCODE_DPAD_UP, hasCandidatesShown);
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DOWN) {

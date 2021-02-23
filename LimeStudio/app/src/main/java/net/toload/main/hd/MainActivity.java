@@ -198,9 +198,6 @@ public class MainActivity extends AppCompatActivity
 
         String cversion = mLIMEPref.getParameterString("current_version", "");
         if (cversion == null || cversion.isEmpty() || !cversion.equals(versionstr)) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            HelpDialog dialog = HelpDialog.newInstance();
-            dialog.show(ft, "helpdialog");
             mLIMEPref.setParameter("current_version", versionstr);
         }
     }

@@ -29,7 +29,7 @@
         android:radius="3dp"
         />
     <solid
-        android:color="@color/second_background_light_fl"
+        android:color="@color/color_white"
         />
     <padding
         android:left="1dp"
