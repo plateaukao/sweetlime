@@ -1650,9 +1650,7 @@ public class LIMEService extends InputMethodService implements
                 handleShift();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DONE) {// long press on options and shift
             // Daniel
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showInputMethodPicker();
-            //handleClose();
+            handleClose();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_UP) {
             keyDownUp(KeyEvent.KEYCODE_DPAD_UP, hasCandidatesShown);
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DOWN) {
@@ -1723,7 +1721,7 @@ public class LIMEService extends InputMethodService implements
     private static final int POS_KEYBOARD = 2;
     private static final int POS_METHOD = 3;
     private static final int POS_SPLIT_KEYBOARD = 4;
-    private static final int POS_VOICEINPUT = 5;
+    private static final int POS_ADD_WORD = 5;
 
 
     /**
@@ -1761,7 +1759,7 @@ public class LIMEService extends InputMethodService implements
 
 
         CharSequence[] options;
-        CharSequence itemVoiceInput = getString(R.string.voice_input);
+        CharSequence itemAddWord = "新增常用字";
 
 
         final boolean hasSplitOption;
@@ -1770,11 +1768,11 @@ public class LIMEService extends InputMethodService implements
         if (isLandScape && mShowArrowKeys > 0) {
             hasSplitOption = false;
             options = new CharSequence[]
-                    {itemSettings, hanConvert, itemSwitchIM, itemSwitchSytemIM, itemVoiceInput};
+                    {itemSettings, hanConvert, itemSwitchIM, itemSwitchSytemIM, itemAddWord};
         } else {
             hasSplitOption = true;
             options = new CharSequence[]
-                    {itemSettings, hanConvert, itemSwitchIM, itemSwitchSytemIM, itemSplitKeyboard, itemVoiceInput};
+                    {itemSettings, hanConvert, itemSwitchIM, itemSwitchSytemIM, itemSplitKeyboard, itemAddWord};
 
         }
 
@@ -1820,8 +1818,8 @@ public class LIMEService extends InputMethodService implements
                             mKeyboardSwitcher.resetKeyboards(true);
                             break;
                         }
-                    case POS_VOICEINPUT:
-                        startVoiceInput();
+                    case POS_ADD_WORD:
+                        showIMEAddWordPage();
                         break;
 
                 }
@@ -1839,12 +1837,13 @@ public class LIMEService extends InputMethodService implements
         mOptionsDialog.show();
     }
 
+    private void showIMEAddWordPage() {
+        LIMEUtilities.showIMEAddWordPage(this, activeIM);
+    }
+
     private void launchSettings() {
         handleClose();
         Intent intent = new Intent();
-        /*if(android.os.Build.VERSION.SDK_INT < 11)  //Jeremy '12,4,30 Add for deprecated preferenceActivity after API 11 (HC)
-            intent.setClass(LIMEService.this, LIMEPreference.class);
-	    else*/
         intent.setClass(LIMEService.this, LIMEPreferenceHC.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

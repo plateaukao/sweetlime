@@ -67,6 +67,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+    public static final String ARG_ADD_WORD = "arg_add_word";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -99,25 +100,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getResources().getString(R.string.global_exit_title));
-            builder.setCancelable(false);
-            builder.setPositiveButton(getResources().getString(R.string.dialog_confirm),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Kill and stop my activity
-                            //android.os.Process.killProcess(android.os.Process.myPid());
-                            System.exit(0);
-                        }
-                    });
-            builder.setNegativeButton(getResources().getString(R.string.dialog_cancel),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    });
-
-            AlertDialog alert = builder.create();
-            alert.show();
+            finish();
+            System.exit(0);
         }
 
         return super.onKeyDown(keyCode, event);
@@ -200,6 +184,34 @@ public class MainActivity extends AppCompatActivity
         if (cversion == null || cversion.isEmpty() || !cversion.equals(versionstr)) {
             mLIMEPref.setParameter("current_version", versionstr);
         }
+
+        //Daniel: check if it's for adding new words
+        if (getIntent() != null && getIntent().getStringExtra(ARG_ADD_WORD) != null) {
+            String table = getIntent().getStringExtra(ARG_ADD_WORD);
+            showImeAddWordDialog(table);
+        }
+    }
+
+    private void showImeAddWordDialog(String table) {
+        for (int i = 0; i < imlist.size(); i++) {
+            String im = imlist.get(i).getCode();
+            if (im.equals(table)) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, ManageImFragment.newInstance(i, table, true), "ManageImFragment_" + table)
+                        .addToBackStack("ManageImFragment_" + table)
+                        .commit();
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getStringExtra(ARG_ADD_WORD) != null) {
+            String table = intent.getStringExtra(ARG_ADD_WORD);
+            showImeAddWordDialog(table);
+        }
     }
 
     private String getContentName(ContentResolver resolver, Uri uri) {
@@ -242,12 +254,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void initialImList() {
-
-        if (datasource == null)
+        if (datasource == null) {
             datasource = new LimeDB(this);
-
-        imlist = new ArrayList<>();
-        imlist = datasource.getIm(null, Lime.IM_TYPE_NAME);
+            imlist = datasource.getIm(null, Lime.IM_TYPE_NAME);
+        }
     }
 
     @Override
@@ -267,12 +277,10 @@ public class MainActivity extends AppCompatActivity
                     .addToBackStack("ManageRelatedFragment")
                     .commit();
         } else {
-
-            initialImList();
             int number = position - 2;
             String table = imlist.get(number).getCode();
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, ManageImFragment.newInstance(position, table), "ManageImFragment_" + table)
+                    .replace(R.id.container, ManageImFragment.newInstance(position, table, false), "ManageImFragment_" + table)
                     .addToBackStack("ManageImFragment_" + table)
                     .commit();
         }

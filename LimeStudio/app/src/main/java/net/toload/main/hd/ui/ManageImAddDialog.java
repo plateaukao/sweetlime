@@ -47,9 +47,6 @@ public class ManageImAddDialog extends DialogFragment {
 
 	private String imtype;
 
-	//Button btnQuizExitConfirm;
-	//Button btnQuizExitCancel;
-
 	private ManageImHandler handler;
 
 	private Button btnManageImWordCancel;
@@ -92,23 +89,6 @@ public class ManageImAddDialog extends DialogFragment {
 	public void setHandler(ManageImHandler handler){
 		this.handler = handler;
 	}
-
-	@Override
-	public void onAttach(Activity act) {
-		super.onAttach(act);
-	}
-
-	@Override
-	public void onCancel(DialogInterface dialog) {
-		super.onCancel(dialog);
-	}
-
-	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		this.setCancelable(false);
-	}
-
 
 	@Override
 	public void onResume() {
@@ -211,25 +191,12 @@ public class ManageImAddDialog extends DialogFragment {
 			}
 		});
 
-		edtManageImWordScore = (TextView) view.findViewById(R.id.edtManageImWordScore);
+		edtManageImWordScore = view.findViewById(R.id.edtManageImWordScore);
 		edtManageImWordScore.setText("1");
 
-		edtManageImWordCode = (EditText) view.findViewById(R.id.edtManageImWordCode);
-		edtManageImWordWord = (EditText) view.findViewById(R.id.edtManageImWordWord);
+		edtManageImWordCode = view.findViewById(R.id.edtManageImWordCode);
+		edtManageImWordWord = view.findViewById(R.id.edtManageImWordWord);
 
-		//txtManageImWordCode3r = (TextView) view.findViewById(R.id.txtManageImWordCode3r);
-
-		/*if(!imtype.equals(Lime.DB_TABLE_DAYI)){
-			edtManageImWordCode3r.setVisibility(View.GONE);
-			txtManageImWordCode3r.setVisibility(View.GONE);
-		}*/
-		
 		return view;
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle icicle) {
-		super.onSaveInstanceState(icicle);
-	}
-
 }

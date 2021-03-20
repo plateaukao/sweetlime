@@ -28,6 +28,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -73,6 +75,7 @@ public class ManageImFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_SECTION_CODE = "section_code";
+    private static final String ARG_DIRECT_ADD = "direct_add";
 
     private SearchServer SearchSrv = null;
     private GridView gridManageIm;
@@ -99,6 +102,7 @@ public class ManageImFragment extends Fragment {
 
     private String prequery = "";
 
+    private boolean isDirectAdd;
     private String table;
     private Activity activity;
     private ManageImHandler handler;
@@ -115,11 +119,12 @@ public class ManageImFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static ManageImFragment newInstance(int sectionNumber, String code) {
+    public static ManageImFragment newInstance(int sectionNumber, String code, boolean isDirectAdd) {
         ManageImFragment fragment = new ManageImFragment();
         Bundle args = new Bundle();
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber);
                 args.putString(ARG_SECTION_CODE, code);
+                args.putBoolean(ARG_DIRECT_ADD, isDirectAdd);
         fragment.setArguments(args);
         return fragment;
     }
@@ -142,13 +147,7 @@ public class ManageImFragment extends Fragment {
         // initial imlist
         imkeyboardlist = new ArrayList<Im>();
         imkeyboardlist = datasource.getIm(null, Lime.IM_TYPE_KEYBOARD);
-        /* try {
-               datasource.open();
-               datasource.close();
-         } catch (SQLException e) {
-              e.printStackTrace();
-         }
-*/
+
         this.progress = new ProgressDialog(this.activity);
         this.progress.setCancelable(false);
         this.progress.setMessage(getResources().getString(R.string.manage_im_loading));
@@ -157,19 +156,13 @@ public class ManageImFragment extends Fragment {
         this.gridManageIm.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //try {
-                //datasource.open();
                 Word w = datasource.getWord(table, id);
-                //datasource.close();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
 
                 // Create and show the dialog.
                 ManageImEditDialog dialog = ManageImEditDialog.newInstance(table);
                 dialog.setHandler(handler, w);
                 dialog.show(ft, "editdialog");
-                //} catch (SQLException e) {
-                //    e.printStackTrace();
-                //}
             }
         });
 
@@ -303,6 +296,18 @@ public class ManageImFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (isDirectAdd) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ManageImAddDialog dialog = ManageImAddDialog.newInstance(table);
+            dialog.setHandler(handler);
+            dialog.show(ft, "adddialog");
+        }
+    }
+
     public void searchword(){
         searchword(prequery);
     }
@@ -328,9 +333,11 @@ public class ManageImFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+                getArguments().getInt(ARG_SECTION_NUMBER)
+        );
 
         this.table = getArguments().getString(ARG_SECTION_CODE);
+        this.isDirectAdd = getArguments().getBoolean(ARG_DIRECT_ADD);
     }
 
     @Override

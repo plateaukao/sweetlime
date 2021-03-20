@@ -40,6 +40,7 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import net.toload.main.hd.LIMEService;
+import net.toload.main.hd.MainActivity;
 import net.toload.main.hd.R;
 
 import java.io.BufferedInputStream;
@@ -421,6 +422,14 @@ public class LIMEUtilities {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
    	 	context.startActivity(intent);
 	}
+
+	public static void showIMEAddWordPage(Context context, String table){
+		Intent intent = new Intent(context, MainActivity.class);
+		intent.putExtra(MainActivity.ARG_ADD_WORD, table);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
+	}
+
 	public static void showInputMethodPicker(Context context){
 		((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
 	}
