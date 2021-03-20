@@ -27,12 +27,10 @@ package net.toload.main.hd;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.RemoteException;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.provider.DocumentFile;
+import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 import android.util.Log;
 
 import net.toload.main.hd.data.KeyboardObj;

@@ -34,8 +34,8 @@ android {
 
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 620
-        versionName '6.2.0'
+        versionCode 630
+        versionName '6.3.0'
     }
     buildTypes {
         release {
@@ -57,6 +57,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }
