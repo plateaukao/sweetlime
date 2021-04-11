@@ -2242,7 +2242,7 @@ public class LIMEService extends InputMethodService implements
                                     if (list.size() > 1 && list.get(1) != null && list.get(1).getWord() != null &&
                                             list.get(1).getWord().getBytes().length > 1 &&
                                             list.get(1).getWord().length() < 4
-                                            ) {
+                                    ) {
                                         item2 = SearchSrv.emojiConvert(list.get(1).getWord(), Lime.EMOJI_TW);
                                         if (item2.size() > 0) {
                                             for (Mapping m : item2) {
@@ -2288,7 +2288,7 @@ public class LIMEService extends InputMethodService implements
                         if (mCandidateView != null
                                 && !keynameString.toUpperCase(Locale.US).equals(finalKeyString.toUpperCase(Locale.US))
                                 && !keynameString.trim().equals("")
-                                ) {
+                        ) {
                             try {
                                 sleep(0);
                             } catch (InterruptedException ignored) {
@@ -2301,8 +2301,6 @@ public class LIMEService extends InputMethodService implements
                 }
             };
             queryThread.start();
-
-
         } else
             //Jermy '11,8,14
             clearSuggestions();
