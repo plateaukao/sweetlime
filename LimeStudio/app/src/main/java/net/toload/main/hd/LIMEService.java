@@ -228,12 +228,8 @@ public class LIMEService extends InputMethodService implements
 
 
     public LIMEService(){
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                mIsHardwareAcceleratedDrawingEnabled = true;// this.enableHardwareAcceleration();
-            }
-
-        }
+        mIsHardwareAcceleratedDrawingEnabled = true;// this.enableHardwareAcceleration();
+    }
 
     /**
      * Main initialization of the input method component. Be sure to call to
@@ -2213,7 +2209,7 @@ public class LIMEService extends InputMethodService implements
 
                         // Emoji Control
                         // Check the Emoji parameter setting and load icons into the suggestions list
-                        if(mLIMEPref.getEmojiMode()){
+                        if(mLIMEPref.getEmojiMode() && !finalHasPhysicalKeyPressed){
                             HashMap<String, String> emojiCheck = new HashMap<>();
                             List<Mapping> emojiList = new LinkedList<>();
 

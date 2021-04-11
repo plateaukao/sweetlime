@@ -262,7 +262,7 @@ public class LIMEPreferenceManager {
 	public boolean getEmojiMode(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		//Jeremy '16,7,30 Emoji support is limited before API 16
-		return sp.getBoolean("enable_emoji", (Build.VERSION.SDK_INT >= 16)?true:false);
+		return sp.getBoolean("enable_emoji", true);
 	}
 
 	public Integer getEmojiDisplayPosition(){

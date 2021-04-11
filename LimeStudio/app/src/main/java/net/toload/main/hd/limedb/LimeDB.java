@@ -81,8 +81,11 @@ public class LimeDB extends LimeSQLiteOpenHelper {
 
     //Jeremy '11,8,5
     //TODO: should set INITIAL_RESULT_LIMIT according to screen size.
-    private final static String INITIAL_RESULT_LIMIT = "15";
-    private final static String FINAL_RESULT_LIMIT = "210";
+    private final static String INITIAL_RESULT_LIMIT = "5";
+    private final static String FINAL_RESULT_LIMIT = "10";
+    // original value
+    //private final static String INITIAL_RESULT_LIMIT = "15";
+    //private final static String FINAL_RESULT_LIMIT = "210";
     private final static int INITIAL_RELATED_LIMIT = 5;
     private final static int COMPOSING_CODE_LENGTH_LIMIT = 16; //Jeremy '12,5,30 changed from 12 to 16 because of improved performance using binary tree.
     private final static int DUALCODE_COMPOSING_LIMIT = 16; //Jeremy '12,5,30 changed from 7 to 16 because of improved performance using binary tree.

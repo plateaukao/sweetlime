@@ -81,13 +81,7 @@ public abstract class LIMEMetaKeyKeyListener extends MetaKeyKeyListener{
      * the current state, returns the new state.
      */
     public static long adjustMetaAfterKeypress(long state) {
-    	if(android.os.Build.VERSION.SDK_INT > 10)
-    		return MetaKeyKeyListener.adjustMetaAfterKeypress(state);
-    	
-        state = adjust(state, META_SHIFT_ON, META_SHIFT_MASK);
-        state = adjust(state, META_ALT_ON, META_ALT_MASK);
-        state = adjust(state, META_SYM_ON, META_SYM_MASK);
-        return state;
+        return MetaKeyKeyListener.adjustMetaAfterKeypress(state);
     }
 
     private static long adjust(long state, int what, long mask) {
@@ -103,22 +97,7 @@ public abstract class LIMEMetaKeyKeyListener extends MetaKeyKeyListener{
      * Handles presses of the meta keys.
      */
     public static long handleKeyDown(long state, int keyCode, KeyEvent event) {
-    	if(android.os.Build.VERSION.SDK_INT > 10)
-    		return MetaKeyKeyListener.handleKeyDown(state, keyCode, event);
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-            return press(state, META_SHIFT_ON, META_SHIFT_MASK);
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
-                || keyCode == KeyEvent.KEYCODE_NUM) {
-            return press(state, META_ALT_ON, META_ALT_MASK);
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_SYM) {
-            return press(state, META_SYM_ON, META_SYM_MASK);
-        }
-
-        return state;
+        return MetaKeyKeyListener.handleKeyDown(state, keyCode, event);
     }
 
     private static long press(long state, int what, long mask) {
@@ -142,22 +121,7 @@ public abstract class LIMEMetaKeyKeyListener extends MetaKeyKeyListener{
      * Handles release of the meta keys.
      */
     public static long handleKeyUp(long state, int keyCode, KeyEvent event) {
-    	if(android.os.Build.VERSION.SDK_INT > 10)
-    		return MetaKeyKeyListener.handleKeyUp(state, keyCode, event);
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-            return release(state, META_SHIFT_ON, META_SHIFT_MASK);
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
-                || keyCode == KeyEvent.KEYCODE_NUM) {
-            return release(state, META_ALT_ON, META_ALT_MASK);
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_SYM) {
-            return release(state, META_SYM_ON, META_SYM_MASK);
-        }
-
-        return state;
+        return MetaKeyKeyListener.handleKeyUp(state, keyCode, event);
     }
 
     private static long release(long state, int what, long mask) {

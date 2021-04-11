@@ -325,33 +325,16 @@ public class LIMEUtilities {
 						.setTicker(message)
 						.setContentText(message);
 
-		boolean lollipop = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-		if(lollipop){
-			mBuilder.setSmallIcon(R.drawable.logobw);
-		}else{
-			mBuilder.setSmallIcon(R.drawable.logo);
-		}
+		mBuilder.setSmallIcon(R.drawable.logobw);
 
 		NotificationManager mNotificationManager =
-						(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		mNotificationManager.notify(501, mBuilder.build());
 	}
 
-	private static int getNotificationIcon() {
-		boolean whiteIcon = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-		return whiteIcon ? R.drawable.logobw : R.drawable.logo;
-	}
-
 	private static Bitmap getNotificationIconBitmap(Context context) {
-		boolean whiteIcon = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-		Bitmap bm = null;
-		if(whiteIcon){
-			bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
-		}else{
-			bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
-		}
-		return bm;
+		return BitmapFactory.decodeResource(context.getResources(), R.drawable.logobw);
 	}
 
 	

@@ -283,8 +283,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
 
     private final UIHandler mHandler = new UIHandler(this);
 
-    private boolean isAPIpre8;
-
     //private LIMEPreferenceManager mLIMEPref;
 
     static class UIHandler extends Handler {
@@ -565,8 +563,6 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
 
         final Resources res = getResources();
 
-        isAPIpre8 = android.os.Build.VERSION.SDK_INT < 8;  //Jeremy '11,8,7 detect API level and disable multi-touch API for API leve 7
-
         isLargeScreen = true; //large || xlarge;  //Force turn off fling selection now.
 
         mPreviewPopup = new PopupWindow(context);
@@ -641,15 +637,11 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 };
 
         final boolean ignoreMultitouch = true;
-        if (isAPIpre8)
-            mGestureDetector = new GestureDetector(getContext(), listener, null);
-        else
-            mGestureDetector = new GestureDetector(getContext(), listener, null, ignoreMultitouch);
+        mGestureDetector = new GestureDetector(getContext(), listener, null, ignoreMultitouch);
 
         mGestureDetector.setIsLongpressEnabled(false);
 
-        mHasDistinctMultitouch = (!isAPIpre8) && context.getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT);
+        mHasDistinctMultitouch = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT);
         mKeyRepeatInterval = res.getInteger(R.integer.config_key_repeat_interval);
     }
 
@@ -1445,7 +1437,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
     public boolean onTouchEvent(@NonNull MotionEvent me) {
         if(DEBUG)
             Log.i(TAG,"onTouchEvent()");
-        final int action = (isAPIpre8) ? me.getAction() : me.getActionMasked();
+        final int action = me.getActionMasked();
         final int pointerCount = me.getPointerCount();
         final int oldPointerCount = mOldPointerCount;
         mOldPointerCount = pointerCount;
@@ -1471,7 +1463,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         }
 
         final long eventTime = me.getEventTime();
-        final int index = (isAPIpre8) ? 0 : me.getActionIndex();
+        final int index = me.getActionIndex();
         final int id = me.getPointerId(index);
         final int x = (int) me.getX(index);
         final int y = (int) me.getY(index);

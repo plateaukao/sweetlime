@@ -37,6 +37,8 @@ public class LIME {
 	public static final String DATABASE_DECOMPRESS_FOLDER_SDCARD = Environment.getExternalStorageDirectory() + "/limehd";
 	public static final String DATABASE_BACKUP_NAME = "backup.zip";
 	public static final String SHARED_PREFS_BACKUP_NAME=  "shared_prefs.bak";
-	public final static int SEARCHSRV_RESET_CACHE_SIZE = 256;
+	public final static int SEARCHSRV_RESET_CACHE_SIZE = 1024;
+	// original size
+	//public final static int SEARCHSRV_RESET_CACHE_SIZE = 256;
 	public final static int LIMEDB_CACHE_SIZE = 1024;
 }
