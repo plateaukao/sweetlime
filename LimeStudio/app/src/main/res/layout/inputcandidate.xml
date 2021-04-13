@@ -63,6 +63,10 @@
         </LinearLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <net.toload.main.hd.keyboard.LIMEKeyboardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/keyboard"
@@ -74,4 +78,15 @@
         android:popupLayout="@layout/keyboard_popup"
         style="?attr/LIMEKeyboardLayout"
         />
+        <TextView
+            android:id="@+id/candidate_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:text="yes"
+            android:textSize="20sp"
+            android:textColor="@color/color_black"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 </net.toload.main.hd.candidate.CandidateInInputViewContainer>

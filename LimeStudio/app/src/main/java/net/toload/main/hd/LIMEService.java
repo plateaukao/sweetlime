@@ -53,6 +53,7 @@ import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.toload.main.hd.candidate.CandidateInInputViewContainer;
@@ -102,6 +103,7 @@ public class LIMEService extends InputMethodService implements
     private CandidateView mCandidateViewStandAlone = null;
     private CandidateViewContainer mCandidateViewContainer = null;
     private CompletionInfo[] mCompletions;
+    private TextView candidateHintView = null;
 
     private StringBuilder mComposing = new StringBuilder();
 
@@ -1384,6 +1386,8 @@ public class LIMEService extends InputMethodService implements
                         // '10, 4, 17 Jeremy
                         if(mLIMEPref.getHanCovertOption() == 0){
                             if (ic != null) ic.commitText(wordToCommit, firstMatchedLength);
+                            candidateHintView.setVisibility(View.VISIBLE);
+                            candidateHintView.setText(wordToCommit);
                         }else{
                             if(mLIMEPref.getHanConvertNotify()){
 
@@ -2549,6 +2553,7 @@ public class LIMEService extends InputMethodService implements
             return;  // escape if mCandidateViewStandAlone is not created or it's not shown '12,5,6, Jeremy 
 
         mCandidateViewHandler.hideCandidateViewDelayed(DELAY_BEFORE_HIDE_CANDIDATE_VIEW);
+        candidateHintView.setText("");
     }
 
     private void forceHideCandidateView() {
@@ -2613,7 +2618,6 @@ public class LIMEService extends InputMethodService implements
     }
 
     public synchronized void setSuggestions(List<Mapping> suggestions, boolean showNumber, String diplaySelkey) {
-
         if (suggestions != null && suggestions.size() > 0) {
 
             if (DEBUG)
@@ -2626,6 +2630,7 @@ public class LIMEService extends InputMethodService implements
             if ((!mFixedCandidateViewOn || hasPhysicalKeyPressed)
                     && mCandidateView != mCandidateViewStandAlone) {
                 mCandidateViewInInputView.clear();
+
                 mCandidateView = mCandidateViewStandAlone; //Jeremy '12,5,4 use standalone candidateView for physical keyboard (no soft keyboard shown)
                 //forceHideCandidateView(); //Jeremy '16,7,19 caused the first composing character missing typed with physical keyboard.
                 if (hasPhysicalKeyPressed) {
@@ -2668,6 +2673,7 @@ public class LIMEService extends InputMethodService implements
                     e.printStackTrace();
                 }
                 mCandidateView.setSuggestions(suggestions, showNumber, diplaySelkey);
+
                 if (DEBUG)
                     Log.i(TAG, "setSuggestion(): mCandidateList.size: " + mCandidateList.size()
                             + ", mComposing = " + mComposing);
@@ -2677,8 +2683,6 @@ public class LIMEService extends InputMethodService implements
             hasMappingList = false;
             //Jeremy '11,8,15
             clearSuggestions();
-
-
         }
 
     }
@@ -2889,14 +2893,15 @@ public class LIMEService extends InputMethodService implements
 
                 mCandidateInInputView = (CandidateInInputViewContainer) LayoutInflater.from(mThemeContext).inflate(
                         R.layout.inputcandidate, null);
-                mInputView = (LIMEKeyboardView) mCandidateInInputView.findViewById(R.id.keyboard);
+                mInputView = mCandidateInInputView.findViewById(R.id.keyboard);
                 mInputView.setOnKeyboardActionListener(this);
                 hasDistinctMultitouch = mInputView.hasDistinctMultitouch();
                 mInputView.setHardwareAcceleratedDrawingEnabled(mIsHardwareAcceleratedDrawingEnabled);
                 mCandidateInInputView.initViews();
-                mCandidateViewInInputView = (CandidateView) mCandidateInInputView.findViewById(R.id.candidatesView);
+                mCandidateViewInInputView = mCandidateInInputView.findViewById(R.id.candidatesView);
                 mCandidateViewInInputView.setService(this);
 
+                candidateHintView = mCandidateInInputView.findViewById(R.id.candidate_hint);
             }
             if (mCandidateView != mCandidateViewInInputView)
                 mCandidateView = mCandidateViewInInputView;
