@@ -24,12 +24,13 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:state_pressed="false"
-        android:drawable="@color/color_common_green_hl" />
-
-    <item android:state_pressed="true"
-        android:drawable="@color/color_common_light_green_hl" />
-
-
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle" >
+            <corners android:radius="5dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#000" />
+        </shape>
+    </item>
 </selector>

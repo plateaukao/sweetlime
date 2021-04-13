@@ -758,7 +758,6 @@ public class LIMEService extends InputMethodService implements
             if (newSelStart < candidatesStart || newSelStart > candidatesEnd) { // cursor is moved before or after composing area
 
                 if (mCandidateList != null) mCandidateList.clear();
-                //mCandidateView.clear();
                 hideCandidateView();
 
                 if (mComposing != null && mComposing.length() > 0) {

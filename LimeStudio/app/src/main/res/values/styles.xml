@@ -219,7 +219,7 @@
         <item name="popupHint">@drawable/hint_popup</item>
 
         <item name="keyTextColorNormal">@color/foreground_light</item>
-        <item name="keyTextColorPressed">@color/color_common_green_hl</item>
+        <item name="keyTextColorPressed">@color/color_black</item>
 
         <item name="functionKeyTextColorNormal">@color/second_foreground_light</item>
         <item name="functionKeyTextColorPressed">@color/color_common_light_green_hl</item>
@@ -235,7 +235,7 @@
         <item name="popupHint">@drawable/hint_popup_dark</item>
 
         <item name="keyTextColorNormal">@color/foreground_dark</item>
-        <item name="keyTextColorPressed">@color/color_common_green_hl</item>
+        <item name="keyTextColorPressed">@color/color_white</item>
 
         <item name="functionKeyTextColorNormal">@color/third_foreground_dark</item>
         <item name="functionKeyTextColorPressed">@color/color_common_light_green_hl</item>

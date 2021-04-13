@@ -967,11 +967,15 @@ public class CandidateView extends View implements View.OnClickListener {
                     case Mapping.RECORD_COMPOSING_CODE:
                        if (mSelectedIndex == 0) {
 
+                            candidatePaint.setColor(mColorComposingCode);
+                           /*
                            if(mTransparentCandidateView){
-                               candidatePaint.setColor(mColorInvertedTextTransparent);
+                               //candidatePaint.setColor(mColorInvertedTextTransparent);
+                               candidatePaint.setColor(mColorComposingCodeHighlight);
                            }else{
                                candidatePaint.setColor(mColorComposingCodeHighlight);
                            }
+                            */
                        }
                        else candidatePaint.setColor(mColorComposingCode);
                         break;
@@ -990,7 +994,8 @@ public class CandidateView extends View implements View.OnClickListener {
                     default:
                         selKeyPaint.setColor(mColorSelKey);
                         if(i == mSelectedIndex)
-                            candidatePaint.setColor(mColorNormalTextHighlight);
+                            candidatePaint.setColor(mColorNormalText);
+                            //candidatePaint.setColor(mColorNormalTextHighlight);
                         else
                             candidatePaint.setColor(mColorNormalText);
                         break;
