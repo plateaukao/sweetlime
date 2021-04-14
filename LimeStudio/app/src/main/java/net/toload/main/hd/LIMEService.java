@@ -77,6 +77,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class LIMEService extends InputMethodService implements
@@ -1386,8 +1388,7 @@ public class LIMEService extends InputMethodService implements
                         // '10, 4, 17 Jeremy
                         if(mLIMEPref.getHanCovertOption() == 0){
                             if (ic != null) ic.commitText(wordToCommit, firstMatchedLength);
-                            candidateHintView.setVisibility(View.VISIBLE);
-                            candidateHintView.setText(wordToCommit);
+                            candidateHintAddWord(wordToCommit);
                         }else{
                             if(mLIMEPref.getHanConvertNotify()){
 
@@ -1521,6 +1522,53 @@ public class LIMEService extends InputMethodService implements
         }
     }
 
+    /**
+     * Candidate Hint Handlings -- Start
+     */
+    private Timer timer = null;
+    private void candidateHintAddWord(String word) {
+        candidateHintView.setVisibility(View.VISIBLE);
+
+        String newHint = (candidateHintView.getText() + word);
+        if (newHint.length() > 5) {
+            candidateHintView.setText(newHint.substring(newHint.length()-5));
+        } else {
+            candidateHintView.setText(newHint);
+        }
+
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                clearCandidateHint();
+                timer = null;
+            }
+
+        }, 3000);
+    }
+
+    private void clearCandidateHint(){
+        candidateHintView.post(new Runnable() {
+            @Override
+            public void run() {
+                candidateHintView.setText("");
+            }
+        });
+    }
+
+    private void candidateHintDeleteWord() {
+        String currentHint = candidateHintView.getText().toString();
+        if (currentHint.length() > 0) {
+            candidateHintView.setText(currentHint.substring(0, currentHint.length() - 1));
+        }
+    }
+
+    /**
+     * Candidate Hint Handlings -- End
+     */
 
     /**
      * Helper to update the shift state of our keyboard based on the initial
@@ -2553,7 +2601,7 @@ public class LIMEService extends InputMethodService implements
             return;  // escape if mCandidateViewStandAlone is not created or it's not shown '12,5,6, Jeremy 
 
         mCandidateViewHandler.hideCandidateViewDelayed(DELAY_BEFORE_HIDE_CANDIDATE_VIEW);
-        candidateHintView.setText("");
+        clearCandidateHint();
     }
 
     private void forceHideCandidateView() {
@@ -2724,6 +2772,7 @@ public class LIMEService extends InputMethodService implements
 
                 }
                 keyDownUp(KeyEvent.KEYCODE_DEL, false);
+                candidateHintDeleteWord();
 
             } catch (Exception e) {
                 e.printStackTrace();

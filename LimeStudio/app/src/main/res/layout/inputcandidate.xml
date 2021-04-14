@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
-            android:text="yes"
+            android:text=""
             android:textSize="20sp"
             android:textColor="@color/color_black"
             android:visibility="invisible"
