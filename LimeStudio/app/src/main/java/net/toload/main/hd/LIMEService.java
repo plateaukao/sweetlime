@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -1525,13 +1524,18 @@ public class LIMEService extends InputMethodService implements
     /**
      * Candidate Hint Handlings -- Start
      */
+    private static final int HINT_COUNT = 5;
+    private static final int HIDE_HINT_INTERVAL = 1000 * 3;
     private Timer timer = null;
     private void candidateHintAddWord(String word) {
         candidateHintView.setVisibility(View.VISIBLE);
+        if (mCandidateView != null) {
+            candidateHintView.setTextColor(mCandidateView.mColorNormalText);
+        }
 
         String newHint = (candidateHintView.getText() + word);
-        if (newHint.length() > 5) {
-            candidateHintView.setText(newHint.substring(newHint.length()-5));
+        if (newHint.length() > HINT_COUNT) {
+            candidateHintView.setText(newHint.substring(newHint.length()-HINT_COUNT));
         } else {
             candidateHintView.setText(newHint);
         }
@@ -1547,7 +1551,7 @@ public class LIMEService extends InputMethodService implements
                 timer = null;
             }
 
-        }, 3000);
+        }, HIDE_HINT_INTERVAL);
     }
 
     private void clearCandidateHint(){
@@ -3252,8 +3256,6 @@ public class LIMEService extends InputMethodService implements
                 if (ic != null) ic.commitText(String.valueOf((char) primaryCode), 1);
                 //Jeremy '12,4,21
                 finishComposing();
-
-
             }
 
         } else {

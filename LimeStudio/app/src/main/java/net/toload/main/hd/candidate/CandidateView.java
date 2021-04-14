@@ -113,7 +113,7 @@ public class CandidateView extends View implements View.OnClickListener {
     private int currentX;
 
     protected int mColorBackground;
-    protected int mColorNormalText;
+    public int mColorNormalText;
     protected int mColorNormalTextHighlight;
     protected int mColorInvertedTextTransparent;
 
