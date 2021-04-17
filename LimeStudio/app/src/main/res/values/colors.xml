@@ -35,7 +35,7 @@
 
     <!-- colors for light theme -->
 
-    <color name="keyboard_background_light">#FFC8C8C8</color>
+    <color name="keyboard_background_light">#FFFFFF</color>
     <color name="second_background_light">#FFE1E1E1</color>
     <color name="second_background_light_fl">#FFFBFBFB</color>
     <color name="third_background_light">#FFFAFAFA</color>

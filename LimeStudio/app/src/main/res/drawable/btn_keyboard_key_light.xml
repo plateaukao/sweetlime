@@ -29,9 +29,9 @@
 	<!-- Functional keys. -->
 
     <item android:state_single="true" android:state_pressed="true"
-          android:drawable="@drawable/btn_flat_keyboard_function_key_pressed_light" />
+          android:drawable="@drawable/btn_flat_keyboard_normal_key_pressed_light" />
     <item android:state_single="true"
-          android:drawable="@drawable/btn_flat_keyboard_function_key_normal_light"/>
+          android:drawable="@drawable/btn_flat_keyboard_normal_key_normal_light"/>
 
 
     <!-- Normal keys -->
