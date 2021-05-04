@@ -510,7 +510,12 @@ public class LIMEPreferenceManager {
 		return sp.getBoolean("hide_software_keyboard_typing_with_physical", true);
 
 	}
-	
+
+	public boolean shouldShowTypedWord(){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return sp.getBoolean("show_typed_word", false);
+	}
+
 	public int getShowArrowKeys(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return Integer.parseInt(sp.getString("show_arrow_key", "0"));

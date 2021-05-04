@@ -1387,7 +1387,9 @@ public class LIMEService extends InputMethodService implements
                         // '10, 4, 17 Jeremy
                         if(mLIMEPref.getHanCovertOption() == 0){
                             if (ic != null) ic.commitText(wordToCommit, firstMatchedLength);
-                            candidateHintAddWord(wordToCommit);
+                            if (mLIMEPref.shouldShowTypedWord()) {
+                                candidateHintAddWord(wordToCommit);
+                            }
                         }else{
                             if(mLIMEPref.getHanConvertNotify()){
 

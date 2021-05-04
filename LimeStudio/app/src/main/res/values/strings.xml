@@ -269,5 +269,7 @@
     <string name="smart_chinese_input">smart_chinese_input</string>
     <string name="preference_smart_chinese_input">開啟中文智慧選字</string>
     <string name="preference_smart_chinese_input_message">部份輸入法可能會影響中英混打功能</string>
+    <string name="show_typed_word_title">顯示剛打的字在鍵盤中間</string>
+    <string name="show_typed_word_summary">減少眼睛不斷來回，將剛打的字直接顯示在鍵盤中間</string>
 
 </resources>

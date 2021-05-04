@@ -77,6 +77,11 @@
             android:key="hide_software_keyboard_typing_with_physical"
             android:summary="@string/hide_software_keyboard_typing_with_physical_summary"
             android:title="@string/hide_software_keyboard_typing_with_physical" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="show_typed_word"
+            android:summary="@string/show_typed_word_summary"
+            android:title="@string/show_typed_word_title" />
         <ListPreference
             android:defaultValue="0"
             android:dialogTitle="@string/show_arrow_keys"
