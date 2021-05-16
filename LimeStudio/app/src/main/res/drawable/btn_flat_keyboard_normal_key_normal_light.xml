@@ -23,27 +23,36 @@
   ~  */
   -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle" >
-    <corners
-        android:radius="3dp"
-        />
-    <solid
-        android:color="@color/color_white"
-        />
-    <padding
-        android:left="1dp"
-        android:top="1dp"
-        android:right="1dp"
-        android:bottom="1dp"
-        />
-    <size
-        android:width="30dp"
-        android:height="46dp"
-        />
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Apply the margin value on the "item" element -->
+    <!-- This example creates a 15dp visible margin around the dialog -->
+    <item
+        android:top="2dp"
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp">
+        <shape android:shape="rectangle" >
+            <corners
+                android:radius="3dp"
+                />
+            <solid
+                android:color="@color/color_white"
+                />
+            <size
+                android:width="30dp"
+                android:height="46dp"
+                />
+            <padding
+                android:left="3dp"
+                android:top="3dp"
+                android:right="3dp"
+                android:bottom="3dp"
+                />
 
-    <stroke
-        android:width="1px"
-        android:color="@color/color_black"
-        />
-</shape>
+            <stroke
+                android:width="1px"
+                android:color="@color/color_black"
+                />
+        </shape>
+    </item>
+</layer-list>

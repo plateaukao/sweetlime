@@ -23,7 +23,7 @@
   ~  */
   -->
 
-<Keyboard xmlns:limehd="http://schemas.android.com/apk/res/net.toload.main.hd"
+<Keyboard xmlns:limehd="http://schemas.android.com/apk/res-auto"
     limehd:keyWidth="10%p"
     limehd:horizontalGap="0px"
     limehd:verticalGap="0px"
