@@ -29,13 +29,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.RemoteException;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.core.content.ContextCompat;
+
+import android.provider.DocumentsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +61,7 @@ import android.widget.Toast;
 
 import net.toload.main.hd.DBServer;
 import net.toload.main.hd.Lime;
+import net.toload.main.hd.MainActivity;
 import net.toload.main.hd.R;
 import net.toload.main.hd.data.Word;
 import net.toload.main.hd.global.LIMEPreferenceManager;
@@ -56,8 +69,10 @@ import net.toload.main.hd.global.LIMEProgressListener;
 import net.toload.main.hd.global.LIMEUtilities;
 import net.toload.main.hd.limedb.LimeDB;
 import net.toload.main.hd.limesettings.LIMESelectFileAdapter;
+import net.toload.main.hd.tools.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -113,6 +128,7 @@ public class SetupImLoadDialog extends DialogFragment {
     List<File> flist;
 
     private Thread loadthread;
+    private ActivityResultLauncher<Intent> mGetContent;
 
     public SetupImLoadDialog(){}
 
@@ -161,6 +177,26 @@ public class SetupImLoadDialog extends DialogFragment {
                 else return false;
             }
         });
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mGetContent = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                activityResult -> {
+                    if (activityResult.getData() == null) return;
+
+                    Uri uri = activityResult.getData().getData();
+                    try {
+                        File file = FileUtil.from(getContext(), uri);
+                        loadMapping(file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
     }
 
     @Override
@@ -310,9 +346,10 @@ public class SetupImLoadDialog extends DialogFragment {
                 btnSetupImDialogCustom.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        selectMappingFile();
+                        //selectMappingFile();
+                        selectCustomMappingFile();
                         handler.initialImButtons();
-                        dismiss();
+                        //dismiss();
                     }
                 });
 
@@ -590,6 +627,17 @@ public class SetupImLoadDialog extends DialogFragment {
         return rootView;
     }
 
+    public void selectCustomMappingFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+
+        // Optionally, specify a URI for the file that should appear in the
+        // system file picker when it loads.
+        File externalFileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, externalFileDir.toURI());
+
+        mGetContent.launch(intent);
+    }
 
     public void selectMappingFile() {
 
@@ -608,22 +656,18 @@ public class SetupImLoadDialog extends DialogFragment {
 
         listview = dialog.findViewById(R.id.listview_loading_target);
         toplayout = dialog.findViewById(R.id.linearlayout_loading_confirm_top);
-        File externalFileDir =ContextCompat.getExternalFilesDirs(getContext(), null)[0];
+        File externalFileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         listview.setAdapter(getAdapter(externalFileDir));
 
         createNavigationButtons(externalFileDir);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                File f = flist.get(position);
-                if(f.isDirectory()){
-                    listview.setAdapter(getAdapter(f));
-                    createNavigationButtons(f);
-                }else{
-                    getAvailableFiles(f.getAbsolutePath());
-                    dialog.dismiss();
-                }
+        listview.setOnItemClickListener((arg0, arg1, position, arg3) -> {
+            File f = flist.get(position);
+            if(f.isDirectory()){
+                listview.setAdapter(getAdapter(f));
+                createNavigationButtons(f);
+            }else{
+                getAvailableFiles(f.getAbsolutePath());
+                dialog.dismiss();
             }
         });
         dialog.show();
@@ -763,34 +807,32 @@ public class SetupImLoadDialog extends DialogFragment {
 
     private List<File> getAvailableFiles(String path) {
 
-        List<File> templist = new ArrayList<File>();
-        List<File> list = new ArrayList<File>();
+        List<File> templist = new ArrayList<>();
+        List<File> list = new ArrayList<>();
         File check = new File(path);
 
         if (check.exists() && check.isDirectory() && check.listFiles() != null) {
 
             for(File f: check.listFiles()){
-                if(true){
-                    if(!f.isDirectory()){
-                        if(imtype.equalsIgnoreCase(Lime.DB_RELATED)){
-                            if( (f.getName().toLowerCase().startsWith(Lime.DB_RELATED) &&
-                                    f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_LIMEDB))
-                                    ){
-                                list.add(f);
-                            }
-                        }else{
-                            if( f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_TXT) ||
-                                    (f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_LIMEDB) &&
-                                            f.getName().toLowerCase().startsWith(imtype) ) ||
-                                    f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_LIME) ||
-                                    f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_CIN)
-                                    ){
-                                list.add(f);
-                            }
+                if(!f.isDirectory()){
+                    if(imtype.equalsIgnoreCase(Lime.DB_RELATED)){
+                        if( (f.getName().toLowerCase().startsWith(Lime.DB_RELATED) &&
+                                f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_LIMEDB))
+                        ){
+                            list.add(f);
                         }
                     }else{
-                        list.add(f);
+                        if( f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_TXT) ||
+                                (f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_LIMEDB) &&
+                                        f.getName().toLowerCase().startsWith(imtype) ) ||
+                                f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_LIME) ||
+                                f.getName().toLowerCase().endsWith(Lime.SUPPORT_FILE_EXT_CIN)
+                        ){
+                            list.add(f);
+                        }
                     }
+                }else{
+                    list.add(f);
                 }
             }
 
@@ -913,19 +955,16 @@ public class SetupImLoadDialog extends DialogFragment {
 
                 @Override
                 public void onProgress(long percentageDone, long var2, String status) {
-                    if(status!=null && !status.isEmpty())
-                        handler.updateProgress(status);
+                    if(status!=null && !status.isEmpty()) handler.updateProgress(status);
                     handler.updateProgress( (int) percentageDone );
                 }
                 @Override
                 public void onStatusUpdate(String status){
-                    if(status!=null && !status.isEmpty())
-                        handler.updateProgress(status);
+                    if(status!=null && !status.isEmpty()) handler.updateProgress(status);
                 }
                 @Override
                 public void onError(int code, String source){
-                    if(source!=null && !source.isEmpty())
-                        showToastMessage(source, Toast.LENGTH_LONG);
+                    if(source!=null && !source.isEmpty()) showToastMessage(source, Toast.LENGTH_LONG);
                 }
                 @Override
                 public void onPostExecute(boolean success, String status, int code){
@@ -979,6 +1018,8 @@ public class SetupImLoadDialog extends DialogFragment {
                     }
 
                     handler.cancelProgress();
+
+                    dismiss();
                 }
             });
         } catch (RemoteException e) {
