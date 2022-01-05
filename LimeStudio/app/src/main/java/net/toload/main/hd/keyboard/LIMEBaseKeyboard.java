@@ -224,12 +224,12 @@ public class LIMEBaseKeyboard {
     /**
      * Reserved space in the middle in unit of columns for separated keyboard in landscape mode.
      */
-    protected static int mReservedColumnsForSplitedKeyboard = 2;
+    protected static int mReservedColumnsForSplitedKeyboard = 3;
 
     /**
      * Key width reduction scale for separated keyboard in landscape mode.
      */
-    protected static float mSplitedKeyWidthScale = 1f;
+    protected static float mSplitedKeyWidthScale = 0.8f;
 
     /**
      * Key width for separated keyboard in landscape mode.
@@ -1348,7 +1348,7 @@ public class LIMEBaseKeyboard {
         mReservedColumnsForSplitedKeyboard = (int) (res.getInteger(R.integer.reserved_columns_for_seperated_keyboard));
 
         mKeysInRow = Math.round(mDisplayWidth / mDefaultWidth);
-        mSplitKeyWidth = Math.round(mDisplayWidth / (mKeysInRow + mReservedColumnsForSplitedKeyboard));
+        mSplitKeyWidth = (int)(Math.round(mDisplayWidth / (mKeysInRow + mReservedColumnsForSplitedKeyboard)) * 0.8);
         mSplitedKeyWidthScale = (float) (mSplitKeyWidth) / (float) (mDefaultWidth);
         if (DEBUG)
             Log.i(TAG, "mKeysInRow = " + mKeysInRow
