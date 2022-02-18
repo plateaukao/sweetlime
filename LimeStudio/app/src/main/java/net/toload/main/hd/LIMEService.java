@@ -1527,23 +1527,23 @@ public class LIMEService extends InputMethodService implements
      * Candidate Hint Handlings -- Start
      */
     private static final int HINT_COUNT = 5;
-    private static final int HIDE_HINT_INTERVAL = 1000 * 3;
+    private static final int HIDE_HINT_INTERVAL = 1000 * 5;
     private Timer timer = null;
+    private String hint = "";
     private void candidateHintAddWord(String word) {
         candidateHintView.setVisibility(View.VISIBLE);
-        if (mCandidateView != null) {
-            candidateHintView.setTextColor(mCandidateView.mColorNormalText);
-        }
 
-        String newHint = (candidateHintView.getText() + word);
+        String newHint = hint + word;
         if (newHint.length() > HINT_COUNT) {
             candidateHintView.setText(newHint.substring(newHint.length()-HINT_COUNT));
         } else {
             candidateHintView.setText(newHint);
         }
+        hint = candidateHintView.getText().toString();
 
         if (timer != null) {
             timer.cancel();
+            timer = null;
         }
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -1556,12 +1556,30 @@ public class LIMEService extends InputMethodService implements
         }, HIDE_HINT_INTERVAL);
     }
 
-    private void clearCandidateHint(){
-        candidateHintView.post(new Runnable() {
-            @Override
-            public void run() {
-                candidateHintView.setText("");
+    private void candidateHintAddComposing(String composingText) {
+        candidateHintView.post(() -> {
+            candidateHintView.setVisibility(View.VISIBLE);
+            candidateHintView.setText(hint + composingText);
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
             }
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    clearCandidateHint();
+                    timer = null;
+                }
+
+            }, HIDE_HINT_INTERVAL);
+        });
+    }
+
+    private void clearCandidateHint(){
+        candidateHintView.post(() -> {
+            candidateHintView.setText("");
+            hint = "";
         });
     }
 
@@ -2342,6 +2360,9 @@ public class LIMEService extends InputMethodService implements
                     // Show composing window if keyToKeyname got different string. Revised by Jeremy '11,6,4
                     if (SearchSrv.getTablename() != null) {
                         String keynameString = SearchSrv.keyToKeyname(finalKeyString); //.toLowerCase(Locale.US)); moved to LimeDB
+                        if (mLIMEPref.shouldShowTypedWord()) {
+                            candidateHintAddComposing(keynameString);
+                        }
                         if (mCandidateView != null
                                 && !keynameString.toUpperCase(Locale.US).equals(finalKeyString.toUpperCase(Locale.US))
                                 && !keynameString.trim().equals("")
@@ -2957,6 +2978,9 @@ public class LIMEService extends InputMethodService implements
                 mCandidateViewInInputView.setService(this);
 
                 candidateHintView = mCandidateInInputView.findViewById(R.id.candidate_hint);
+                if (mCandidateView != null) {
+                    candidateHintView.setTextColor(mCandidateView.mColorNormalText);
+                }
             }
             if (mCandidateView != mCandidateViewInInputView)
                 mCandidateView = mCandidateViewInInputView;

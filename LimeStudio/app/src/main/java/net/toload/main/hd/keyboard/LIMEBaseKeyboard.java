@@ -224,12 +224,12 @@ public class LIMEBaseKeyboard {
     /**
      * Reserved space in the middle in unit of columns for separated keyboard in landscape mode.
      */
-    protected static int mReservedColumnsForSplitedKeyboard = 3;
+    protected static int mReservedColumnsForSplitedKeyboard = 2;
 
     /**
      * Key width reduction scale for separated keyboard in landscape mode.
      */
-    protected static float mSplitedKeyWidthScale = 0.8f;
+    protected static float mSplitedKeyWidthScale = 1.2f;
 
     /**
      * Key width for separated keyboard in landscape mode.
