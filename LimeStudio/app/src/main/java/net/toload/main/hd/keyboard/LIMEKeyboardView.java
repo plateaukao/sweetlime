@@ -35,15 +35,16 @@ import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
 public class LIMEKeyboardView extends LIMEKeyboardBaseView {
-	static final boolean DEBUG = false;
+	static final boolean DEBUG = true;
 	static final String TAG = "LIMEKeyboardView";
 
 	public static final int KEYCODE_OPTIONS = -100;
 	public static final int KEYCODE_SPACE_LONGPRESS = -102;
     public static final int KEYCODE_NEXT_IM = -104;
     public static final int KEYCODE_PREV_IM = -105;
-    
-    private int mKeyHeight;
+	public static final int KEYCODE_SYMBOL_KEYBOARD = -106;
+
+	private int mKeyHeight;
 
 	public LIMEKeyboardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -63,15 +64,15 @@ public class LIMEKeyboardView extends LIMEKeyboardBaseView {
 				+"; key_height = " + mKeyHeight
 					);
 		if (key.codes[0] == LIMEBaseKeyboard.KEYCODE_DONE) {
-			// Daniel
-			//getOnKeyboardActionListener().onKey(KEYCODE_OPTIONS, null,0,0);
-			// change to show system input method picker
 			InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.showInputMethodPicker();
 			return true;
 		}else if (key.codes[0] == LIMEKeyboard.KEYCODE_SPACE
-				&& Math.abs(((LIMEKeyboard) this.getKeyboard()).getSpaceDragDiff() ) < mKeyHeight/5){ //Jeremy '12,4,23 avoid small move blocking the long press.
-			getOnKeyboardActionListener().onKey(KEYCODE_SPACE_LONGPRESS, null,0,0);
+				&& Math.abs(((LIMEKeyboard) this.getKeyboard()).getSpaceDragDiff() ) < mKeyHeight/5) { //Jeremy '12,4,23 avoid small move blocking the long press.
+			getOnKeyboardActionListener().onKey(KEYCODE_SPACE_LONGPRESS, null, 0, 0);
+			return true;
+		} else if (key.codes[0] ==  LIMEKeyboard.KEYCODE_MODE_CHANGE) {
+			getOnKeyboardActionListener().onKey(KEYCODE_SYMBOL_KEYBOARD, null, 0, 0);
 			return true;
 		} else {
 			return super.onLongPress(key);

@@ -1734,8 +1734,12 @@ public class LIMEService extends InputMethodService implements
             handleOptions();
         } else if (primaryCode == LIMEKeyboardView.KEYCODE_SPACE_LONGPRESS) {
             handleOptions();
+        } else if (primaryCode == LIMEKeyboardView.KEYCODE_SYMBOL_KEYBOARD) {
+            mEnglishOnly = true;
+            mKeyboardSwitcher.setKeyboardMode(activeIM, LIMEKeyboardSwitcher.MODE_PHONE, mImeOptions, false, false, false);
         } else if (primaryCode == KEYCODE_SWITCH_TO_SYMBOL_MODE && mInputView != null) { //->symbol keyboard
             switchKeyboard(primaryCode);
+            // here
         } else if (primaryCode == KEYCODE_SWITCH_SYMBOL_KEYBOARD && mInputView != null) { //->switch symbols1 keyboards
             switchKeyboard(primaryCode);
         } else if (primaryCode == LIMEKeyboardView.KEYCODE_NEXT_IM) {
