@@ -74,10 +74,10 @@
     </Row>
 
     <Row limehd:rowEdgeFlags="bottom">
-        <Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true" limehd:keyWidth="15%p" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true" limehd:keyWidth="10%p" limehd:keyEdgeFlags="left"/>
         <Key limehd:codes="-9" limehd:keyLabel="EN" limehd:isModifier="true" limehd:keyWidth="10%p" />
         <Key limehd:codes="44" limehd:keyLabel="," limehd:keyWidth="10%p"/>
-        <Key limehd:codes="32" limehd:keyIcon="@drawable/sym_flat_keyboard_space"  limehd:keyWidth="30%p" limehd:isRepeatable="true"/>
+        <Key limehd:codes="32" limehd:keyIcon="@drawable/sym_flat_keyboard_space"  limehd:keyWidth="35%p" limehd:isRepeatable="true"/>
         <Key limehd:codes="46" 
         		limehd:keyLabel="." 
 				 limehd:popupKeyboard="@xml/popup_c_punctuation"  
