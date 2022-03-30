@@ -92,12 +92,9 @@ public class SetupImFragment extends Fragment {
 
     private ProgressDialog progress;
 
-    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
-
     //Activate LIME IM
     Button btnSetupImSystemSettings;
     Button btnSetupImSystemIMPicker;
-    Button btnSetupImGrantPermission;
 
     // Custom Import
     Button btnSetupImImportStandard;
@@ -109,8 +106,6 @@ public class SetupImFragment extends Fragment {
     // Backup Restore
     Button btnSetupImBackupLocal;
     Button btnSetupImRestoreLocal;
-
-    private ConnectivityManager connManager;
 
     private View rootView;
     private LimeDB datasource;
@@ -154,16 +149,6 @@ public class SetupImFragment extends Fragment {
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         frg.setArguments(args);
         return frg;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        /*
-        if(vpadnBanner != null){
-            vpadnBanner.destroy();
-            vpadnBanner = null;
-        }*/
     }
 
     @Override
@@ -225,14 +210,10 @@ public class SetupImFragment extends Fragment {
         DBSrv = new DBServer(activity);
         mLIMEPref = new LIMEPreferenceManager(activity);
 
-        connManager = (ConnectivityManager) SetupImFragment.this.activity.getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-
         rootView = inflater.inflate(R.layout.fragment_setup_im, container, false);
 
         btnSetupImSystemSettings = (Button) rootView.findViewById(R.id.btnSetupImSystemSetting);
         btnSetupImSystemIMPicker = (Button) rootView.findViewById(R.id.btnSetupImSystemIMPicker);
-        btnSetupImGrantPermission = (Button) rootView.findViewById(R.id.btnSetupImGrantPermission);
         btnSetupImImportStandard = (Button) rootView.findViewById(R.id.btnSetupImImportStandard);
         btnSetupImImportRelated = (Button) rootView.findViewById(R.id.btnSetupImImportRelated);
         btnSetupImPhonetic = (Button) rootView.findViewById(R.id.btnSetupImPhonetic);
@@ -290,10 +271,7 @@ public class SetupImFragment extends Fragment {
                     btnSetupImSystemSettings.setVisibility(View.GONE);
                     rootView.findViewById(R.id.setup_im_system_settings_description).setVisibility(View.GONE);
                     rootView.findViewById(R.id.SetupImList).setVisibility(View.VISIBLE);
-                    if(LIMEUtilities.isLIMEActive(getActivity().getApplicationContext()) &&
-                            ContextCompat.checkSelfPermission(this.getActivity(),
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                            ) {  //LIME is activated, also the active Keyboard, and write storage permission is grated
+                    if(LIMEUtilities.isLIMEActive(getActivity().getApplicationContext())) {  //LIME is activated, also the active Keyboard, and write storage permission is grated
                         btnSetupImSystemIMPicker.setVisibility(View.GONE);
                         rootView.findViewById(R.id.Setup_Wizard).setVisibility(View.GONE);
                         btnSetupImBackupLocal.setEnabled(true);
@@ -313,48 +291,20 @@ public class SetupImFragment extends Fragment {
                             btnSetupImSystemIMPicker.setVisibility(View.VISIBLE);
                             rootView.findViewById(R.id.setup_im_system_impicker_description).setVisibility(View.VISIBLE);
                         }
-                        //Check permission for > API 23
-                        if (ContextCompat.checkSelfPermission(this.getActivity(),
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                        {
-                            rootView.findViewById(R.id.setup_im_grant_permission).setVisibility((View.GONE));
-                            btnSetupImGrantPermission.setVisibility(View.GONE);
-                            btnSetupImBackupLocal.setEnabled(true);
-                            btnSetupImRestoreLocal.setEnabled(true);
-                            btnSetupImImportStandard.setEnabled(true);
-                            btnSetupImImportRelated.setEnabled(true);
-                        }
-                        else
-                        {
-                            rootView.findViewById(R.id.setup_im_grant_permission).setVisibility((View.VISIBLE));
-                            btnSetupImGrantPermission.setVisibility(View.VISIBLE);
-                            btnSetupImBackupLocal.setEnabled(false);
-                            btnSetupImRestoreLocal.setEnabled(false);
-                            btnSetupImImportStandard.setEnabled(false);
-                            btnSetupImImportRelated.setEnabled(false);
-                        }
 
+                        btnSetupImBackupLocal.setEnabled(true);
+                        btnSetupImRestoreLocal.setEnabled(true);
+                        btnSetupImImportStandard.setEnabled(true);
+                        btnSetupImImportRelated.setEnabled(true);
                     }
                 }else {
                     btnSetupImSystemSettings.setVisibility(View.VISIBLE);
                     rootView.findViewById(R.id.setup_im_system_settings_description).setVisibility(View.VISIBLE);
                     btnSetupImSystemIMPicker.setVisibility(View.GONE);
-                    rootView.findViewById(R.id.setup_im_grant_permission).setVisibility((View.GONE));
-                    btnSetupImGrantPermission.setVisibility(View.GONE);
                     rootView.findViewById(R.id.setup_im_system_impicker_description).setVisibility(View.GONE);
                     rootView.findViewById(R.id.SetupImList).setVisibility(View.GONE);
                 }
 
-
-
-                btnSetupImGrantPermission.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                    }
-                });
                 btnSetupImSystemSettings.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

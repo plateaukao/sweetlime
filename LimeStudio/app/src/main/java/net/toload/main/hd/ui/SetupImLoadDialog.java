@@ -336,13 +336,7 @@ public class SetupImLoadDialog extends DialogFragment {
 
                 getDialog().getWindow().setTitle(getResources().getString(R.string.setup_im_dialog_title));
 
-                //Check permission for > API 23
-                if (ContextCompat.checkSelfPermission(this.getActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    btnSetupImDialogCustom.setEnabled(false);
-                else
-                    btnSetupImDialogCustom.setEnabled(true);
-
+                btnSetupImDialogCustom.setEnabled(true);
                 btnSetupImDialogCustom.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

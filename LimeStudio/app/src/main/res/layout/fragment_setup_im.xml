@@ -118,31 +118,6 @@
                     android:layout_marginLeft="10dp" />
             </TableRow>
         </TableLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/setup_im_grant_permission"
-            android:id="@+id/setup_im_grant_permission"
-            android:layout_marginBottom="5dp" />
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_im_grant_permission_button"
-                android:id="@+id/btnSetupImGrantPermission"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp" />
-        </TableRow>
-    </TableLayout>
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
