@@ -28,6 +28,8 @@
 <!-- for the Search Manager. -->
 
 <input-method xmlns:android="http://schemas.android.com/apk/res/android" 
-			  android:settingsActivity="net.toload.main.hd.MainActivity"/>
+			  android:settingsActivity="net.toload.main.hd.MainActivity"
+	android:supportsSwitchingToNextInputMethod="true"
+	/>
 			  
 			  

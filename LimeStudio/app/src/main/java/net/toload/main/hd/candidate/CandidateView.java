@@ -1048,6 +1048,7 @@ public class CandidateView extends View implements View.OnClickListener {
             Thread updatingThread = new Thread() {
 
                 public void run() {
+                    if (mSuggestions.isEmpty()) return;
                     mService.requestFullRecords(mSuggestions.get(0).isRelatedPhraseRecord());
                 }
             };

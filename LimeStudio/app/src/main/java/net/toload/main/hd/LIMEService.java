@@ -507,7 +507,6 @@ public class LIMEService extends InputMethodService implements
         super.onComputeInsets(outInsets);
         if(mCandidateView == null || mCandidateView == mCandidateViewInInputView ) return;
 
-       // Jeremy '16,7,21 get space for candidate view for candidateView typing with physical keybaord
         outInsets.contentTopInsets = mCandidateViewContainer.getHeight() - mCandidateViewStandAlone.getHeight();
         outInsets.visibleTopInsets = mCandidateViewContainer.getHeight();
 
@@ -1720,7 +1719,6 @@ public class LIMEService extends InputMethodService implements
             if (!(!hasPhysicalKeyPressed && hasDistinctMultitouch))
                 handleShift();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_DONE) {// long press on options and shift
-            // Daniel
             handleClose();
         } else if (primaryCode == LIMEBaseKeyboard.KEYCODE_UP) {
             keyDownUp(KeyEvent.KEYCODE_DPAD_UP, hasCandidatesShown);

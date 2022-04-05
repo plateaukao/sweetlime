@@ -23,43 +23,41 @@
   ~  *
   ~  */
   -->
-<net.toload.main.hd.candidate.CandidateInInputViewContainer 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<net.toload.main.hd.candidate.CandidateInInputViewContainer xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:background="@color/color_white">
-       
+        android:background="@color/color_white"
+        android:orientation="horizontal">
+
         <net.toload.main.hd.candidate.CandidateView
             android:id="@+id/candidatesView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1.0"
-            android:gravity="center_vertical" 
-            />
-			
+            android:gravity="center_vertical" />
+
         <LinearLayout
             android:id="@+id/candidate_right_parent"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:background="@color/color_white"
             android:clickable="true"
-            android:orientation="horizontal" 
-            android:background="@color/color_white">
-            
+            android:orientation="horizontal">
+
             <ImageButton
                 android:id="@+id/candidate_right"
-                android:contentDescription="@string/more_cand"
                 android:layout_width="@dimen/candidate_expand_button_width"
                 android:layout_height="fill_parent"
                 android:clickable="true"
+                android:contentDescription="@string/more_cand"
                 android:src="@drawable/ic_suggest_expander" />
-            
+
         </LinearLayout>
     </LinearLayout>
 
@@ -67,26 +65,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <net.toload.main.hd.keyboard.LIMEKeyboardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/keyboard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:keyTextSize = "@dimen/key_text_size"
-        android:labelTextSize = "@dimen/label_text_size"
-        android:popupLayout="@layout/keyboard_popup"
-        style="?attr/LIMEKeyboardLayout"
-        />
+        <net.toload.main.hd.keyboard.LIMEKeyboardView
+            android:id="@+id/keyboard"
+            style="?attr/LIMEKeyboardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:keyTextSize="@dimen/key_text_size"
+            android:labelTextSize="@dimen/label_text_size"
+            android:popupLayout="@layout/keyboard_popup" />
+
         <TextView
             android:id="@+id/candidate_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="25dp"
             android:text=""
-            android:textSize="20sp"
             android:textColor="@color/color_black"
-            android:visibility="invisible"
-            android:layout_gravity="center"/>
+            android:textSize="20sp"
+            android:visibility="invisible" />
     </FrameLayout>
 </net.toload.main.hd.candidate.CandidateInInputViewContainer>
