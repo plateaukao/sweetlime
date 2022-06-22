@@ -2245,12 +2245,12 @@ public class LIMEService extends InputMethodService implements
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                    try {
-                        sleep(0);
-                    } catch (InterruptedException ignored) {
-                        ignored.printStackTrace();
-                        return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-                    }
+//                    try {
+//                        sleep(0);
+//                    } catch (InterruptedException ignored) {
+//                        ignored.printStackTrace();
+//                        return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
+//                    }
                     //Jeremy '11,6,19 EZ and ETEN use "`" as IM Keys, and also custom may use "`".
                     if (list.size() > 0) {
                         // Setup sel key display if
@@ -2276,12 +2276,12 @@ public class LIMEService extends InputMethodService implements
                             else if (selkeyOption == 2) selkey = mixedModeSelkey + " " + selkey;
                         }
 
-                        try {
-                            sleep(0);
-                        } catch (InterruptedException ignored) {
-                            ignored.printStackTrace();
-                            return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-                        }
+//                        try {
+//                            sleep(0);
+//                        } catch (InterruptedException ignored) {
+//                            ignored.printStackTrace();
+//                            return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
+//                        }
 
 
                         // Emoji Control

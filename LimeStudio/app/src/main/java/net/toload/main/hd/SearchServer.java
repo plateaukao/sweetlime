@@ -658,11 +658,10 @@ public class SearchServer {
                 }
 
             }
-            //codeLengthMap is deprecated and replace by exact match stack scheme '15,6,3 jeremy
-            //codeLengthMap.add(new Pair<>(code.length(), result.size()));  //Jeremy 12,6,2 preserve the code length in each loop.
-            //if (DEBUG) 	Log.i(TAG, "getMappingByCode() codeLengthMap  code length = " + code.length() + ", result size = " + result.size());
 
-            code = code.substring(0, code.length() - 1);
+            if (!code.isEmpty()) {
+                code = code.substring(0, code.length() - 1);
+            }
         }
         if (DEBUG)
             Log.i(TAG, "getMappingByCode() code=" + code + " result.size()=" + result.size());
