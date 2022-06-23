@@ -59,6 +59,7 @@ import net.toload.main.hd.candidate.CandidateInInputViewContainer;
 import net.toload.main.hd.candidate.CandidateView;
 import net.toload.main.hd.candidate.CandidateViewContainer;
 import net.toload.main.hd.data.ChineseSymbol;
+import net.toload.main.hd.data.Keyboard;
 import net.toload.main.hd.data.Mapping;
 import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.global.LIMEUtilities;
@@ -730,9 +731,6 @@ public class LIMEService extends InputMethodService implements
 
         auto_commit = mLIMEPref.getAutoCommitValue();
         currentSoftKeyboard = mKeyboardSwitcher.getImKeyboard(activeIM);
-
-
-
     }
 
     /**
@@ -3001,7 +2999,6 @@ public class LIMEService extends InputMethodService implements
 
         }
 
-
         // Check if mKeyboardSwitcher == null
         if (mKeyboardSwitcher == null) {
             mKeyboardSwitcher = new LIMEKeyboardSwitcher(this, mThemeContext);
@@ -3019,7 +3016,18 @@ public class LIMEService extends InputMethodService implements
             }
         }
 
+        adjustHintPosition();
+    }
 
+    private void adjustHintPosition() {
+        if (mKeyboardSwitcher.getImKeyboard(activeIM).equals("lime")) {
+            candidateHintView.setTranslationY(pxToDp(-20, this));
+        }
+    }
+
+
+    private int pxToDp(int px, LIMEService limeService) {
+        return (int) (limeService.getResources().getDisplayMetrics().density * px);
     }
 
     /**
