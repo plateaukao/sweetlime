@@ -1531,6 +1531,9 @@ public class LIMEService extends InputMethodService implements
     private String hint = "";
     private void candidateHintAddWord(String word) {
         candidateHintView.setVisibility(View.VISIBLE);
+        if (mCandidateView != null) {
+            candidateHintView.setTextColor(mCandidateView.mColorNormalText);
+        }
 
         String newHint = hint + word;
         if (newHint.length() > HINT_COUNT) {
@@ -1556,6 +1559,9 @@ public class LIMEService extends InputMethodService implements
     }
 
     private void candidateHintAddComposing(String composingText) {
+        if (mCandidateView != null) {
+            candidateHintView.setTextColor(mCandidateView.mColorNormalText);
+        }
         candidateHintView.post(() -> {
             candidateHintView.setVisibility(View.VISIBLE);
             candidateHintView.setText(hint + composingText);
@@ -2980,9 +2986,6 @@ public class LIMEService extends InputMethodService implements
                 mCandidateViewInInputView.setService(this);
 
                 candidateHintView = mCandidateInInputView.findViewById(R.id.candidate_hint);
-                if (mCandidateView != null) {
-                    candidateHintView.setTextColor(mCandidateView.mColorNormalText);
-                }
             }
             if (mCandidateView != mCandidateViewInInputView)
                 mCandidateView = mCandidateViewInInputView;
