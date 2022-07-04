@@ -43,6 +43,7 @@
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:hardwareAccelerated="true"
+            android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -56,6 +57,7 @@
         <service
             android:name=".LIMEService"
             android:label="@string/app_name"
+            android:exported="true"
             android:permission="android.permission.BIND_INPUT_METHOD" >
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
