@@ -27,15 +27,15 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "net.toload.main.hd"
 
         minSdkVersion 19
-        targetSdkVersion 32
-        versionCode 672
-        versionName '6.7.2'
+        targetSdkVersion 33
+        versionCode 680
+        versionName '6.8.0'
     }
     buildTypes {
         release {

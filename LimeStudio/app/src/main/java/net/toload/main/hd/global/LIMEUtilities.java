@@ -346,13 +346,12 @@ public class LIMEUtilities {
 	
 		//boolean isVoiceSearchServiceEnabled = false;
 		for (int i = 0; i < mInputMethodProperties.size(); i++) {
-			InputMethodInfo imi = mInputMethodProperties.get(i);
-			if(DEBUG) Log.i(TAG, "enabled IM " + i + ":" + imi.getId());
+			String id = mInputMethodProperties.get(i).getId();
 
-			if(imi.getId().equals("com.google.android.voicesearch/.ime.VoiceInputMethodService")){
-				return "com.google.android.voicesearch/.ime.VoiceInputMethodService";
-			}else if(imi.getId().equals("com.google.android.googlequicksearchbox/com.google.android.voicesearch.ime.VoiceInputMethodService")){
-				return "com.google.android.googlequicksearchbox/com.google.android.voicesearch.ime.VoiceInputMethodService";
+			if(id.equals("com.google.android.voicesearch/.ime.VoiceInputMethodService") ||
+					id.equals("com.google.android.googlequicksearchbox/com.google.android.voicesearch.ime.VoiceInputMethodService") ||
+					id.equals("com.google.android.tts/com.google.android.apps.speech.tts.googletts.settings.asr.voiceime.VoiceInputMethodService")){
+				return id;
 			}
 		}
 		return null;
