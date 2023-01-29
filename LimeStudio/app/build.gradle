@@ -34,8 +34,8 @@ android {
 
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 680
-        versionName '6.8.0'
+        versionCode 690
+        versionName '6.9.0'
     }
     buildTypes {
         release {
