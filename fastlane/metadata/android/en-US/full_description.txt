@@ -1,0 +1,3 @@
+Sweetlime is a fork of lime removing the cloud functions and improving the UX.
+
+Sweetlime supports Zhuyin/Bopomofo, Cangjie, Wubi, Pinyin and more Chinese input methods.
