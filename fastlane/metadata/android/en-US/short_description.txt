@@ -1,0 +1,1 @@
+A smaller better Lime (Lightweight Input Method Editor)
