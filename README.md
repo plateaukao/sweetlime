@@ -6,6 +6,10 @@ Github Project 網址 http://github.com/lime-ime/    http://www.limeime.org/
 
 **目前的 LIME HD 已經很久沒有更新了。所以我把它 fork 一份來改成自己想要的型式。**
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-zh-hant.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/net.toload.main.hd)
+
 ## 主要更動
 1. 將 Github 上的 repo (原本有 900 多 MB)，重新建立。不然只是要改個 code，得要下載接近 1GB 的 repo 到自己電腦上，會讓人卻步。
 2. 拿掉廣告。
