@@ -35,7 +35,7 @@ public class Lime {
 
     // Database Setting
     final public static String DATABASE_NAME = "lime.db";
-    final public static String DATABASE_DEVICE_FOLDER =  Environment.getDataDirectory() + "/data/net.toload.main.hd/databases";
+    final public static String DATABASE_DEVICE_FOLDER = Environment.getDataDirectory() + "/data/info.plateaukao.sweetlime/databases";
     final public static String DATABASE_DECOMPRESS_FOLDER_SDCARD = Environment.getExternalStorageDirectory() + "/limehd/databases";
     final public static String DATABASE_FOLDER_EXTERNAL = Environment.getExternalStorageDirectory() + "/limehd/";
     final public static String DATABASE_BACKUP_NAME = "backup.zip";
@@ -112,7 +112,7 @@ public class Lime {
     public static final String DATABASE_CLOUD_IM_HS_V1 = DATABASE_CLOUD_URL_BASED + "hs1.zip";
     public static final String DATABASE_OPENFOUNDRY_IM_HS_V1 = DATABASE_OPENFOUNDRY_URL_BASED + "hs1.zip";
     public static final String DATABASE_CLOUD_IM_HS_V2 = DATABASE_CLOUD_URL_BASED + "hs2.zip";
-    public static final String DATABASE_OPENFOUNDRY_IM_HS_V2  = DATABASE_OPENFOUNDRY_URL_BASED + "hs2.zip";
+    public static final String DATABASE_OPENFOUNDRY_IM_HS_V2 = DATABASE_OPENFOUNDRY_URL_BASED + "hs2.zip";
     public static final String DATABASE_CLOUD_IM_HS_V3 = DATABASE_CLOUD_URL_BASED + "hs3.zip";
     public static final String DATABASE_OPENFOUNDRY_IM_HS_V3 = DATABASE_OPENFOUNDRY_URL_BASED + "hs3.zip";
 
@@ -131,7 +131,7 @@ public class Lime {
     public static final String DB_TABLE_PINYIN = "pinyin";
     public static final String DB_TABLE_SCJ = "scj";
     public static final String DB_TABLE_WB = "wb";
-    
+
     public static final String IM_ARRAY = "array";
     public static final String IM_ARRAY10 = "array10";
     public static final String IM_CJ_BIG5 = "cjbig5";
@@ -204,7 +204,7 @@ public class Lime {
     public static final String DB_KEYBOARD_COLUMN_EXTENDEDKB = "extendedkb";
     public static final String DB_KEYBOARD_COLUMN_EXTENDEDSHIFTKB = "extendedshiftkb";
     public static final String DB_KEYBOARD_COLUMN_DISABLE = "disable";
-    public static final String DB_TOTAL_COUNT ="count";
+    public static final String DB_TOTAL_COUNT = "count";
 
     public static final String IM_TYPE_NAME = "name";
     public static final String IM_TYPE_KEYBOARD = "keyboard";
@@ -235,7 +235,7 @@ public class Lime {
     public static final String SUPPORT_FILE_EXT_TXT = "txt";
     public static final String SUPPORT_FILE_EXT_LIME = "lime";
     public static final String SUPPORT_FILE_EXT_LIMEDB = "limedb";
-    public static final String SUPPORT_FILE_EXT_CIN= "cin";
+    public static final String SUPPORT_FILE_EXT_CIN = "cin";
 
     // Emoji Parameter
 
@@ -243,27 +243,27 @@ public class Lime {
     public static final int EMOJI_TW = 2;
     public static final int EMOJI_CN = 3;
 
-    public static final String EMOJI_FIELD_TAG= "tag";
-    public static final String EMOJI_FIELD_VALUE= "value";
+    public static final String EMOJI_FIELD_TAG = "tag";
+    public static final String EMOJI_FIELD_VALUE = "value";
 
     // Global Utility Methods
 
-    public static String format(int number){
+    public static String format(int number) {
         try {
             DecimalFormat df = new DecimalFormat("###,###,###,###,###,###,##0");
             return df.format(number);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "0";
         }
     }
 
-    public static String formatSqlValue(String value){
-        if(value != null) {
+    public static String formatSqlValue(String value) {
+        if (value != null) {
             value = value.replaceAll("\"", "\"\"");
             value = value.replaceAll("'", "\\\'");
             return value;
-        }else{
+        } else {
             return "";
         }
     }
