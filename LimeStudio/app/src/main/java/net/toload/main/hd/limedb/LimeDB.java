@@ -38,7 +38,6 @@ import android.util.SparseArray;
 import android.widget.Toast;
 
 import net.toload.main.hd.Lime;
-import net.toload.main.hd.R;
 import net.toload.main.hd.data.ChineseSymbol;
 import net.toload.main.hd.data.Im;
 import net.toload.main.hd.data.ImObj;
@@ -64,6 +63,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
+
+import info.plateaukao.sweetlime.R;
 
 public class LimeDB extends LimeSQLiteOpenHelper {
 

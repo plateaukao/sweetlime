@@ -28,11 +28,11 @@ android {
     signingConfigs {
     }
     compileSdk = 33
-    buildToolsVersion = '33.0.0'
+    buildToolsVersion = '33.0.1'
     defaultConfig {
         applicationId "info.plateaukao.sweetlime"
 
-        minSdkVersion 30
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 690
         versionName '6.9.0'
@@ -56,6 +56,8 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    namespace 'info.plateaukao.sweetlime'
 }
 
 dependencies {

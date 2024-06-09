@@ -80,6 +80,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import info.plateaukao.sweetlime.R;
+
 
 public class LIMEService extends InputMethodService implements
         LIMEKeyboardBaseView.OnKeyboardActionListener {

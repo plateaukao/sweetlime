@@ -35,7 +35,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.toload.main.hd.Lime;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.global.LIME;
 import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.global.LIMEUtilities;

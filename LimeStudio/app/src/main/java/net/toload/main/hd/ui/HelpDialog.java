@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 
 public class HelpDialog extends DialogFragment {
 	View view;

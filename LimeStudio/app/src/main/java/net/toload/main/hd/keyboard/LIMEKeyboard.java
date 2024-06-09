@@ -25,7 +25,7 @@
 package net.toload.main.hd.keyboard;
 
 import net.toload.main.hd.LIMEKeyboardSwitcher;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;

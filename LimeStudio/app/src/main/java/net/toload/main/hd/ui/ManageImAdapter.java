@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.data.Word;
 
 import java.util.List;

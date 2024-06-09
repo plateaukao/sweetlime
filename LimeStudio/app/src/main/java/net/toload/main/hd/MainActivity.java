@@ -59,6 +59,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import info.plateaukao.sweetlime.R;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

@@ -22,8 +22,7 @@
   ~  */
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.toload.main.hd">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -42,7 +41,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="net.toload.main.hd.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -58,7 +57,7 @@
 
         <!-- LIME Services -->
         <service
-            android:name=".LIMEService"
+            android:name="net.toload.main.hd.LIMEService"
             android:exported="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_INPUT_METHOD">
@@ -72,7 +71,7 @@
         </service>
 
         <activity
-            android:name=".limesettings.LIMEPreferenceHC"
+            android:name="net.toload.main.hd.limesettings.LIMEPreferenceHC"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:label="@string/ime_setting"
             android:theme="@style/Theme.AppCompat.Light"></activity>

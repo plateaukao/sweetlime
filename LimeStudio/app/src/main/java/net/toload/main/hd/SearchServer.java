@@ -48,6 +48,8 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import info.plateaukao.sweetlime.R;
+
 public class SearchServer {
 
     private static boolean DEBUG = false;

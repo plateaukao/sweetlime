@@ -27,7 +27,7 @@ package net.toload.main.hd.ui;
 import android.os.RemoteException;
 
 import net.toload.main.hd.DBServer;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.SearchServer;
 
 /**

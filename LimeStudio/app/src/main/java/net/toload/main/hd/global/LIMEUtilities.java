@@ -41,7 +41,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import net.toload.main.hd.LIMEService;
 import net.toload.main.hd.MainActivity;
-import net.toload.main.hd.R;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -55,6 +54,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import info.plateaukao.sweetlime.R;
 
 //
 

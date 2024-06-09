@@ -63,6 +63,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import info.plateaukao.sweetlime.R;
+
 //Jeremy '12,5,1 renamed from DBServer and change from service to ordinary class.
 public class  DBServer {
 	private static final boolean DEBUG = false;
@@ -224,50 +226,6 @@ public class  DBServer {
 		}
 	}
 
-	public static void backupDatabase() throws RemoteException {
-		if (DEBUG) Log.i(TAG, "backupDatabase()");
-
-		//File limedir = new File(LIME.LIME_SDCARD_FOLDER + File.separator);
-		File limedir = ContextCompat.getExternalFilesDirs(ctx, null)[0];
-
-		if (!limedir.exists()) {
-			limedir.mkdirs();
-		}
-
-		//backup shared preferences
-		File fileSharedPrefsBackup = new File(LIME.getLimeDataRootFolder(), LIME.SHARED_PREFS_BACKUP_NAME);
-		if(fileSharedPrefsBackup.exists())  fileSharedPrefsBackup.delete();
-		backupDefaultSharedPreference(fileSharedPrefsBackup);
-
-		// create backup file list.
-		List<String> backupFileList = new ArrayList<>();
-		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_NAME);
-		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_JOURNAL);
-		backupFileList.add(LIME.SHARED_PREFS_BACKUP_NAME);
-
-		// hold database connection and close database.
-		//mLIMEPref.holdDatabaseCoonection(true);
-		datasource.holdDBConnection(); //Jeremy '15,5,23
-		closeDatabse();
-
-		//ready to zip backup file list
-		try {
-			LIMEUtilities.zip(limedir.getAbsolutePath() + File.separator + LIME.DATABASE_BACKUP_NAME, backupFileList, LIME.getLimeDataRootFolder() , true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			showNotificationMessage(ctx.getText(R.string.l3_initial_backup_error) + "");
-		} finally {
-			showNotificationMessage(ctx.getText(R.string.l3_initial_backup_end) + "");
-		}
-
-		// backup finished.  unhold the database connection and false reopen the database.
-		datasource.unHoldDBConnection(); //Jeremy '15,5,23
-		//mLIMEPref.holdDatabaseConnection(false);
-		datasource.openDBConnection(true);
-
-		//cleanup the shared preference backup file.
-		if( fileSharedPrefsBackup!=null && fileSharedPrefsBackup.exists() ) fileSharedPrefsBackup.delete();
-	}
 
 	public static void restoreDatabase(String srcFilePath) throws RemoteException {
 		File check = new File(srcFilePath);
@@ -429,216 +387,6 @@ public class  DBServer {
 	}
 
 
-	public String getKeyboardCode(String im)
-			throws RemoteException {
-		//if (datasource == null) {loadLimeDB();}
-		return datasource.getKeyboardCode(im);
-	}
-
-
-
-
-	/*
-	 * Select Remote File to download
-	 */
-	public File downloadRemoteFile(String backup_url, String url, String folder, String filename){
-
-		File olddbfile = new File(folder + filename);
-		if(olddbfile.exists()){
-			olddbfile.delete();
-		}
-
-		//mLIMEPref.setParameter("reload_database", true);
-		abortDownload = false;
-		remoteFileDownloading = true;
-		File target = downloadRemoteFile(url, folder, filename);
-		if(!target.exists() || target == null || target.length() == 0){
-			target = downloadRemoteFile(backup_url, folder, filename);
-		}
-		remoteFileDownloading = false;
-		return target;
-	}
-
-	/*
-	 * Download Remote File
-	 */
-	public File downloadRemoteFile(String url, String folder, String filename){
-
-		if(DEBUG)
-			Log.i(TAG,"downloadRemoteFile() Starting....");
-
-		try {
-			URL downloadUrl = new URL(url);
-			URLConnection conn = downloadUrl.openConnection();
-			conn.connect();
-			InputStream is = conn.getInputStream();
-			long remoteFileSize = conn.getContentLength();
-			long downloadedSize = 0;
-
-			if(DEBUG)
-				Log.i(TAG, "downloadRemoteFile() contentLength:");
-
-			if(is == null){
-				throw new RuntimeException("stream is null");
-			}
-
-			File downloadFolder = new File(folder);
-			downloadFolder.mkdirs();
-
-			//Log.i("ART","downloadFolder Folder status :"+ downloadFolder.exists());
-
-			File downloadedFile = new File(downloadFolder.getAbsolutePath() + File.separator + filename);
-			if(downloadedFile.exists()){
-				downloadedFile.delete();
-			}
-
-			FileOutputStream fos = null;
-			fos = new FileOutputStream(downloadedFile);
-			// '04,12,27 Jeremy modified buf size from 128 to 128k and dramatically speed-up downloading speed on modern devices
-			byte buf[] = new byte[128000];
-			do{
-				Thread.sleep(300);
-				int numread = is.read(buf);
-				downloadedSize += numread;
-
-				if(DEBUG)
-					Log.i(TAG, "downloadRemoteFile(), contentLength:"
-							+ remoteFileSize+ ". downloadedSize:" + downloadedSize);
-
-				if(numread <=0){break;}
-				fos.write(buf, 0, numread);
-			}while(!abortDownload);
-			fos.close();
-			is.close();
-
-			return downloadedFile;
-
-		} catch (FileNotFoundException e) {
-			Log.d(TAG,"downloadRemoteFile(); can't open temp file on sdcard for writing.");
-			showNotificationMessage(ctx.getText(R.string.l3_initial_download_write_sdcard_failed)+ "");
-			e.printStackTrace();
-
-		} catch (MalformedURLException e) {
-			Log.d(TAG, "downloadRemoteFile() MalformedURLException....");
-			showNotificationMessage(ctx.getText(R.string.l3_initial_download_failed)+ "");
-			e.printStackTrace();
-		} catch (IOException e){
-			Log.d(TAG, "downloadRemoteFile() IOException....");
-			showNotificationMessage(ctx.getText(R.string.l3_initial_download_failed)+ "");
-			e.printStackTrace();
-		} catch (Exception e){
-			Log.d(TAG, "downloadRemoteFile() Others....");
-			showNotificationMessage(ctx.getText(R.string.l3_initial_download_failed)+ "");
-			e.printStackTrace();
-		}
-		if(DEBUG)
-			Log.i(TAG, "downloadRemoteFile() failed.");
-		return null;
-	}
-
-	/*
-	 * Decompress retrieved file to target folder
-	 */
-	public static boolean decompressFile(File sourceFile, String targetFolder, String targetFile, boolean removeOriginal){
-		if(DEBUG)
-			Log.i(TAG, "decompressFile(), srouce = " + sourceFile.toString() + "" +	", target = " + targetFolder.toString()+ "/" + targetFile.toString());
-
-		try {
-
-			File targetFolderObj = new File(targetFolder);
-			if(!targetFolderObj.exists()){
-				targetFolderObj.mkdirs();
-			}
-
-			FileInputStream fis = new FileInputStream(sourceFile);
-			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
-			//ZipEntry entry; 
-			while (( zis.getNextEntry()) != null) {
-
-				int size;
-				byte[] buffer = new byte[2048];
-
-				File OutputFile = new File(targetFolderObj.getAbsolutePath() + File.separator + targetFile);
-				OutputFile.delete();
-
-				FileOutputStream fos = new FileOutputStream(OutputFile);
-				BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
-				while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
-					bos.write(buffer, 0, size);
-				}
-				bos.flush();
-				bos.close();
-
-				//Log.i("ART","uncompress Output File:"+OutputFile.getAbsolutePath() + " / " + OutputFile.length());
-
-			}
-			zis.close();
-			fis.close();
-
-			if(removeOriginal) {
-				sourceFile.delete();
-			}
-			return true;
-		} catch (Exception e) {
-			showNotificationMessage(ctx.getText(R.string.l3_initial_download_failed)+ "");
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	public void compressFile(File sourceFile, String targetFolder, String targetFile){
-		if(DEBUG)
-			Log.i(TAG, "compressFile(), srouce = " + sourceFile.toString() + "" +
-					", target = " + targetFolder.toString()+ "/" + targetFile.toString());
-		try{
-			final int BUFFER = 2048;
-
-			File targetFolderObj = new File(targetFolder);
-			if(!targetFolderObj.exists()){
-				targetFolderObj.mkdirs();
-			}
-
-
-			File OutputFile = new File(targetFolderObj.getAbsolutePath() + File.separator + targetFile);
-			OutputFile.delete();
-
-			FileOutputStream dest = new FileOutputStream(OutputFile);
-			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
-
-			byte data[] = new byte[BUFFER];
-
-			FileInputStream fi = new  FileInputStream(sourceFile);
-			BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
-			ZipEntry entry = new ZipEntry(sourceFile.getAbsolutePath());
-			out.putNextEntry(entry);
-			int count;
-			while((count = origin.read(data, 0, BUFFER)) != -1) {
-				out.write(data, 0, count);
-			}
-			origin.close();
-			out.close();
-
-			//Log.i("ART","compress Output File:"+OutputFile.getAbsolutePath() + " / " + OutputFile.length());
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * Check the consistency of phonetic keyboard setting in preference and db.
-	 * Jeremy '12,6,8
-	 *
-	 */
-	public void checkPhoneticKeyboardSetting(){
-		datasource.checkPhoneticKeyboardSetting();
-	}
-
-
-	public int getLoadingMappingPercentageDone() throws RemoteException {
-		if(remoteFileDownloading) return 0;
-		else return datasource.getProgressPercentageDone();
-	}
-
 	//Jeremy '12,4,23 rewriting using alert notification builder in LIME utilities to replace the deprecated method
 	public static void showNotificationMessage(String message) {
 
@@ -648,12 +396,6 @@ public class  DBServer {
 		LIMEUtilities.showNotification(
 				ctx, true, ctx.getText(R.string.ime_setting), message, i);
 
-	}
-
-	public void renameTableName(String source, String target) {
-		if(datasource != null){
-			datasource.renameTableName(source, target);
-		}
 	}
 
 	/**

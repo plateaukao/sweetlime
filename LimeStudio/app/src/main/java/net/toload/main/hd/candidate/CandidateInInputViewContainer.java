@@ -34,7 +34,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 
 public class CandidateInInputViewContainer extends LinearLayout  implements View.OnClickListener {
 

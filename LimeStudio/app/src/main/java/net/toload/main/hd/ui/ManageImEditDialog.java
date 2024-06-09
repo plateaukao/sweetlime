@@ -38,7 +38,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.data.Word;
 
 public class ManageImEditDialog extends DialogFragment {

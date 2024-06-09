@@ -42,14 +42,14 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
 
-import net.toload.main.hd.R;
-
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import info.plateaukao.sweetlime.R;
 
 
 /**

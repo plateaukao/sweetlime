@@ -24,7 +24,7 @@
 
 package net.toload.main.hd.keyboard;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.keyboard.LIMEKeyboardBaseView.OnKeyboardActionListener;
 import net.toload.main.hd.keyboard.LIMEKeyboardBaseView.UIHandler;
 import net.toload.main.hd.keyboard.LIMEBaseKeyboard.Key;

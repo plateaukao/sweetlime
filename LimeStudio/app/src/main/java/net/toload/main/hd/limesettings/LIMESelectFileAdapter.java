@@ -27,7 +27,7 @@ package net.toload.main.hd.limesettings;
 import java.io.File;
 import java.util.List;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

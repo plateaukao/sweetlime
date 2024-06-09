@@ -29,7 +29,7 @@ import android.os.RemoteException;
 
 import net.toload.main.hd.DBServer;
 import net.toload.main.hd.Lime;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 
 public class SetupImBackupRunnable implements Runnable {
     private SetupImFragment mFragment;

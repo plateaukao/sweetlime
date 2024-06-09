@@ -34,7 +34,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.data.Mapping;
 
 import java.util.List;

@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.plateaukao.sweetlime.R;
+
 public class LIMEKeyboardSwitcher {
 	
 	static final boolean DEBUG = false;

@@ -34,7 +34,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import net.toload.main.hd.Lime;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.data.Mapping;
 
 import java.util.LinkedList;

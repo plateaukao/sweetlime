@@ -35,7 +35,7 @@ import android.preference.PreferenceFragment;
 import android.util.Log;
 
 import net.toload.main.hd.DBServer;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.SearchServer;
 import net.toload.main.hd.data.KeyboardObj;
 import net.toload.main.hd.global.LIMEPreferenceManager;

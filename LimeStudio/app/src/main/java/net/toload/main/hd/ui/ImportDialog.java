@@ -39,7 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.toload.main.hd.Lime;
-import net.toload.main.hd.R;
+import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.data.Im;
 import net.toload.main.hd.data.Related;
 import net.toload.main.hd.data.Word;
