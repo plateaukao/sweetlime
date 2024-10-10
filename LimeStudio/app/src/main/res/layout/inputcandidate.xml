@@ -48,6 +48,7 @@
             android:layout_weight="1"
             android:background="@color/color_white"
             android:clickable="true"
+            android:layout_gravity="right"
             android:orientation="horizontal">
 
             <ImageButton

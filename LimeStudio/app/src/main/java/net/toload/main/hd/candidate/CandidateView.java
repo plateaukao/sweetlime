@@ -27,6 +27,7 @@ package net.toload.main.hd.candidate;
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -1193,8 +1194,13 @@ public class CandidateView extends View implements View.OnClickListener {
     }
 
     private String getClipboardText() {
-        return ((ClipboardManager)getContext().getSystemService(CLIPBOARD_SERVICE))
-            .getPrimaryClip().getItemAt(0).getText().toString();
+        ClipData data = ((ClipboardManager)getContext().getSystemService(CLIPBOARD_SERVICE))
+            .getPrimaryClip();
+        if (data == null || data.getItemCount() == 0) {
+            return "";
+        } else {
+                return data.getItemAt(0).getText().toString();
+        }
     }
 
     @Override
