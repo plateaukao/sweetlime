@@ -109,7 +109,7 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
 
             if (mPasteButton != null) {
                 Boolean shouldShowPasteButton = (showExpandButton || mCandidateView.isClipboardEmpty()) ? false : true;
-                mPasteButton.setVisibility(shouldShowPasteButton ? VISIBLE : GONE);
+                mPasteButton.setVisibility(shouldShowPasteButton ? VISIBLE : INVISIBLE);
             }
 
             if (mButtonRightExpand != null) {
