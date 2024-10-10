@@ -24,6 +24,10 @@
 
 package net.toload.main.hd.candidate;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -469,7 +473,8 @@ public class CandidateView extends View implements View.OnClickListener {
         if (DEBUG)
             Log.i(TAG, "resetWidth() mHeight:" + mHeight);
         int candiWidth = mScreenWidth;
-        if (mTotalWidth > mScreenWidth || isEmpty()) candiWidth -= mExpandButtonWidth;
+        // * 2 for expand buttons: newly added paste button
+        if (mTotalWidth > mScreenWidth || isEmpty()) candiWidth -= mExpandButtonWidth * 2;
         if (DEBUG)
             Log.i(TAG, "resetWidth() candiWidth:" + candiWidth);
         this.setLayoutParams(new LinearLayout.LayoutParams(candiWidth, mHeight));
@@ -1176,6 +1181,20 @@ public class CandidateView extends View implements View.OnClickListener {
     public void startVoiceInput(){
         if(mService!=null)
             mService.startVoiceInput();
+    }
+
+    public Boolean isClipboardEmpty(){
+        return getClipboardText().isEmpty();
+    }
+
+    // paste text from system clipboard
+    public void paste() {
+        mService.commitText(getClipboardText());
+    }
+
+    private String getClipboardText() {
+        return ((ClipboardManager)getContext().getSystemService(CLIPBOARD_SERVICE))
+            .getPrimaryClip().getItemAt(0).getText().toString();
     }
 
     @Override

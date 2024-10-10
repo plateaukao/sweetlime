@@ -541,6 +541,13 @@ public class LIMEService extends InputMethodService implements
         initOnStartInput(attribute);
     }
 
+    public void commitText(String text) {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic != null) {
+            ic.commitText(text, 0);
+        }
+    }
+
     /**
      * Initialization for IM and softkeybaords, and also choose wring lanaguage mode
      * according the input attrubute in editorInfo

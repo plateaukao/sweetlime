@@ -509,6 +509,7 @@ public class SetupImFragment extends Fragment {
 
     final static private int RESTORE_FILE_REQUEST_CODE = 421;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_CODE_CLIPBOARD_PERMISSION = 2;
 
     private void askForStoragePermission() {
 

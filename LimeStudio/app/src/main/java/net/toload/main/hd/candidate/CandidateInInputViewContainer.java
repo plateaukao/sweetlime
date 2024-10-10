@@ -27,7 +27,9 @@
 package net.toload.main.hd.candidate;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
+
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -36,11 +38,12 @@ import android.widget.LinearLayout;
 
 import info.plateaukao.sweetlime.R;
 
-public class CandidateInInputViewContainer extends LinearLayout  implements View.OnClickListener {
+public class CandidateInInputViewContainer extends LinearLayout implements View.OnClickListener {
 
     private static final boolean DEBUG = false;
     private static final String TAG = "CandiInputViewContainer";
     private ImageButton mRightButton;
+    private ImageButton mPasteButton;
     private View mButtonRightExpand;
     private CandidateView mCandidateView;
 
@@ -60,17 +63,26 @@ public class CandidateInInputViewContainer extends LinearLayout  implements View
             Log.i(TAG, "initViews()");
         if (mCandidateView == null) {
             mButtonRightExpand = findViewById(R.id.candidate_right_parent);
-            mRightButton = (ImageButton) findViewById(R.id.candidate_right);
 
-            if (mRightButton != null) {
-                mRightButton.setOnClickListener(this);
-            }
-            mCandidateView = (CandidateView) findViewById(R.id.candidatesView);
-
+            mCandidateView = findViewById(R.id.candidatesView);
             mCandidateView.setBackgroundColor(mCandidateView.mColorBackground);
+
+            mRightButton = findViewById(R.id.candidate_right);
+            mRightButton.setOnClickListener(this);
             mRightButton.setBackgroundColor(mCandidateView.mColorBackground);
+
+            mPasteButton = findViewById(R.id.paste_button);
+            mPasteButton.setOnClickListener(v -> paste());
+            mPasteButton.setBackgroundColor(mCandidateView.mColorBackground);
+            mPasteButton.setColorFilter(mCandidateView.mColorComposingText);
+
             this.setBackgroundColor(mCandidateView.mColorBackground);
         }
+    }
+
+    // paste content from clipboard
+    public void paste() {
+        mCandidateView.paste();
     }
 
     @Override
@@ -93,6 +105,11 @@ public class CandidateInInputViewContainer extends LinearLayout  implements View
 
             if (mRightButton != null) {
                 mRightButton.setImageDrawable(showVoiceInputButton ? mCandidateView.mDrawableVoiceInput : mCandidateView.mDrawableExpandButton);
+            }
+
+            if (mPasteButton != null) {
+                Boolean shouldShowPasteButton = (showExpandButton || mCandidateView.isClipboardEmpty()) ? false : true;
+                mPasteButton.setVisibility(shouldShowPasteButton ? VISIBLE : GONE);
             }
 
             if (mButtonRightExpand != null) {

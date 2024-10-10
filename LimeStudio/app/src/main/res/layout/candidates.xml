@@ -62,6 +62,15 @@
             android:clickable="true"
             android:orientation="horizontal">
 
+		 <ImageButton
+			 android:id="@+id/paste_button"
+			 android:contentDescription="paste"
+			 android:src="@drawable/paste"
+			 android:layout_width="@dimen/candidate_expand_button_width"
+			 android:layout_height="fill_parent"
+			 android:visibility="gone"
+			 android:clickable="true"
+			 />
         <ImageButton
             android:id="@+id/candidate_right"
             android:contentDescription="@string/more_cand"
