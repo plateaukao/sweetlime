@@ -43,7 +43,6 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
     private static final boolean DEBUG = false;
     private static final String TAG = "CandiInputViewContainer";
     private ImageButton mRightButton;
-    private ImageButton mPasteButton;
     private View mButtonRightExpand;
     private CandidateView mCandidateView;
 
@@ -69,12 +68,11 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
 
             mRightButton = findViewById(R.id.candidate_right);
             mRightButton.setOnClickListener(this);
+            mRightButton.setOnLongClickListener(v -> {
+                paste();
+                return true;
+            });
             mRightButton.setBackgroundColor(mCandidateView.mColorBackground);
-
-            mPasteButton = findViewById(R.id.paste_button);
-            mPasteButton.setOnClickListener(v -> paste());
-            mPasteButton.setBackgroundColor(mCandidateView.mColorBackground);
-            mPasteButton.setColorFilter(mCandidateView.mColorComposingText);
 
             this.setBackgroundColor(mCandidateView.mColorBackground);
         }
@@ -105,11 +103,6 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
 
             if (mRightButton != null) {
                 mRightButton.setImageDrawable(showVoiceInputButton ? mCandidateView.mDrawableVoiceInput : mCandidateView.mDrawableExpandButton);
-            }
-
-            if (mPasteButton != null) {
-                Boolean shouldShowPasteButton = (showExpandButton || mCandidateView.isClipboardEmpty()) ? false : true;
-                mPasteButton.setVisibility(shouldShowPasteButton ? VISIBLE : INVISIBLE);
             }
 
             if (mButtonRightExpand != null) {

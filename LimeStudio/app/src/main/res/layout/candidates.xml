@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ /*
   ~  *
   ~  **    Copyright 2015, The LimeIME Open Source Project
@@ -23,64 +22,51 @@
   ~  */
   -->
 
-<net.toload.main.hd.candidate.CandidateViewContainer
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_transparent"
-			>
+<net.toload.main.hd.candidate.CandidateViewContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_transparent"
+    android:orientation="vertical">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/embeddedComposing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/composing_text_size"
-        android:textColor="@color/second_foreground_light"
         android:background="@color/composing_background_light"
-        android:minWidth="0dip"
         android:gravity="top"
-        />
+        android:minWidth="0dip"
+        android:textColor="@color/second_foreground_light"
+        android:textSize="@dimen/composing_text_size" />
+
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:background="@color/third_background_light">
 
-    <view xmlns:android="http://schemas.android.com/apk/res/android"
-		    class="net.toload.main.hd.candidate.CandidateView"
-	        android:id="@+id/candidates"
-	        android:layout_width="0dp"
-	        android:layout_height="@dimen/candidate_stripe_height"
-	        android:layout_weight="1"
-	        android:background="@color/third_background_light"
-			/>
+        <view xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/candidates"
+            class="net.toload.main.hd.candidate.CandidateView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/candidate_stripe_height"
+            android:layout_weight="1"
+            android:background="@color/third_background_light" />
 
-     <LinearLayout
+        <LinearLayout
             android:id="@+id/candidate_right_parent"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:layout_gravity="right"
             android:clickable="true"
-		 android:layout_gravity="right"
             android:orientation="horizontal">
 
-		 <ImageButton
-			 android:id="@+id/paste_button"
-			 android:contentDescription="paste"
-			 android:src="@drawable/paste"
-			 android:layout_width="@dimen/candidate_expand_button_width"
-			 android:layout_height="fill_parent"
-			 android:visibility="invisible"
-			 android:clickable="true"
-			 />
-        <ImageButton
-            android:id="@+id/candidate_right"
-            android:contentDescription="@string/more_cand"
-            android:src="@drawable/ic_suggest_expander"
-            android:layout_width="@dimen/candidate_expand_button_width"
-            android:layout_height="fill_parent"
-            android:clickable="true"
-            />
+            <ImageButton
+                android:id="@+id/candidate_right"
+                android:layout_width="@dimen/candidate_expand_button_width"
+                android:layout_height="fill_parent"
+                android:clickable="true"
+                android:contentDescription="@string/more_cand"
+                android:src="@drawable/ic_suggest_expander" />
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-    
+
 </net.toload.main.hd.candidate.CandidateViewContainer>
