@@ -2265,7 +2265,7 @@ public class LIMEService extends InputMethodService implements
 //                        return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
 //                    }
                     //Jeremy '11,6,19 EZ and ETEN use "`" as IM Keys, and also custom may use "`".
-                    if (list.size() > 0) {
+                    if (!list.isEmpty()) {
                         // Setup sel key display if
                         String selkey = null;
                         if (disable_physical_selection && finalHasPhysicalKeyPressed) {
@@ -2289,21 +2289,13 @@ public class LIMEService extends InputMethodService implements
                             else if (selkeyOption == 2) selkey = mixedModeSelkey + " " + selkey;
                         }
 
-//                        try {
-//                            sleep(0);
-//                        } catch (InterruptedException ignored) {
-//                            ignored.printStackTrace();
-//                            return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-//                        }
-
-
                         // Emoji Control
                         // Check the Emoji parameter setting and load icons into the suggestions list
                         if(mLIMEPref.getEmojiMode() && !finalHasPhysicalKeyPressed){
                             HashMap<String, String> emojiCheck = new HashMap<>();
                             List<Mapping> emojiList = new LinkedList<>();
 
-                            if(list.size() > 0){
+                            if(!list.isEmpty()){
 
                                 List<Mapping> item1 = null, item2, item3;
 
@@ -2315,7 +2307,7 @@ public class LIMEService extends InputMethodService implements
                                 if( list.get(0).getWord().matches("[A-Za-z]+") ) {
 
                                     item1 = SearchSrv.emojiConvert(list.get(0).getWord(), Lime.EMOJI_EN);
-                                    if (item1.size() > 0) {
+                                    if (!item1.isEmpty()) {
                                         for (Mapping m : item1) {
                                             if (emojiCheck.get(m.getWord()) == null) {
                                                 emojiList.add(m);
@@ -2326,7 +2318,7 @@ public class LIMEService extends InputMethodService implements
 
                                 }
 
-                                if(item1 == null || item1.size() == 0){
+                                if(item1 == null || item1.isEmpty()){
 
                                     //Log.i("EMOJI Check:", ""+list.get(1).getWord().getBytes().length);
                                     if (list.size() > 1 && list.get(1) != null && list.get(1).getWord() != null &&
@@ -2334,7 +2326,7 @@ public class LIMEService extends InputMethodService implements
                                             list.get(1).getWord().length() < 4
                                     ) {
                                         item2 = SearchSrv.emojiConvert(list.get(1).getWord(), Lime.EMOJI_TW);
-                                        if (item2.size() > 0) {
+                                        if (!item2.isEmpty()) {
                                             for (Mapping m : item2) {
                                                 if (emojiCheck.get(m.getWord()) == null) {
                                                     emojiList.add(m);
@@ -2342,9 +2334,9 @@ public class LIMEService extends InputMethodService implements
                                                 }
                                             }
                                         }
-                                        if (item2.size() == 0) {
+                                        if (item2.isEmpty()) {
                                             item3 = SearchSrv.emojiConvert(list.get(1).getWord(), Lime.EMOJI_CN);
-                                            if (item3.size() > 0) {
+                                            if (!item3.isEmpty()) {
                                                 for (Mapping m : item3) {
                                                     if (emojiCheck.get(m.getWord()) == null) {
                                                         emojiList.add(m);
@@ -2356,7 +2348,7 @@ public class LIMEService extends InputMethodService implements
                                     }
                                 }
 
-                                if(emojiList.size() > 0){
+                                if(!emojiList.isEmpty()){
                                     list.addAll(insertPosition, emojiList);
                                 }
                             }
@@ -2380,7 +2372,7 @@ public class LIMEService extends InputMethodService implements
                         }
                         if (mCandidateView != null
                                 && !keynameString.toUpperCase(Locale.US).equals(finalKeyString.toUpperCase(Locale.US))
-                                && !keynameString.trim().equals("")
+                                && !keynameString.trim().isEmpty()
                         ) {
                             try {
                                 sleep(0);
