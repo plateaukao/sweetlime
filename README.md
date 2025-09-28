@@ -1,3 +1,8 @@
+# 往後不再維護！ 請前往安裝 [fcitx5-android](https://github.com/plateaukao/fcitx5-android/releases) 或是原始版本的 [fcitx5-android/fcitx5-android](https://github.com/fcitx5-android/fcitx5-android)
+# 並參考網路上的教學安裝所需的字碼表 (搜尋關鍵字: 無蝦米 fcitx)
+
+* fcitx5-android 持續有在開發中，可以自訂輸入法及鍵盤的外觀，設定上也很容易。最重要的是：**在新版的 Android 中，外接硬體鍵盤時，可以正確地顯示輸入中的候選字視窗。**
+
 ## Sweet LIME 
 
 (Lightweight Input Method Editor) 程式碼採用開源GPL 的方式授權，原始專案網站分別放置在 Github 及 中研院 OpenFoundary 上對外開放。
