@@ -232,6 +232,10 @@ public class LIMEService extends InputMethodService implements
     private boolean hasChineseSymbolCandidatesShown = false;
     private boolean hasCandidatesShown = false;
 
+    // Track key codes consumed in onKeyDown so we can also consume them in onKeyUp,
+    // preventing the key-up events from being forwarded to the application.
+    private final java.util.Set<Integer> mConsumedKeyCodes = new java.util.HashSet<>();
+
 
     public LIMEService(){
         mIsHardwareAcceleratedDrawingEnabled = true;// this.enableHardwareAcceleration();
@@ -761,8 +765,16 @@ public class LIMEService extends InputMethodService implements
         InputConnection ic = getCurrentInputConnection();
 
         if (mComposing.length() > 0
-                && !(candidatesEnd == candidatesStart) //Jeremy '12,7,2 bug fixed on composition being clear after second word in chrome 
-                && candidatesStart >= 0 && candidatesEnd > 0 // in composing  
+                && !(candidatesEnd == candidatesStart) //Jeremy '12,7,2 bug fixed on composition being clear after second word in chrome
+                && candidatesStart >= 0 && candidatesEnd > 0 // in composing
+                // Verify the composing span matches current mComposing length.
+                // When typing fast (especially on Bluetooth keyboards), stale
+                // onUpdateSelection callbacks from earlier setComposingText calls
+                // can arrive with outdated composing span values, making it look
+                // like the cursor moved outside the composing area. Ignore stale callbacks
+                // to prevent finishComposingText() from committing the composing
+                // text (English letters) as regular text prematurely.
+                && (candidatesEnd - candidatesStart) == mComposing.length()
                 ) {
             if (newSelStart < candidatesStart || newSelStart > candidatesEnd) { // cursor is moved before or after composing area
 
@@ -1027,6 +1039,7 @@ public class LIMEService extends InputMethodService implements
                 // of let the application to the delete itself.
                 hasPhysicalKeyPressed = true;
                 onKey(LIMEBaseKeyboard.KEYCODE_DELETE, null);
+                mConsumedKeyCodes.add(keyCode);
                 return true;
 
             case KeyEvent.KEYCODE_ENTER:
@@ -1081,8 +1094,11 @@ public class LIMEService extends InputMethodService implements
                     if (hasMenuPress) hasMenuProcessed = true;
                     hasSpaceProcessed = true;
                     return true;
-                } else
-                    return translateKeyDown(keyCode, event);
+                } else {
+                    boolean handled = translateKeyDown(keyCode, event);
+                    if (handled) mConsumedKeyCodes.add(keyCode);
+                    return handled;
+                }
 
             case MY_KEYCODE_SWITCH_CHARSET: // experia pro earth key
             case 1000: // milestone chi/eng key
@@ -1108,6 +1124,7 @@ public class LIMEService extends InputMethodService implements
                 if (!(hasCtrlPress ||  event.isCtrlPressed()  || hasMenuPress)) {
                     if (translateKeyDown(keyCode, event)) {
                         if (DEBUG) Log.i(TAG, "Onkeydown():tranlatekeydown:true");
+                        mConsumedKeyCodes.add(keyCode);
                         return true;
                     }
                 }
@@ -1325,8 +1342,13 @@ public class LIMEService extends InputMethodService implements
 
                 if (hasSpaceProcessed)
                     return true;
+                // fall through to default
             default:
-
+                // Consume key-up events for keys that were consumed in onKeyDown
+                // to prevent them from being forwarded to the application
+                if (mConsumedKeyCodes.remove(keyCode)) {
+                    return true;
+                }
         }
         // Update metakeystate of IC maintained by MetaKeyKeyListerner
         //setInputConnectionMetaStateAsCurrentMetaKeyKeyListenerState(); moved to OnKey by jeremy '12,6,13
@@ -1770,15 +1792,30 @@ public class LIMEService extends InputMethodService implements
                         activeIM.equals("phonetic") && (mComposing.toString().endsWith(" ") || mComposing.length() == 0))
                         || primaryCode == MY_KEYCODE_ENTER)) {
 
+            // If composing text exists but candidates haven't loaded yet
+            // (query thread still running), wait briefly for it to complete
+            // so the user's space/enter can pick the correct candidate.
+            if (mComposing.length() > 0 && mCandidateList == null
+                    && queryThread != null && queryThread.isAlive()) {
+                try {
+                    queryThread.join(300);
+                } catch (InterruptedException ignored) {}
+            }
+
             if (hasCandidatesShown) { //Replace isCandidateShown() with hasCandidatesShown by Jeremy '12,5,6
                 if (!pickHighlightedCandidate()) {//Jeremy '12,5,11 fixed for not sedning related.
                     if (mComposing.length() == 0)
                         hideCandidateView();
+                    // Clear mComposing before sendKeyChar to keep state consistent
+                    // (sendKeyChar's commitText replaces composing text on IC)
+                    mComposing.setLength(0);
                     sendKeyChar((char) primaryCode);
 
                 }
 
             } else {
+                // Clear mComposing before sendKeyChar to keep state consistent
+                mComposing.setLength(0);
                 sendKeyChar((char) primaryCode);
             }
 
@@ -2249,6 +2286,12 @@ public class LIMEService extends InputMethodService implements
             final String finalKeyString = keyString;
             final boolean finalHasPhysicalKeyPressed = hasPhysicalKeyPressed;
             if (queryThread != null && queryThread.isAlive()) queryThread.interrupt();
+            // Invalidate stale candidates to prevent committing wrong character
+            // when typing fast on physical keyboard (race between query thread and key events).
+            // Both must be cleared: pickCandidateManually reads from mCandidateList
+            // to set selectedCandidate, so clearing only selectedCandidate is insufficient.
+            selectedCandidate = null;
+            mCandidateList = null;
             queryThread = new Thread() {
 
                 public void run() {
@@ -2716,15 +2759,19 @@ public class LIMEService extends InputMethodService implements
                 mCandidateView = mCandidateViewStandAlone; //Jeremy '12,5,4 use standalone candidateView for physical keyboard (no soft keyboard shown)
                 //forceHideCandidateView(); //Jeremy '16,7,19 caused the first composing character missing typed with physical keyboard.
                 if (hasPhysicalKeyPressed) {
-                    // cancel the current composing first before closing soft keyboard and switched to physical keyboarding typing.
-                    InputConnection ic = getCurrentInputConnection();
-                    if (ic != null && mPredictionOn) ic.setComposingText("", 0);
-                    mInputView.closing();
-                    requestHideSelf(0);
-                    // preserved the last character typed with physical keyboard in composing
-                    if(mComposing.length() > 1)
-                        mComposing.delete(0, mComposing.length()-1);
-                    updateCandidates();
+                    // Post IC and UI operations to main thread to avoid race conditions.
+                    // setSuggestions is called from the background queryThread, but
+                    // InputConnection and View operations must run on the main thread.
+                    mCandidateViewHandler.post(() -> {
+                        InputConnection ic = getCurrentInputConnection();
+                        if (ic != null && mPredictionOn) ic.setComposingText("", 0);
+                        mInputView.closing();
+                        requestHideSelf(0);
+                        // preserved the last character typed with physical keyboard in composing
+                        if(mComposing.length() > 1)
+                            mComposing.delete(0, mComposing.length()-1);
+                        updateCandidates();
+                    });
                 }
             } else if((mFixedCandidateViewOn || !hasPhysicalKeyPressed ) &&
                     mCandidateView != mCandidateViewInInputView) {
@@ -3181,7 +3228,7 @@ public class LIMEService extends InputMethodService implements
         }
 
 
-        if (i < 0 || i >= mCandidateList.size()) {
+        if (i < 0 || mCandidateList == null || i >= mCandidateList.size()) {
             return false;
         } else {
             pickCandidateManually(i);
