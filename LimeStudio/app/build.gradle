@@ -23,6 +23,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     signingConfigs {
@@ -58,6 +59,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     lintOptions {
         abortOnError false
     }
@@ -69,4 +73,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "androidx.activity:activity:1.4.0"
     implementation 'androidx.documentfile:documentfile:1.0.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 }

@@ -89,7 +89,7 @@ public class LIMEService extends InputMethodService implements
     private static final boolean DEBUG = false;
     private static final String TAG = "LIMEService";
 
-    private static Thread queryThread; // queryThread for no-blocking I/O  Jeremy '15,6,1
+    private final QueryDispatcher queryDispatcher = new QueryDispatcher();
 
     static final int KEYCODE_SWITCH_TO_SYMBOL_MODE = -2;
     static final int KEYCODE_SWITCH_TO_ENGLISH_MODE = -9;
@@ -1796,10 +1796,8 @@ public class LIMEService extends InputMethodService implements
             // (query thread still running), wait briefly for it to complete
             // so the user's space/enter can pick the correct candidate.
             if (mComposing.length() > 0 && mCandidateList == null
-                    && queryThread != null && queryThread.isAlive()) {
-                try {
-                    queryThread.join(300);
-                } catch (InterruptedException ignored) {}
+                    && queryDispatcher.isActive()) {
+                queryDispatcher.awaitCompletion(300);
             }
 
             if (hasCandidatesShown) { //Replace isCandidateShown() with hasCandidatesShown by Jeremy '12,5,6
@@ -2285,28 +2283,21 @@ public class LIMEService extends InputMethodService implements
 
             final String finalKeyString = keyString;
             final boolean finalHasPhysicalKeyPressed = hasPhysicalKeyPressed;
-            if (queryThread != null && queryThread.isAlive()) queryThread.interrupt();
+            queryDispatcher.cancel();
             // Invalidate stale candidates to prevent committing wrong character
             // when typing fast on physical keyboard (race between query thread and key events).
             // Both must be cleared: pickCandidateManually reads from mCandidateList
             // to set selectedCandidate, so clearing only selectedCandidate is insufficient.
             selectedCandidate = null;
             mCandidateList = null;
-            queryThread = new Thread() {
-
-                public void run() {
+            queryDispatcher.launchQuery(() -> {
 
                     try {
                         list.addAll(SearchSrv.getMappingByCode(finalKeyString, !finalHasPhysicalKeyPressed, getAllRecords));
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-//                    try {
-//                        sleep(0);
-//                    } catch (InterruptedException ignored) {
-//                        ignored.printStackTrace();
-//                        return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-//                    }
+                    if (Thread.interrupted()) return;
                     //Jeremy '11,6,19 EZ and ETEN use "`" as IM Keys, and also custom may use "`".
                     if (!list.isEmpty()) {
                         // Setup sel key display if
@@ -2417,18 +2408,11 @@ public class LIMEService extends InputMethodService implements
                                 && !keynameString.toUpperCase(Locale.US).equals(finalKeyString.toUpperCase(Locale.US))
                                 && !keynameString.trim().isEmpty()
                         ) {
-                            try {
-                                sleep(0);
-                            } catch (InterruptedException ignored) {
-                                ignored.printStackTrace();
-                                return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-                            }
+                            if (Thread.interrupted()) return;
                             mCandidateView.setComposingText(keynameString);
                         }
                     }
-                }
-            };
-            queryThread.start();
+            });
         } else
             //Jermy '11,8,14
             clearSuggestions();
@@ -2489,9 +2473,7 @@ public class LIMEService extends InputMethodService implements
                         tempEnglishList.clear();
 
                         final boolean finalHasPhysicalKeyPressed = hasPhysicalKeyPressed;
-                        if (queryThread != null && queryThread.isAlive()) queryThread.interrupt();
-                        queryThread = new Thread() {
-                            public void run() {
+                        queryDispatcher.launchQuery(() -> {
                                 final Mapping self = new Mapping();
                                 self.setWord(tempEnglishWord.toString());
                                 self.setComposingCodeRecord();
@@ -2502,12 +2484,7 @@ public class LIMEService extends InputMethodService implements
                                 } catch (RemoteException e) {
                                     e.printStackTrace();
                                 }
-                                try {
-                                    sleep(0);
-                                } catch (InterruptedException ignored) {
-                                    ignored.printStackTrace();
-                                    return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-                                }
+                                if (Thread.interrupted()) return;
 
                                 if ((suggestions != null ? suggestions.size() : 0) > 0) {
                                     list.add(self);
@@ -2519,12 +2496,7 @@ public class LIMEService extends InputMethodService implements
                                     if (disable_physical_selection && finalHasPhysicalKeyPressed) {
                                         selkey = "";
                                     }
-                                    try {
-                                        sleep(0);
-                                    } catch (InterruptedException ignored) {
-                                        ignored.printStackTrace();
-                                        return;   // terminate thread here, since it is interrupted and more recent getMappingByCode will update the suggestions.
-                                    }
+                                    if (Thread.interrupted()) return;
 
 
                                     // Emoji Control
@@ -2568,9 +2540,7 @@ public class LIMEService extends InputMethodService implements
                                     //Jermy '11,8,14
                                     clearSuggestions();
                                 }
-                            }
-                        };
-                        queryThread.start();
+                        });
                     }
 
                 }
@@ -2600,9 +2570,7 @@ public class LIMEService extends InputMethodService implements
                 && !committedCandidate.getWord().equals("")) {
 
             final boolean finalHasPhysicalKeyPressed = hasPhysicalKeyPressed;
-            if (queryThread != null && queryThread.isAlive()) queryThread.interrupt();
-            queryThread = new Thread() {
-                public void run() {
+            queryDispatcher.launchQuery(() -> {
 
                     LinkedList<Mapping> list = new LinkedList<>();
                     //Jeremy '11,8,9 Insert completion suggestions from application
@@ -2613,7 +2581,6 @@ public class LIMEService extends InputMethodService implements
 
 
                     if (committedCandidate != null && hasMappingList) {
-                        if (queryThread != null && queryThread.isAlive()) queryThread.interrupt();
                         if(!committedCandidate.isEmojiRecord() && !committedCandidate.isChinesePunctuationSymbolRecord()){
                             list.addAll(SearchSrv.getRelatedPhrase(committedCandidate.getWord(), getAllRecords));
                         }
@@ -2634,9 +2601,7 @@ public class LIMEService extends InputMethodService implements
                             clearSuggestions();
                         }
                     }
-                }
-            };
-            queryThread.start();
+            });
         }
 
     }
@@ -2760,7 +2725,7 @@ public class LIMEService extends InputMethodService implements
                 //forceHideCandidateView(); //Jeremy '16,7,19 caused the first composing character missing typed with physical keyboard.
                 if (hasPhysicalKeyPressed) {
                     // Post IC and UI operations to main thread to avoid race conditions.
-                    // setSuggestions is called from the background queryThread, but
+                    // setSuggestions is called from the background query coroutine, but
                     // InputConnection and View operations must run on the main thread.
                     mCandidateViewHandler.post(() -> {
                         InputConnection ic = getCurrentInputConnection();
@@ -3587,6 +3552,7 @@ public class LIMEService extends InputMethodService implements
         if (DEBUG)
             Log.i(TAG, "onDestroy()");
 
+        queryDispatcher.destroy();
         //jeremy 12,4,21 need to check again---
         //clearComposing(true); see no need to do this '12,4,21
         super.onDestroy();
