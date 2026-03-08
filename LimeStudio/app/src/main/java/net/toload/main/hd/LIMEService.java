@@ -842,7 +842,18 @@ public class LIMEService extends InputMethodService implements
      * option.
      */
     private boolean translateKeyDown(int keyCode, KeyEvent event) {
+        boolean wasPhysicalKeyPressed = hasPhysicalKeyPressed;
         hasPhysicalKeyPressed = true;
+
+        if (!wasPhysicalKeyPressed && mInputView != null && mInputView.isShown()) {
+            // First time a physical key is pressed while the soft keyboard is visible.
+            // Hide the soft keyboard *synchronously* now, before any typing begins.
+            // Doing this here rather than asynchronously in setSuggestions() prevents
+            // the Android framework from implicitly committing the first typed letter.
+            requestHideSelf(0);
+            mInputView.closing();
+            updateInputViewShown();
+        }
 
         // If user use the physical keyboard then not fixed the candidate view also use
         // the tranparent background
@@ -2794,15 +2805,6 @@ public class LIMEService extends InputMethodService implements
                                                            // keyboard (no soft keyboard shown)
                 // forceHideCandidateView(); //Jeremy '16,7,19 caused the first composing
                 // character missing typed with physical keyboard.
-                if (hasPhysicalKeyPressed) {
-                    // Post IC and UI operations to main thread to avoid race conditions.
-                    // setSuggestions is called from the background query coroutine, but
-                    // InputConnection and View operations must run on the main thread.
-                    mCandidateViewHandler.post(() -> {
-                        mInputView.closing();
-                        updateInputViewShown();
-                    });
-                }
             } else if ((mFixedCandidateViewOn || !hasPhysicalKeyPressed) &&
                     mCandidateView != mCandidateViewInInputView) {
                 mCandidateViewStandAlone.clear();
