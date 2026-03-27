@@ -444,7 +444,12 @@ public class LIMEPreferenceManager {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return Integer.parseInt(sp.getString("similiar_list", "20"));
 	}
-	
+
+	public int getCustomImResultLimit(){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return Integer.parseInt(sp.getString("custom_im_result_limit", "210"));
+	}
+
 	public float getFontSize(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return Float.parseFloat(sp.getString("font_size", "1"));

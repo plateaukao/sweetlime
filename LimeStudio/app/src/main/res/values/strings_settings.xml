@@ -135,6 +135,7 @@
 
     <string name="table_list">對應表選取</string>
     <string name="similiar_list">建議字顯示數量</string>
+    <string name="custom_im_result_limit">自建輸入法候選字數量</string>
     <string name="vibrate_on_keypress">打字震動</string>
     <string name="sound_on_keypress">打字音效</string>
     <string name="display_number_keypads">顯示數字鍵盤</string>
@@ -412,6 +413,24 @@
         <item>30</item>
         <item>40</item>
         <item>50</item>
+    </string-array>
+
+    <string-array name="custom_im_result_limit_options">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>50</item>
+        <item>210 (全部)</item>
+    </string-array>
+
+    <string-array name="custom_im_result_limit_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>50</item>
+        <item>210</item>
     </string-array>
 
     <!-- Table Selection list -->

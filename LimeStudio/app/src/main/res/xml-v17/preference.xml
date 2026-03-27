@@ -344,6 +344,13 @@
             android:entryValues="@array/similiar_codes"
             android:key="similiar_list"
             android:title="@string/similiar_list" />
+        <ListPreference
+            android:defaultValue="210"
+            android:dialogTitle="@string/custom_im_result_limit"
+            android:entries="@array/custom_im_result_limit_options"
+            android:entryValues="@array/custom_im_result_limit_values"
+            android:key="custom_im_result_limit"
+            android:title="@string/custom_im_result_limit" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="similiar_enable"
