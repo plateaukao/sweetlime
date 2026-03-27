@@ -35,8 +35,8 @@ android {
 
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 702
-        versionName '7.0.2'
+        versionCode 710
+        versionName '7.1'
     }
     buildTypes {
         release {
