@@ -87,6 +87,7 @@ public class LimeDB extends LimeSQLiteOpenHelper {
     // original value
     private final static String INITIAL_RESULT_LIMIT = "15";
     private final static String FINAL_RESULT_LIMIT = "210";
+    private final static String CUSTOM_IM_INITIAL_RESULT_LIMIT = "5";
     private final static int INITIAL_RELATED_LIMIT = 5;
     private final static int COMPOSING_CODE_LENGTH_LIMIT = 16; //Jeremy '12,5,30 changed from 12 to 16 because of improved performance using binary tree.
     private final static int DUALCODE_COMPOSING_LIMIT = 16; //Jeremy '12,5,30 changed from 7 to 16 because of improved performance using binary tree.
@@ -1570,7 +1571,8 @@ public class LimeDB extends LimeSQLiteOpenHelper {
                     String escapedCode = code.replaceAll("'", "''");
                     int codeLen = code.length();
 
-                    String limitClause = (getAllRecords) ? FINAL_RESULT_LIMIT : INITIAL_RESULT_LIMIT;
+                    String initialLimit = tablename.equals(Lime.DB_TABLE_CUSTOM) ? CUSTOM_IM_INITIAL_RESULT_LIMIT : INITIAL_RESULT_LIMIT;
+                    String limitClause = (getAllRecords) ? FINAL_RESULT_LIMIT : initialLimit;
 
                     //Jeremy '15, 6, 1 between search clause without using related column for better sorting order.
                     //if(betweenSearch){

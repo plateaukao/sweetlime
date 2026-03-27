@@ -2935,8 +2935,18 @@ public class LIMEService extends InputMethodService implements
     }
 
     private void dismissMiniCandidatePopup() {
-        if (mMiniCandidatePopup != null && mMiniCandidatePopup.isShowing()) {
-            mMiniCandidatePopup.dismiss();
+        if (mMiniCandidatePopup != null) {
+            if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+                if (mMiniCandidatePopup.isShowing()) {
+                    mMiniCandidatePopup.dismiss();
+                }
+            } else {
+                mCandidateViewHandler.post(() -> {
+                    if (mMiniCandidatePopup != null && mMiniCandidatePopup.isShowing()) {
+                        mMiniCandidatePopup.dismiss();
+                    }
+                });
+            }
         }
     }
 
