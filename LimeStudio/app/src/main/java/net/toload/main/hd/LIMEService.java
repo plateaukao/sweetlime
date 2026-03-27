@@ -395,6 +395,19 @@ public class LIMEService extends InputMethodService implements
     }
 
     /**
+     * Override this to control when the input view (soft keyboard) should be shown.
+     * When a physical keyboard is active, return false to hide the soft keyboard
+     * while keeping the IME window alive for the candidate bar.
+     */
+    @Override
+    public boolean onEvaluateInputViewShown() {
+        if (hasPhysicalKeyPressed) {
+            return false;
+        }
+        return super.onEvaluateInputViewShown();
+    }
+
+    /**
      * This is called when the user is done editing a field. We can use this to
      * reset our state.
      */
@@ -847,10 +860,12 @@ public class LIMEService extends InputMethodService implements
 
         if (!wasPhysicalKeyPressed && mInputView != null && mInputView.isShown()) {
             // First time a physical key is pressed while the soft keyboard is visible.
-            // Hide the soft keyboard *synchronously* now, before any typing begins.
-            // Doing this here rather than asynchronously in setSuggestions() prevents
-            // the Android framework from implicitly committing the first typed letter.
-            requestHideSelf(0);
+            // Hide only the soft keyboard (input view), not the entire IME window.
+            // Do NOT call requestHideSelf(0) here — on Android 12+ (API 31+), it
+            // permanently hides the IME window, blocking setCandidatesViewShown(true)
+            // from re-showing it. updateInputViewShown() calls onEvaluateInputViewShown()
+            // (which returns false when hasPhysicalKeyPressed is true), hiding the
+            // input view frame while keeping the IME window alive for the candidate bar.
             mInputView.closing();
             updateInputViewShown();
         }
@@ -858,7 +873,9 @@ public class LIMEService extends InputMethodService implements
         // If user use the physical keyboard then not fixed the candidate view also use
         // the tranparent background
         mFixedCandidateViewOn = false;
-        mCandidateView.setTransparentCandidateView(false);
+        if (mCandidateView != null) {
+            mCandidateView.setTransparentCandidateView(false);
+        }
 
         if (DEBUG)
             Log.i(TAG, "translateKeyDown() LIMEMetaKeyKeyListener.getMetaState(mMetaState) = "
@@ -2909,7 +2926,21 @@ public class LIMEService extends InputMethodService implements
         else
             super.setCandidatesViewShown(false);
 
-        if (DEBUG)
+        // On Android 12+ (API 31+), the framework may block the internal
+        // showWindow(false) call when a physical keyboard is connected, preventing
+        // the IME window from appearing. Force it open via two mechanisms:
+        // 1. showWindow(true) — directly shows the window. The soft keyboard stays
+        //    hidden because onEvaluateInputViewShown() returns false.
+        // 2. requestShowSelf() (API 28+) — asks the system to show the IME through
+        //    proper channels, as a fallback.
+        if (shown && hasPhysicalKeyPressed) {
+            showWindow(true);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                requestShowSelf(0);
+            }
+        }
+
+        if (DEBUG && mCandidateViewStandAlone != null)
             Log.i(TAG, "isCandidateViewShown:" + mCandidateViewStandAlone.isShown());
 
     }
