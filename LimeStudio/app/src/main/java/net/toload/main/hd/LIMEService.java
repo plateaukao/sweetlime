@@ -48,10 +48,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.graphics.Matrix;
+import android.view.Gravity;
 import android.view.inputmethod.CompletionInfo;
+import android.view.inputmethod.CursorAnchorInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -108,6 +112,13 @@ public class LIMEService extends InputMethodService implements
     private CandidateViewContainer mCandidateViewContainer = null;
     private CompletionInfo[] mCompletions;
     private TextView candidateHintView = null;
+
+    // Floating mini candidate bar for physical keyboard mode
+    private PopupWindow mMiniCandidatePopup;
+    private android.widget.LinearLayout mMiniCandidateLayout;
+    private static final int MINI_CANDIDATE_COUNT = 4;
+    private int mCursorScreenX = 0, mCursorScreenTop = 0, mCursorScreenBottom = 0;
+    private boolean mHasCursorAnchor = false;
 
     private StringBuilder mComposing = new StringBuilder();
 
@@ -395,16 +406,45 @@ public class LIMEService extends InputMethodService implements
     }
 
     /**
-     * Override this to control when the input view (soft keyboard) should be shown.
-     * When a physical keyboard is active, return false to hide the soft keyboard
-     * while keeping the IME window alive for the candidate bar.
+     * Always return true so the IME window is available for the candidate bar,
+     * even when a physical keyboard is connected. The soft keyboard view itself
+     * is hidden by setting its visibility to GONE when physical keyboard is active.
+     * This is the same approach used by fcitx5-android.
      */
+    @SuppressLint("MissingSuperCall")
     @Override
     public boolean onEvaluateInputViewShown() {
+        return true;
+    }
+
+    /**
+     * Override to hide the soft keyboard when physical keyboard is active,
+     * while keeping the IME window (and candidate bar) visible.
+     */
+    @Override
+    public void updateInputViewShown() {
+        if (mInputView == null) return;
+        super.updateInputViewShown();
         if (hasPhysicalKeyPressed) {
-            return false;
+            hideInputFrame();
         }
-        return super.onEvaluateInputViewShown();
+    }
+
+    private void hideInputFrame() {
+        if (mInputView != null) mInputView.setVisibility(View.GONE);
+        if (mCandidateInInputView != null) mCandidateInInputView.setVisibility(View.GONE);
+        // Walk up the parent chain to hide the framework's input frame container
+        View v = mInputView;
+        while (v != null && v.getParent() instanceof View) {
+            View parent = (View) v.getParent();
+            // The framework's mInputFrame is a FrameLayout wrapping our input view
+            if (parent.getClass().getName().contains("InputMethodService")
+                    || parent instanceof android.widget.FrameLayout) {
+                parent.setVisibility(View.GONE);
+                break;
+            }
+            v = parent;
+        }
     }
 
     /**
@@ -510,6 +550,7 @@ public class LIMEService extends InputMethodService implements
      * Clear suggestions or candidates in candidate view.
      */
     private synchronized void clearSuggestions() {
+        dismissMiniCandidatePopup();
         if (mCandidateView != null) {
             if (DEBUG)
                 Log.i(TAG, "clearSuggestions(): "
@@ -589,6 +630,12 @@ public class LIMEService extends InputMethodService implements
                     + "; attribute.inputType & EditorInfo.TYPE_MASK_VARIATION: "
                     + (attribute.inputType & EditorInfo.TYPE_MASK_VARIATION));
 
+        // Ensure mInputView is created even if onCreateInputView() hasn't been called yet
+        // (e.g., physical keyboard connected on Android 12+ where the framework may skip it)
+        if (mInputView == null) {
+            initialViewAndSwitcher(true);
+        }
+
         if (mInputView == null) {
             return;
         }
@@ -621,6 +668,20 @@ public class LIMEService extends InputMethodService implements
 
         hasPhysicalKeyPressed = false; // Jeremy '11,9,6 reset phsycalkeyflag
         hasCandidatesShown = false;
+        mHasCursorAnchor = false;
+        dismissMiniCandidatePopup();
+
+        // Restore soft keyboard visibility when switching back from physical keyboard
+        if (mInputView != null) {
+            mInputView.setVisibility(View.VISIBLE);
+        }
+
+        // Request cursor position updates for floating candidate bar
+        InputConnection icForCursor = getCurrentInputConnection();
+        if (icForCursor != null) {
+            icForCursor.requestCursorUpdates(
+                    InputConnection.CURSOR_UPDATE_IMMEDIATE | InputConnection.CURSOR_UPDATE_MONITOR);
+        }
 
         // Reset the IM softkeyboard settings. Jeremy '11,6,19
         try {
@@ -826,6 +887,29 @@ public class LIMEService extends InputMethodService implements
 
     }
 
+    @Override
+    public void onUpdateCursorAnchorInfo(CursorAnchorInfo info) {
+        if (info == null) return;
+        float x = info.getInsertionMarkerHorizontal();
+        float top = info.getInsertionMarkerTop();
+        float bottom = info.getInsertionMarkerBottom();
+        if (!Float.isNaN(x) && !Float.isNaN(bottom)) {
+            Matrix matrix = info.getMatrix();
+            float[] ptBottom = new float[]{x, bottom};
+            matrix.mapPoints(ptBottom);
+            mCursorScreenX = (int) ptBottom[0];
+            mCursorScreenBottom = (int) ptBottom[1];
+            if (!Float.isNaN(top)) {
+                float[] ptTop = new float[]{x, top};
+                matrix.mapPoints(ptTop);
+                mCursorScreenTop = (int) ptTop[1];
+            } else {
+                mCursorScreenTop = mCursorScreenBottom - (int) (20 * getResources().getDisplayMetrics().density);
+            }
+            mHasCursorAnchor = true;
+        }
+    }
+
     /**
      * This tells us about completions that the editor has determined based on
      * the current text in it. We want to use this in fullscreen mode to show
@@ -855,18 +939,21 @@ public class LIMEService extends InputMethodService implements
      * option.
      */
     private boolean translateKeyDown(int keyCode, KeyEvent event) {
+        Log.i(TAG, "translateKeyDown(): keyCode=" + keyCode
+                + ", mInputView=" + (mInputView != null)
+                + ", mCandidateView=" + (mCandidateView != null)
+                + ", mEnglishOnly=" + mEnglishOnly);
         boolean wasPhysicalKeyPressed = hasPhysicalKeyPressed;
         hasPhysicalKeyPressed = true;
 
-        if (!wasPhysicalKeyPressed && mInputView != null && mInputView.isShown()) {
-            // First time a physical key is pressed while the soft keyboard is visible.
-            // Hide only the soft keyboard (input view), not the entire IME window.
-            // Do NOT call requestHideSelf(0) here — on Android 12+ (API 31+), it
-            // permanently hides the IME window, blocking setCandidatesViewShown(true)
-            // from re-showing it. updateInputViewShown() calls onEvaluateInputViewShown()
-            // (which returns false when hasPhysicalKeyPressed is true), hiding the
-            // input view frame while keeping the IME window alive for the candidate bar.
+        if (!wasPhysicalKeyPressed && mInputView != null) {
+            // First physical key press: hide the soft keyboard but keep the IME window.
             mInputView.closing();
+            mInputView.setVisibility(View.GONE);
+            // Force the IME window to show so the candidate bar can be displayed.
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                requestShowSelf(InputMethodManager.SHOW_FORCED);
+            }
             updateInputViewShown();
         }
 
@@ -2731,6 +2818,7 @@ public class LIMEService extends InputMethodService implements
     private void hideCandidateView() {
         if (DEBUG)
             Log.i(TAG, "hideCandidateView()");
+        dismissMiniCandidatePopup();
         if (mCandidateView != null)
             mCandidateView.clear();
         hasCandidatesShown = false;
@@ -2741,6 +2829,115 @@ public class LIMEService extends InputMethodService implements
 
         mCandidateViewHandler.hideCandidateViewDelayed(DELAY_BEFORE_HIDE_CANDIDATE_VIEW);
         clearCandidateHint();
+    }
+
+    private void ensureMiniCandidatePopup() {
+        if (mMiniCandidatePopup != null) return;
+
+        float density = getResources().getDisplayMetrics().density;
+        int padH = (int) (12 * density);
+        int padV = (int) (8 * density);
+
+        mMiniCandidateLayout = new android.widget.LinearLayout(this);
+        mMiniCandidateLayout.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+        bg.setColor(0xFFFFFFFF);
+        bg.setStroke((int) (1 * density), 0xFF333333);
+        bg.setCornerRadius(4 * density);
+        mMiniCandidateLayout.setBackground(bg);
+        mMiniCandidateLayout.setPadding(padH / 2, padV / 2, padH / 2, padV / 2);
+
+        for (int i = 0; i < MINI_CANDIDATE_COUNT; i++) {
+            TextView tv = new TextView(this);
+            tv.setTextColor(0xFF000000);
+            tv.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 18);
+            tv.setPadding(padH, padV, padH, padV);
+            tv.setGravity(Gravity.CENTER);
+            final int idx = i;
+            tv.setOnClickListener(v -> {
+                pickCandidateManually(idx);
+                dismissMiniCandidatePopup();
+            });
+            mMiniCandidateLayout.addView(tv);
+        }
+
+        mMiniCandidatePopup = new PopupWindow(mMiniCandidateLayout,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+        mMiniCandidatePopup.setClippingEnabled(false);
+        mMiniCandidatePopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NOT_NEEDED);
+        mMiniCandidatePopup.setTouchable(true);
+    }
+
+    private void showMiniCandidatePopup(List<Mapping> suggestions) {
+        ensureMiniCandidatePopup();
+
+        int count = Math.min(suggestions.size(), MINI_CANDIDATE_COUNT);
+        for (int i = 0; i < MINI_CANDIDATE_COUNT; i++) {
+            TextView tv = (TextView) mMiniCandidateLayout.getChildAt(i);
+            if (i < count && suggestions.get(i).getWord() != null) {
+                tv.setText(suggestions.get(i).getWord());
+                tv.setVisibility(View.VISIBLE);
+            } else {
+                tv.setVisibility(View.GONE);
+            }
+        }
+
+        View anchor = getWindow().getWindow().getDecorView();
+        if (anchor == null || !anchor.isAttachedToWindow()) return;
+
+        // showAtLocation coordinates are relative to the anchor's window.
+        int[] anchorLocation = new int[2];
+        anchor.getLocationOnScreen(anchorLocation);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+
+        mMiniCandidateLayout.measure(
+                View.MeasureSpec.makeMeasureSpec(screenWidth, View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        int popupW = mMiniCandidateLayout.getMeasuredWidth();
+        int popupH = mMiniCandidateLayout.getMeasuredHeight();
+        if (popupH <= 0) popupH = (int) (48 * dm.density);
+        if (popupW <= 0) popupW = (int) (200 * dm.density);
+
+        // Calculate screen-space position: default below cursor
+        int screenX = mHasCursorAnchor ? mCursorScreenX : 0;
+        int screenY = mHasCursorAnchor ? mCursorScreenBottom : screenHeight / 3;
+
+        // If popup goes below screen bottom, show it above the cursor instead
+        if (screenY + popupH > screenHeight) {
+            screenY = (mHasCursorAnchor ? mCursorScreenTop : screenHeight / 3) - popupH;
+        }
+
+        // Clamp horizontal: don't overflow right edge
+        if (screenX + popupW > screenWidth) {
+            screenX = screenWidth - popupW;
+        }
+        // Don't go off-screen left or top
+        if (screenX < 0) screenX = 0;
+        if (screenY < 0) screenY = 0;
+
+        // Convert to anchor-relative coordinates
+        int x = screenX - anchorLocation[0];
+        int y = screenY - anchorLocation[1];
+
+        try {
+            if (mMiniCandidatePopup.isShowing()) {
+                mMiniCandidatePopup.update(x, y, -1, -1);
+            } else {
+                mMiniCandidatePopup.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "showMiniCandidatePopup failed", e);
+        }
+    }
+
+    private void dismissMiniCandidatePopup() {
+        if (mMiniCandidatePopup != null && mMiniCandidatePopup.isShowing()) {
+            mMiniCandidatePopup.dismiss();
+        }
     }
 
     private void forceHideCandidateView() {
@@ -2814,7 +3011,29 @@ public class LIMEService extends InputMethodService implements
                         + ", mFixedCandidateViewOn:" + mFixedCandidateViewOn
                         + ", hasPhysicalKeyPressed:" + hasPhysicalKeyPressed);
 
-            if ((!mFixedCandidateViewOn || hasPhysicalKeyPressed)
+            // Physical keyboard: show only the floating mini candidate bar near cursor
+            if (hasPhysicalKeyPressed) {
+                mCandidateList = (LinkedList<Mapping>) suggestions;
+                try {
+                    if (suggestions.size() > 1 && suggestions.get(1).isExactMatchToCodeRecord()) {
+                        selectedCandidate = suggestions.get(1);
+                    } else if (suggestions.size() > 0) {
+                        selectedCandidate = suggestions.get(0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                hasCandidatesShown = true;
+                hasMappingList = true;
+                // Hide the bottom candidate bar
+                setCandidatesViewShown(false);
+                // Show the floating mini bar near cursor (must be on main thread)
+                final List<Mapping> popupSuggestions = suggestions;
+                mCandidateViewHandler.post(() -> showMiniCandidatePopup(popupSuggestions));
+                return;
+            }
+
+            if ((!mFixedCandidateViewOn)
                     && mCandidateView != mCandidateViewStandAlone) {
                 mCandidateViewInInputView.clear();
 
@@ -2822,7 +3041,7 @@ public class LIMEService extends InputMethodService implements
                                                            // keyboard (no soft keyboard shown)
                 // forceHideCandidateView(); //Jeremy '16,7,19 caused the first composing
                 // character missing typed with physical keyboard.
-            } else if ((mFixedCandidateViewOn || !hasPhysicalKeyPressed) &&
+            } else if ((mFixedCandidateViewOn) &&
                     mCandidateView != mCandidateViewInInputView) {
                 mCandidateViewStandAlone.clear();
                 hideCandidateView();
@@ -2830,7 +3049,7 @@ public class LIMEService extends InputMethodService implements
                 if (mCandidateViewStandAlone != null)
                     mCandidateViewStandAlone.setEmbeddedComposingView(null);
             }
-            if (!mFixedCandidateViewOn || (hasPhysicalKeyPressed))
+            if (!mFixedCandidateViewOn)
                 showCandidateView();
 
             hasCandidatesShown = true; // Jeremy '15,6,1 move after hideCandidateView if candidateView is fixed.
@@ -2921,24 +3140,7 @@ public class LIMEService extends InputMethodService implements
 
         if (DEBUG)
             Log.i(TAG, "setCandidateViewShown():" + shown);
-        if (shown)
-            super.setCandidatesViewShown(true);
-        else
-            super.setCandidatesViewShown(false);
-
-        // On Android 12+ (API 31+), the framework may block the internal
-        // showWindow(false) call when a physical keyboard is connected, preventing
-        // the IME window from appearing. Force it open via two mechanisms:
-        // 1. showWindow(true) — directly shows the window. The soft keyboard stays
-        //    hidden because onEvaluateInputViewShown() returns false.
-        // 2. requestShowSelf() (API 28+) — asks the system to show the IME through
-        //    proper channels, as a fallback.
-        if (shown && hasPhysicalKeyPressed) {
-            showWindow(true);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                requestShowSelf(0);
-            }
-        }
+        super.setCandidatesViewShown(shown);
 
         if (DEBUG && mCandidateViewStandAlone != null)
             Log.i(TAG, "isCandidateViewShown:" + mCandidateViewStandAlone.isShown());
@@ -3518,6 +3720,15 @@ public class LIMEService extends InputMethodService implements
      */
     // Jeremy '12,5,11 add return value from mCandidate.takeselectedsuggestion()
     public boolean pickHighlightedCandidate() {
+        // Physical keyboard mode: commit directly using selectedCandidate
+        // since mCandidateView isn't updated with the mini floating bar's suggestions
+        if (hasPhysicalKeyPressed && selectedCandidate != null
+                && mCandidateList != null && !mCandidateList.isEmpty()) {
+            InputConnection ic = getCurrentInputConnection();
+            commitTyped(ic);
+            dismissMiniCandidatePopup();
+            return true;
+        }
         return mCandidateView != null && mCandidateView.takeSelectedSuggestion();
     }
 
@@ -3693,17 +3904,7 @@ public class LIMEService extends InputMethodService implements
 
     }
 
-    // jeremy '11,9, 5 hideCanddiate when inputView is closed
-    @Override
-    public void updateInputViewShown() {
-        if (mInputView == null)
-            return;
-        if (DEBUG)
-            Log.i(TAG, "updateInputViewShown(): mInputView.isShown(): " + mInputView.isShown());
-        super.updateInputViewShown();
-        if (!mInputView.isShown() && !hasPhysicalKeyPressed)
-            hideCandidateView();
-    }
+    // updateInputViewShown is now overridden near onEvaluateInputViewShown
 
     @Override
     public void onFinishInputView(boolean finishingInput) {
