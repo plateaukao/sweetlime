@@ -157,6 +157,7 @@ public class LIMEService extends InputMethodService implements
     private List<Mapping> tempEnglishList;
 
     private boolean hasPhysicalKeyPressed;
+    private View mHiddenInputFrameParent; // Track parent hidden by hideInputFrame() for restoration
 
     // private String mWordSeparators;
     // private String misMatched; //Removed by Jeremy '13,1,10
@@ -441,9 +442,19 @@ public class LIMEService extends InputMethodService implements
             if (parent.getClass().getName().contains("InputMethodService")
                     || parent instanceof android.widget.FrameLayout) {
                 parent.setVisibility(View.GONE);
+                mHiddenInputFrameParent = parent;
                 break;
             }
             v = parent;
+        }
+    }
+
+    private void showInputFrame() {
+        if (mInputView != null) mInputView.setVisibility(View.VISIBLE);
+        if (mCandidateInInputView != null) mCandidateInInputView.setVisibility(View.VISIBLE);
+        if (mHiddenInputFrameParent != null) {
+            mHiddenInputFrameParent.setVisibility(View.VISIBLE);
+            mHiddenInputFrameParent = null;
         }
     }
 
@@ -672,9 +683,7 @@ public class LIMEService extends InputMethodService implements
         dismissMiniCandidatePopup();
 
         // Restore soft keyboard visibility when switching back from physical keyboard
-        if (mInputView != null) {
-            mInputView.setVisibility(View.VISIBLE);
-        }
+        showInputFrame();
 
         // Request cursor position updates for floating candidate bar
         InputConnection icForCursor = getCurrentInputConnection();
@@ -1265,6 +1274,16 @@ public class LIMEService extends InputMethodService implements
                         LIMEMetaKeyKeyListener.META_ALT_ON) > 0
                         && mLIMEPref.getPhysicalKeyboardType().equals("milestone2")))
                     break;
+            // System keys: pass to framework, don't treat as physical keyboard character input
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_VOLUME_MUTE:
+            case KeyEvent.KEYCODE_HOME:
+            case KeyEvent.KEYCODE_POWER:
+            case KeyEvent.KEYCODE_CAMERA:
+            case KeyEvent.KEYCODE_FOCUS:
+            case KeyEvent.KEYCODE_HEADSETHOOK:
+                break;
             default:
                 if (!(hasCtrlPress || event.isCtrlPressed() || hasMenuPress)) {
                     if (translateKeyDown(keyCode, event)) {
