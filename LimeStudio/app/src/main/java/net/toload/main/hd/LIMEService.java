@@ -3812,14 +3812,14 @@ public class LIMEService extends InputMethodService implements
             if (this.tempEnglishList.get(index).isEmojiRecord()) {
                 if (ic != null)
                     ic.commitText(
-                            this.tempEnglishList.get(index).getWord() + " ", 0);
+                            this.tempEnglishList.get(index).getWord() + " ", 1);
             } else {
                 if (ic != null)
                     ic.commitText(
                             this.tempEnglishList.get(index).getWord()
                                     .substring(tempEnglishWord.length())
                                     + " ",
-                            0);
+                            1);
             }
 
             resetTempEnglishWord();
