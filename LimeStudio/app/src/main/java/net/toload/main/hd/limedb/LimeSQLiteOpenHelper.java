@@ -99,7 +99,7 @@ public abstract class LimeSQLiteOpenHelper {
 
 	private String getDBPath(String dbTarget){
 
-        File destpath = new File(Lime.DATABASE_DEVICE_FOLDER + File.separator + Lime.DATABASE_NAME);
+        File destpath = new File(Lime.getDatabaseFolder(mContext) + File.separator + Lime.DATABASE_NAME);
 
         if(dbTarget.equalsIgnoreCase("sdcard")){
             destpath = new File(LIME.DATABASE_DECOMPRESS_FOLDER_SDCARD);
@@ -154,10 +154,10 @@ public abstract class LimeSQLiteOpenHelper {
 
         // Initial Database
         // Copy DB file from Raw Dir to Database Dir
-        File destdir = new File(Lime.DATABASE_DEVICE_FOLDER + File.separator);
+        File destdir = new File(Lime.getDatabaseFolder(mContext) + File.separator);
         destdir.mkdirs();
 
-        File destpath = new File(Lime.DATABASE_DEVICE_FOLDER + File.separator + Lime.DATABASE_NAME);
+        File destpath = new File(Lime.getDatabaseFolder(mContext) + File.separator + Lime.DATABASE_NAME);
 
         if (!destpath.exists() || destpath.length() < 10000) {
 

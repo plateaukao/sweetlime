@@ -121,8 +121,6 @@ public class MainActivity extends AppCompatActivity
 
         this.mLIMEPref = new LIMEPreferenceManager(this);
 
-        LIME.PACKAGE_NAME = getApplicationContext().getPackageName();
-
         // initial imlist
         initialImList();
 

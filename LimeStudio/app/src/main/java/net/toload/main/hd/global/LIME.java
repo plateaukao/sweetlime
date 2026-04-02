@@ -24,13 +24,12 @@
 
 package net.toload.main.hd.global;
 
+import android.content.Context;
 import android.os.Environment;
 
 public class LIME {
-	public static String PACKAGE_NAME;
-	
 	public static final String LIME_SDCARD_FOLDER = Environment.getExternalStorageDirectory() + "/limehd/";
-	public static String getLimeDataRootFolder(){ return Environment.getDataDirectory() + "/data/"+LIME.PACKAGE_NAME; }
+	public static String getLimeDataRootFolder(Context context){ return context.getApplicationInfo().dataDir; }
 	public static final String DATABASE_RELATIVE_FOLDER = "/databases";
 	public static final String DATABASE_NAME = "lime.db";
 	public static final String DATABASE_JOURNAL = "lime.db-journal";

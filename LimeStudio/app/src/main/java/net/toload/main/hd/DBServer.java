@@ -172,7 +172,7 @@ public class  DBServer {
 		}
 
 		//backup shared preferences
-		File fileSharedPrefsBackup = new File(LIME.getLimeDataRootFolder(), LIME.SHARED_PREFS_BACKUP_NAME);
+		File fileSharedPrefsBackup = new File(LIME.getLimeDataRootFolder(ctx), LIME.SHARED_PREFS_BACKUP_NAME);
 		if(fileSharedPrefsBackup.exists())  fileSharedPrefsBackup.delete();
 		backupDefaultSharedPreference(fileSharedPrefsBackup);
 
@@ -191,7 +191,7 @@ public class  DBServer {
 		try {
 			LIMEUtilities.zip(
 					limedir.getAbsolutePath() + File.separator + LIME.DATABASE_BACKUP_NAME, backupFileList,
-					LIME.getLimeDataRootFolder(),
+					LIME.getLimeDataRootFolder(ctx),
 					true
 			);
 
@@ -234,7 +234,7 @@ public class  DBServer {
 			datasource.holdDBConnection(); //Jeremy '15,5,23
 			closeDatabse();
 			try {
-				LIMEUtilities.unzip(srcFilePath, LIME.getLimeDataRootFolder(), true);
+				LIMEUtilities.unzip(srcFilePath, LIME.getLimeDataRootFolder(ctx), true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				showNotificationMessage(ctx.getText(R.string.l3_initial_restore_error) + "");
@@ -247,7 +247,7 @@ public class  DBServer {
 			datasource.openDBConnection(true);
 
 			//restore shared preference
-			File checkpref = new File(LIME.getLimeDataRootFolder(), LIME.SHARED_PREFS_BACKUP_NAME);
+			File checkpref = new File(LIME.getLimeDataRootFolder(ctx), LIME.SHARED_PREFS_BACKUP_NAME);
 			if(checkpref.exists()){
 				restoreDefaultSharedPreference(checkpref);
 			}

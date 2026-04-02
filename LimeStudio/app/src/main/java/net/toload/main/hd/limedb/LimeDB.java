@@ -4610,7 +4610,7 @@ public class LimeDB extends LimeSQLiteOpenHelper {
         if (db != null)
             db.close();
 
-        File dbFile = new File(Lime.DATABASE_DEVICE_FOLDER + File.separator + Lime.DATABASE_NAME);
+        File dbFile = new File(Lime.getDatabaseFolder(mContext) + File.separator + Lime.DATABASE_NAME);
         dbFile.deleteOnExit();
         LIMEUtilities.copyRAWFile(mContext.getResources().openRawResource(R.raw.lime), dbFile);
         openDBConnection(true);

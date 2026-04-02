@@ -24,6 +24,7 @@
 
 package net.toload.main.hd;
 
+import android.content.Context;
 import android.os.Environment;
 
 import java.text.DecimalFormat;
@@ -35,7 +36,10 @@ public class Lime {
 
     // Database Setting
     final public static String DATABASE_NAME = "lime.db";
-    final public static String DATABASE_DEVICE_FOLDER = Environment.getDataDirectory() + "/data/info.plateaukao.sweetlime/databases";
+
+    public static String getDatabaseFolder(Context context) {
+        return context.getDatabasePath(DATABASE_NAME).getParent();
+    }
     final public static String DATABASE_DECOMPRESS_FOLDER_SDCARD = Environment.getExternalStorageDirectory() + "/limehd/databases";
     final public static String DATABASE_FOLDER_EXTERNAL = Environment.getExternalStorageDirectory() + "/limehd/";
     final public static String DATABASE_BACKUP_NAME = "backup.zip";

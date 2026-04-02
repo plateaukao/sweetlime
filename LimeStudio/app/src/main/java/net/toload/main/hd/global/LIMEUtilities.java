@@ -230,7 +230,7 @@ public class LIMEUtilities {
 				}
 				else if(itemName.startsWith("/data/") || itemName.startsWith(String.valueOf(Environment.getDataDirectory())+File.separator)){
 					//target is zipped with absolute path on /data, we need to confirm the targetfolder is within our package.
-					String packageRoot = LIME.getLimeDataRootFolder();
+					String packageRoot = targetDirectory.getAbsolutePath();
 					if(!itemName.startsWith(packageRoot))  //skip if the target path is not under our package root
 						continue;
 					targetFile = new File(ze.getName());  //target is zipped with absolute path on /sdcard
