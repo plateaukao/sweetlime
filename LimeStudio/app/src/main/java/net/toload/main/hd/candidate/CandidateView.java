@@ -138,6 +138,7 @@ public class CandidateView extends View implements View.OnClickListener {
     protected Drawable mDrawableVoiceInput;
     protected Drawable mDrawableExpandButton;
     protected Drawable mDrawableCloseButton;
+    protected Drawable mDrawablePaste;
 
     protected int mColorSelKey;
     protected int mColorSelKeyShifted;
@@ -242,6 +243,12 @@ public class CandidateView extends View implements View.OnClickListener {
         }
 
         a.recycle();
+
+        mDrawablePaste = ContextCompat.getDrawable(context, R.drawable.paste);
+        if (mDrawablePaste != null) {
+            mDrawablePaste = mDrawablePaste.mutate();
+            mDrawablePaste.setColorFilter(mColorNormalText, PorterDuff.Mode.SRC_IN);
+        }
 
         final Resources r = context.getResources();
 
@@ -476,8 +483,10 @@ public class CandidateView extends View implements View.OnClickListener {
         if (DEBUG)
             Log.i(TAG, "resetWidth() mHeight:" + mHeight);
         int candiWidth = mScreenWidth;
-        // * 2 for expand buttons: newly added paste button
-        if (mTotalWidth > mScreenWidth || isEmpty()) candiWidth -= mExpandButtonWidth;
+        if (mTotalWidth > mScreenWidth || isEmpty()) {
+            int reservedButtons = (isEmpty() && !isClipboardEmpty()) ? 2 : 1;
+            candiWidth -= mExpandButtonWidth * reservedButtons;
+        }
         if (DEBUG)
             Log.i(TAG, "resetWidth() candiWidth:" + candiWidth);
         this.setLayoutParams(new LinearLayout.LayoutParams(candiWidth, mHeight));

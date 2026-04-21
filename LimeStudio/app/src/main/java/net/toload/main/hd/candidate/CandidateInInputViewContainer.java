@@ -43,6 +43,7 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
     private static final boolean DEBUG = false;
     private static final String TAG = "CandiInputViewContainer";
     private ImageButton mRightButton;
+    private ImageButton mPasteButton;
     private View mButtonRightExpand;
     private CandidateView mCandidateView;
 
@@ -74,6 +75,15 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
             });
             mRightButton.setBackgroundColor(mCandidateView.mColorBackground);
 
+            mPasteButton = findViewById(R.id.candidate_paste);
+            if (mPasteButton != null) {
+                mPasteButton.setOnClickListener(v -> paste());
+                mPasteButton.setBackgroundColor(mCandidateView.mColorBackground);
+                if (mCandidateView.mDrawablePaste != null) {
+                    mPasteButton.setImageDrawable(mCandidateView.mDrawablePaste);
+                }
+            }
+
             this.setBackgroundColor(mCandidateView.mColorBackground);
         }
     }
@@ -101,8 +111,14 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
             if (mCandidateView.isCandidateExpanded())
                 showExpandButton = true;
 
+            boolean showPasteButton = showVoiceInputButton && !mCandidateView.isClipboardEmpty();
+
             if (mRightButton != null) {
                 mRightButton.setImageDrawable(showVoiceInputButton ? mCandidateView.mDrawableVoiceInput : mCandidateView.mDrawableExpandButton);
+            }
+
+            if (mPasteButton != null) {
+                mPasteButton.setVisibility(showPasteButton ? VISIBLE : GONE);
             }
 
             if (mButtonRightExpand != null) {

@@ -52,6 +52,16 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/candidate_paste"
+                android:layout_width="@dimen/candidate_expand_button_width"
+                android:layout_height="fill_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:contentDescription="@string/paste"
+                android:src="@drawable/paste"
+                android:visibility="gone" />
+
+            <ImageButton
                 android:id="@+id/candidate_right"
                 android:layout_width="@dimen/candidate_expand_button_width"
                 android:layout_height="fill_parent"

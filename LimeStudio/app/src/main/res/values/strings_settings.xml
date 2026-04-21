@@ -28,6 +28,7 @@
     <!-- Image button description  -->
     <string name="more_cand">Click for more candidates.</string>
     <string name="close_cand">Close the popup candiates view.</string>
+    <string name="paste">Paste text from clipboard.</string>
 
     <!-- Title for Latin keyboard  -->
     <string name="ime_name">LIME-HD</string>
