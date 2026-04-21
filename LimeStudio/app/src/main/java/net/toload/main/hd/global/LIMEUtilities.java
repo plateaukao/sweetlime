@@ -38,6 +38,7 @@ import androidx.core.app.NotificationCompat;
 import android.util.Log;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.InputMethodSubtype;
 
 import net.toload.main.hd.LIMEService;
 import net.toload.main.hd.MainActivity;
@@ -341,22 +342,49 @@ public class LIMEUtilities {
 	
 	public static String isVoiceSearchServiceExist(Context context){
 		if(DEBUG) Log.i(TAG, "isVoiceSearchServiceExist()");
-		
+
 		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		List<InputMethodInfo> mInputMethodProperties = imm.getEnabledInputMethodList();
-	
-		//boolean isVoiceSearchServiceEnabled = false;
-		for (int i = 0; i < mInputMethodProperties.size(); i++) {
-			String id = mInputMethodProperties.get(i).getId();
 
+		// Pass 1: known Google voice IMEs (fastest path on GMS devices).
+		for (InputMethodInfo imi : mInputMethodProperties) {
+			String id = imi.getId();
 			if(id.equals("com.google.android.voicesearch/.ime.VoiceInputMethodService") ||
 					id.equals("com.google.android.googlequicksearchbox/com.google.android.voicesearch.ime.VoiceInputMethodService") ||
 					id.equals("com.google.android.tts/com.google.android.apps.speech.tts.googletts.settings.asr.voiceime.VoiceInputMethodService")){
 				return id;
 			}
 		}
+
+		// Pass 2: any enabled IME that looks like a voice/speech service, either
+		// by declaring a subtype with mode="voice" or by ID heuristics. This
+		// covers vendor voice IMEs and future Google packages we haven't listed.
+		for (InputMethodInfo imi : mInputMethodProperties) {
+			int subtypeCount = imi.getSubtypeCount();
+			for (int i = 0; i < subtypeCount; i++) {
+				InputMethodSubtype subtype = imi.getSubtypeAt(i);
+				if ("voice".equals(subtype.getMode())) {
+					return imi.getId();
+				}
+			}
+			String lowerId = imi.getId().toLowerCase();
+			if (lowerId.contains("voice") || lowerId.contains("speech")) {
+				return imi.getId();
+			}
+		}
+
+		// Pass 3: Gboard fallback. Gboard has built-in voice input but does not
+		// expose a dedicated voice IME or voice subtype. On non-GMS devices
+		// where the user has installed Gboard, switching to it at least lets
+		// the user invoke voice input via Gboard's mic button.
+		for (InputMethodInfo imi : mInputMethodProperties) {
+			if (imi.getId().startsWith("com.google.android.inputmethod.latin/")) {
+				return imi.getId();
+			}
+		}
+
 		return null;
-		
+
 	}
 	
 	public static boolean isLIMEEnabled(Context context){
