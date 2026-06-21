@@ -90,6 +90,16 @@ public class SearchServer {
      */
     private static ConcurrentHashMap<String, List<String>> coderemapcache = null;
 
+    /**
+     * perf: memoize isRelatedPhraseExist() lookups. makeRunTimeSuggestion() re-checks
+     * the same (pword, cword) pairs on every keystroke of a multi-char composition,
+     * and each check is an uncached SQLite query. Cleared at composition start/abandon
+     * (clearRunTimeSuggestion) so phrases learned at the previous commit are always
+     * picked up on the next composition. Negative hits are cached via RELATED_NOT_FOUND.
+     */
+    private static ConcurrentHashMap<String, Mapping> relatedExistCache = null;
+    private static final Mapping RELATED_NOT_FOUND = new Mapping();
+
     private Context mContext = null;
 
     public SearchServer(Context context) {
@@ -211,7 +221,23 @@ public class SearchServer {
         }
         suggestionLoL.clear();
         if (bestSuggestionStack != null) bestSuggestionStack.clear();
+        // perf: related-phrase cache is scoped to a single composition (see field doc)
+        if (relatedExistCache != null) relatedExistCache.clear();
         abandonPhraseSuggestion =abandonSuggestion;
+    }
+
+    /**
+     * perf: cached wrapper around LimeDB.isRelatedPhraseExist(). See relatedExistCache.
+     */
+    private Mapping isRelatedPhraseExistCached(String pword, String cword) {
+        String key = pword + " " + cword;
+        Mapping cached = (relatedExistCache == null) ? null : relatedExistCache.get(key);
+        if (cached != null)
+            return (cached == RELATED_NOT_FOUND) ? null : cached;
+        Mapping result = dbadapter.isRelatedPhraseExist(pword, cword);
+        if (relatedExistCache != null)
+            relatedExistCache.put(key, (result == null) ? RELATED_NOT_FOUND : result);
+        return result;
     }
 
     private static boolean dumpRunTimeSuggestion = false;
@@ -392,7 +418,7 @@ public class SearchServer {
                             for (int k = ((phraseLen < 4) ? phraseLen - 1 : 3); k > 0; k--) {
                                 String pword = phrase.substring(phraseLen - k - 1, phraseLen - k);
                                 String cword = phrase.substring(phraseLen - k, phraseLen);
-                                relatedMapping = dbadapter.isRelatedPhraseExist(pword, cword);
+                                relatedMapping = isRelatedPhraseExistCached(pword, cword);
                                 if (relatedMapping != null) break;
                             }
                             if (relatedMapping != null
@@ -835,6 +861,7 @@ public class SearchServer {
         emojicache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
         keynamecache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
         coderemapcache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
+        relatedExistCache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
 
         //  initial exact match stack here
         suggestionLoL = new LinkedList<>();

@@ -351,6 +351,14 @@
             android:entryValues="@array/custom_im_result_limit_values"
             android:key="custom_im_result_limit"
             android:title="@string/custom_im_result_limit" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/candidate_query_debounce"
+            android:entries="@array/candidate_query_debounce_options"
+            android:entryValues="@array/candidate_query_debounce_values"
+            android:key="candidate_query_debounce"
+            android:summary="@string/candidate_query_debounce_summary"
+            android:title="@string/candidate_query_debounce" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="similiar_enable"

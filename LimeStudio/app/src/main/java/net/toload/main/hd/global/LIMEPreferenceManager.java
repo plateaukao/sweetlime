@@ -450,6 +450,14 @@ public class LIMEPreferenceManager {
 		return Integer.parseInt(sp.getString("custom_im_result_limit", "210"));
 	}
 
+	// perf: debounce delay (ms) before a candidate query runs. 0 = off (default).
+	// Helps weak-CPU / e-ink devices by collapsing bursts of fast typing into a
+	// single query (a new keystroke cancels the still-pending query).
+	public int getCandidateQueryDebounce(){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return Integer.parseInt(sp.getString("candidate_query_debounce", "0"));
+	}
+
 	public float getFontSize(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return Float.parseFloat(sp.getString("font_size", "1"));

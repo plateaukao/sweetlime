@@ -37,6 +37,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.Build;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -167,8 +169,6 @@ public class LIMEService extends InputMethodService implements
     private Vibrator mVibrator;
     private AudioManager mAudioManager;
 
-    private boolean hasVibration = false;
-    private boolean hasSound = false;
     private boolean hasNumberMapping = false;
     private boolean hasSymbolMapping = false;
     private boolean hasQuickSwitch = false;
@@ -825,8 +825,6 @@ public class LIMEService extends InputMethodService implements
 
     private void loadSettings() {
 
-        hasVibration = mLIMEPref.getVibrateOnKeyPressed();
-        hasSound = mLIMEPref.getSoundOnKeyPressed();
         mPersistentLanguageMode = mLIMEPref.getPersistentLanguageMode();
         activeIM = mLIMEPref.getActiveIM();
         hasQuickSwitch = mLIMEPref.getSwitchEnglishModeHotKey();
@@ -2485,7 +2483,9 @@ public class LIMEService extends InputMethodService implements
             // to set selectedCandidate, so clearing only selectedCandidate is insufficient.
             selectedCandidate = null;
             mCandidateList = null;
-            queryDispatcher.launchQuery(() -> {
+            // perf: optional debounce (default 0/off) to collapse bursts of fast
+            // typing into a single query on weak-CPU / e-ink devices.
+            queryDispatcher.launchQuery(mLIMEPref.getCandidateQueryDebounce(), () -> {
 
                 try {
                     list.addAll(SearchSrv.getMappingByCode(finalKeyString, !finalHasPhysicalKeyPressed, getAllRecords));
@@ -3873,10 +3873,15 @@ public class LIMEService extends InputMethodService implements
     public void doVibrateSound(int primaryCode) {
         if (DEBUG)
             Log.i(TAG, "doVibrateSound()");
-        if (hasVibration) {
-            mVibrator.vibrate(mLIMEPref.getVibrateLevel());
+        if (mLIMEPref.getVibrateOnKeyPressed()) {
+            long duration = mLIMEPref.getVibrateLevel();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mVibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                mVibrator.vibrate(duration);
+            }
         }
-        if (hasSound) {
+        if (mLIMEPref.getSoundOnKeyPressed()) {
             int sound = AudioManager.FX_KEYPRESS_STANDARD;
             switch (primaryCode) {
                 case LIMEBaseKeyboard.KEYCODE_DELETE:

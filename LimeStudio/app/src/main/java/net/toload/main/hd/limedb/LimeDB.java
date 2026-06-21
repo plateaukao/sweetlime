@@ -95,6 +95,14 @@ public class LimeDB extends LimeSQLiteOpenHelper {
 
     private static boolean codeDualMapped = false;
 
+    // Jeremy/perf: a few IM tables (cj5, ecj, wb) shipped without an index on the
+    // 'code' column, forcing a full table SCAN on every between-search cache miss.
+    // ensureCodeIndexExist() creates the missing index lazily, once per table per
+    // process. Tracked here so the sqlite_master probe runs at most once per table.
+    // (Collections.synchronizedSet keeps this API-21 safe; ConcurrentHashMap.newKeySet needs API 24.)
+    private static final java.util.Set<String> codeIndexCheckedTables =
+            java.util.Collections.synchronizedSet(new HashSet<String>());
+
     public static boolean isCodeDualMapped() {
         return codeDualMapped;
     }
@@ -353,6 +361,49 @@ public class LimeDB extends LimeSQLiteOpenHelper {
 
     }
     */
+
+    /*
+     * Make sure the active IM table has an index on the 'code' column. Most tables
+     * ship one (<table>_idx_code), but cj5, ecj and wb do not, so their between-search
+     * query degrades to a full table scan. Detect coverage via PRAGMA index_info (so we
+     * don't create a duplicate when an index exists under a different name, e.g. pinyin
+     * uses imtable1_idx_code) and create it once if missing. Runs on the query (IO)
+     * thread, guarded so the probe happens at most once per table per process.
+     */
+    private void ensureCodeIndexExist(String table) {
+        if (table == null || table.equals("") || codeIndexCheckedTables.contains(table))
+            return;
+        if (!checkDBConnection()) return; // db not ready yet; retry on next query
+        try {
+            boolean covered = false;
+            Cursor list = db.rawQuery("PRAGMA index_list(" + table + ")", null);
+            if (list != null) {
+                int nameCol = list.getColumnIndex("name");
+                while (!covered && list.moveToNext()) {
+                    String idxName = list.getString(nameCol);
+                    Cursor info = db.rawQuery("PRAGMA index_info(" + idxName + ")", null);
+                    if (info != null) {
+                        if (info.moveToFirst()
+                                && "code".equalsIgnoreCase(info.getString(info.getColumnIndex("name"))))
+                            covered = true;
+                        info.close();
+                    }
+                }
+                list.close();
+            }
+            if (!covered) {
+                Log.i(TAG, "ensureCodeIndexExist(): creating missing code index on table: " + table);
+                long startTime = System.currentTimeMillis();
+                db.execSQL("create index if not exists " + table + "_idx_code on " + table + " (code)");
+                Log.i(TAG, "ensureCodeIndexExist(): index created on " + table
+                        + ". Elapsed time = " + (System.currentTimeMillis() - startTime) + "ms.");
+            }
+            codeIndexCheckedTables.add(table);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getTablename() {
         return this.tablename;
     }
@@ -1509,6 +1560,8 @@ public class LimeDB extends LimeSQLiteOpenHelper {
         //Jeremy '12,5,1 !checkDBConnection() when db is restoring or replaced.
         if (!checkDBConnection()) return null;
 
+        // perf: ensure the 'code' column is indexed (cj5/ecj/wb shipped without it)
+        ensureCodeIndexExist(tablename);
 
         boolean sort;
         if (softKeyboard) sort = mLIMEPref.getSortSuggestions();
@@ -1640,22 +1693,27 @@ public class LimeDB extends LimeSQLiteOpenHelper {
      */
     private String expandBetweenSearchClause(String searchColumn, String code) {
 
-        String selectClause = "";// searchColumn + "= '" + code.replaceAll("'", "''") + "' or ";
-
+        // perf: build with StringBuilder and escape the code once instead of via
+        // repeated string concatenation + replaceAll() on every cache-miss query.
         int len = code.length();
         int end = (len > 5) ? 6 : len;
 
+        StringBuilder selectClauseBuilder = new StringBuilder();
+
         if (len > 1) {
             for (int j = 0; j < end - 1; j++) {
-                selectClause += searchColumn + "= '" + code.substring(0, j + 1).replaceAll("'", "''") + "' or ";
+                selectClauseBuilder.append(searchColumn).append("= '")
+                        .append(code.substring(0, j + 1).replaceAll("'", "''")).append("' or ");
             }
         }
         //if(fuzzySearch) code = (len>2) ?  code.substring(0,2) : code;
         char[] chArray = code.toCharArray();
         chArray[code.length() - 1]++;
-        String nextCode = new String(chArray);
-        selectClause += " (" + searchColumn + " >= '" + code.replaceAll("'", "''") + "' and " + searchColumn
-                + " <'" + nextCode.replaceAll("'", "''") + "') ";
+        String escapedCode = code.replaceAll("'", "''");
+        String nextCode = new String(chArray).replaceAll("'", "''");
+        selectClauseBuilder.append(" (").append(searchColumn).append(" >= '").append(escapedCode)
+                .append("' and ").append(searchColumn).append(" <'").append(nextCode).append("') ");
+        String selectClause = selectClauseBuilder.toString();
         if (DEBUG)
             Log.i(TAG, "expandBetweenSearchClause() selectClause: " + selectClause);
         return selectClause;

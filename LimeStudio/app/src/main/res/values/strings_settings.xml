@@ -137,6 +137,8 @@
     <string name="table_list">對應表選取</string>
     <string name="similiar_list">建議字顯示數量</string>
     <string name="custom_im_result_limit">自建輸入法候選字數量</string>
+    <string name="candidate_query_debounce">選字查詢延遲</string>
+    <string name="candidate_query_debounce_summary">電子紙等低效能裝置可設定延遲，快速連打時只查詢最後一鍵</string>
     <string name="vibrate_on_keypress">打字震動</string>
     <string name="sound_on_keypress">打字音效</string>
     <string name="display_number_keypads">顯示數字鍵盤</string>
@@ -432,6 +434,22 @@
         <item>20</item>
         <item>50</item>
         <item>210</item>
+    </string-array>
+
+    <string-array name="candidate_query_debounce_options">
+        <item>關閉</item>
+        <item>20 ms</item>
+        <item>30 ms</item>
+        <item>40 ms</item>
+        <item>60 ms</item>
+    </string-array>
+
+    <string-array name="candidate_query_debounce_values">
+        <item>0</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>60</item>
     </string-array>
 
     <!-- Table Selection list -->
