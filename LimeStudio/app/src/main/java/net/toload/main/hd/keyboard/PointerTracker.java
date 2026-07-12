@@ -33,6 +33,8 @@ import android.content.res.Resources;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import java.util.Arrays;
+
 public class PointerTracker {
     private static final String TAG = "PointerTracker";
     private static final boolean DEBUG = false;
@@ -88,6 +90,9 @@ public class PointerTracker {
 
     // pressed key
     private int mPreviousKey = NOT_A_KEY;
+
+    // perf: scratch buffer for detectAndSendKey (see there)
+    private int[] mScratchCodes;
 
     // This class keeps track of a key index and a position where this pointer is.
     private static class KeyState {
@@ -518,7 +523,14 @@ public class PointerTracker {
                 }
             } else {
                 int code = key.codes[0];
-                int[] codes = mKeyDetector.newCodeArray();
+                // perf: reuse one scratch array per tracker instead of
+                // allocating on every committed keystroke. The listener
+                // (LIMEService.onKey) never retains the array.
+                if (mScratchCodes == null || mScratchCodes.length != mKeyDetector.getMaxNearbyKeys())
+                    mScratchCodes = mKeyDetector.newCodeArray();
+                else
+                    Arrays.fill(mScratchCodes, NOT_A_KEY);
+                final int[] codes = mScratchCodes;
                 mKeyDetector.getKeyIndexAndNearbyCodes(x, y, codes);
                 // Multi-tap
                 if (mInMultiTap) {

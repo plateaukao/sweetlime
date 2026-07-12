@@ -223,6 +223,11 @@ public class CandidateExpandedView extends CandidateView {
         mCandidateView = v;
     }
 
+    @Override
+    protected float candidateTextScale() {
+        return 1.0f;  // the expanded grid always rendered at full size
+    }
+
     public void prepareLayout() {
         if (DEBUG)
             Log.i(TAG, "prepareLayout()");

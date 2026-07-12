@@ -180,6 +180,11 @@ public class  DBServer {
 		List<String> backupFileList = new ArrayList<>();
 		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_NAME);
 		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_JOURNAL);
+		// WAL side files normally vanish when the db closes cleanly (missing
+		// files are skipped when zipping); after a crash they hold the last
+		// un-checkpointed writes and must travel with the main file.
+		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_NAME + "-wal");
+		backupFileList.add(LIME.DATABASE_RELATIVE_FOLDER + File.separator + LIME.DATABASE_NAME + "-shm");
 		backupFileList.add(LIME.SHARED_PREFS_BACKUP_NAME);
 
 		// hold database connection and close database.
@@ -233,6 +238,13 @@ public class  DBServer {
 		if(check.exists()){
 			datasource.holdDBConnection(); //Jeremy '15,5,23
 			closeDatabse();
+			// Drop WAL side files of the database being replaced - a stale
+			// -wal left by a crash would be "recovered" into the restored
+			// file on next open. If the backup contains its own -wal/-shm,
+			// the unzip below writes them back afterwards.
+			File dbFolder = new File(LIME.getLimeDataRootFolder(ctx) + LIME.DATABASE_RELATIVE_FOLDER);
+			new File(dbFolder, LIME.DATABASE_NAME + "-wal").delete();
+			new File(dbFolder, LIME.DATABASE_NAME + "-shm").delete();
 			try {
 				LIMEUtilities.unzip(srcFilePath, LIME.getLimeDataRootFolder(ctx), true);
 			} catch (Exception e) {

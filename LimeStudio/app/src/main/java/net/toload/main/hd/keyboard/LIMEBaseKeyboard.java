@@ -754,6 +754,20 @@ public class LIMEBaseKeyboard {
             }
             return states;
         }
+
+        /**
+         * Same as getCurrentDrawableState() but ignoring the transient pressed
+         * state (sticky on/off is preserved). Used when key press highlighting
+         * is disabled (e-ink devices), so a full redraw landing mid-press can
+         * never bake a pressed highlight into the buffer.
+         */
+        public int[] getNormalDrawableState() {
+            if (sticky)
+                return on ? KEY_STATE_NORMAL_ON : KEY_STATE_NORMAL_OFF;
+            if (isFunctionalKey())
+                return KEY_STATE_FUNCTIONAL_NORMAL;
+            return KEY_STATE_NORMAL;
+        }
     }
 
     /**

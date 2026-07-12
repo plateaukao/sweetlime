@@ -450,6 +450,13 @@ public class LIMEPreferenceManager {
 		return Integer.parseInt(sp.getString("custom_im_result_limit", "210"));
 	}
 
+	// perf: key press highlight redraws. Off skips the press/release keyboard
+	// rasters entirely - a tap costs zero redraws / e-ink panel refreshes.
+	public boolean getKeyPressHighlight(){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return sp.getBoolean("key_press_highlight", true);
+	}
+
 	// perf: debounce delay (ms) before a candidate query runs. 0 = off (default).
 	// Helps weak-CPU / e-ink devices by collapsing bursts of fast typing into a
 	// single query (a new keystroke cancels the still-pending query).

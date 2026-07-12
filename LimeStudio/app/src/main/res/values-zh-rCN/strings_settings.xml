@@ -138,6 +138,8 @@
     <string name="custom_im_result_limit">自建输入法候选字数量</string>
     <string name="candidate_query_debounce">选字查询延迟</string>
     <string name="candidate_query_debounce_summary">电子纸等低效能设备可设定延迟，快速连打时只查询最后一键</string>
+    <string name="key_press_highlight">按键按下强调效果</string>
+    <string name="key_press_highlight_summary">关闭后按键时不重绘强调效果，电子纸设备可减少闪烁与延迟</string>
     <string name="vibrate_on_keypress">打字震动</string>
     <string name="sound_on_keypress">打字音效</string>
     <string name="display_number_keypads">显示数字键盘</string>

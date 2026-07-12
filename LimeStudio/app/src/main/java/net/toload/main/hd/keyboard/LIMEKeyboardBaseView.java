@@ -60,6 +60,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.PopupWindow;
 
+import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.keyboard.LIMEBaseKeyboard.Key;
 
 import java.lang.ref.WeakReference;
@@ -284,7 +285,12 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
 
     private final UIHandler mHandler = new UIHandler(this);
 
-    //private LIMEPreferenceManager mLIMEPref;
+    private LIMEPreferenceManager mLIMEPref;
+
+    // perf: when false (e-ink devices), key press/release feedback redraws are
+    // skipped entirely so a tap costs zero keyboard rasters / panel refreshes.
+    // Refreshed from preferences in setKeyboard().
+    private boolean mShowKeyPressHighlight = true;
 
     static class UIHandler extends Handler {
         private static final int MSG_POPUP_PREVIEW = 1;
@@ -454,6 +460,8 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         super(context, attrs, defStyle);
 
         mContext = context;
+
+        mLIMEPref = new LIMEPreferenceManager(context.getApplicationContext());
 
         setLayerType(LAYER_TYPE_HARDWARE, null);
 
@@ -648,6 +656,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
     public void setKeyboard(LIMEBaseKeyboard keyboard) {
         // Remove any pending messages, except dismissing preview
         mHandler.cancelKeyTimers();
+        mShowKeyPressHighlight = mLIMEPref.getKeyPressHighlight();
         mKeyboard = keyboard;
         //LatinImeLogger.onSetKeyboard(keyboard);
         mKeys = mKeyDetector.setKeyboard(keyboard, -getPaddingLeft(),
@@ -838,10 +847,17 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             mKeyboardChanged = false;
         }
         final Canvas canvas = mCanvas;
-        //Daniel: this is old usage. will cause crash
-        //canvas.clipRect(mDirtyRect, Op.REPLACE);
 
         if (mKeyboard == null) return;
+
+        // perf: clip the buffer canvas to the dirty region so invalidateKey()
+        // re-rasterizes only that key instead of clearing and redrawing every key.
+        // Region.Op.REPLACE (the original pre-API-28 idiom) throws since Android P,
+        // so scope the clip to this pass with save()/restore() instead.
+        if (mDirtyRect.isEmpty())
+            mDirtyRect.union(0, 0, getWidth(), getHeight());
+        canvas.save();
+        canvas.clipRect(mDirtyRect);
 
         final Paint paint = mPaint;
         final Drawable keyBackground = mKeyBackground;
@@ -870,7 +886,8 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             if (drawSingleKey && invalidKey != key) {
                 continue;
             }
-            int[] drawableState = key.getCurrentDrawableState();
+            int[] drawableState = mShowKeyPressHighlight
+                    ? key.getCurrentDrawableState() : key.getNormalDrawableState();
             keyBackground.setState(drawableState);
 
 
@@ -951,12 +968,13 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 if (mShadowRadius > 0) paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
                 final int centerX = (key.width + padding.left - padding.right) / 2;
                 final int centerY = (key.height + padding.top - padding.bottom) / 2;
+                final boolean drawPressed = key.pressed && mShowKeyPressHighlight;
                 final int keyColor = key.isFunctionalKey()
-                        ? (key.pressed ? mFunctionKeyTextColorPressed : mFunctionKeyTextColorNormal)
-                        : (key.pressed ? mKeyTextColorPressed : mKeyTextColorNormal);
+                        ? (drawPressed ? mFunctionKeyTextColorPressed : mFunctionKeyTextColorNormal)
+                        : (drawPressed ? mKeyTextColorPressed : mKeyTextColorNormal);
                 final int subKeyColor = key.isFunctionalKey()
-                        ? (key.pressed ? mFunctionKeyTextColorPressed : mFunctionKeyTextColorNormal)
-                        :(key.pressed ? mKeySubLabelTextColorPressed : mKeySubLabelTextColorNormal);
+                        ? (drawPressed ? mFunctionKeyTextColorPressed : mFunctionKeyTextColorNormal)
+                        :(drawPressed ? mKeySubLabelTextColorPressed : mKeySubLabelTextColorNormal);
 
                 float KEY_LABEL_VERTICAL_ADJUSTMENT_FACTOR = 0.55f;
                 float baseline = centerY
@@ -1090,6 +1108,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             }
         }
 
+        canvas.restore();
         mDrawPending = false;
         mDirtyRect.setEmpty();
     }
@@ -1117,6 +1136,11 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
      */
     public void invalidateKey(Key key) {
         if (key == null)
+            return;
+        // perf: all invalidateKey callers are press/release visual feedback.
+        // With highlighting off (e-ink) skip the redraw entirely; onBufferDraw
+        // also ignores the pressed state so the buffer never shows a highlight.
+        if (!mShowKeyPressHighlight)
             return;
         mInvalidatedKey = key;
         // TODO we should clean up this and record key's region to use in onBufferDraw.

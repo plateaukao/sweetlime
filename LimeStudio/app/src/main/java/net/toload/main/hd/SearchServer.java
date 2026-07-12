@@ -39,6 +39,10 @@ import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.global.LIMEUtilities;
 import net.toload.main.hd.limedb.LimeDB;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Process;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,6 +51,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import info.plateaukao.sweetlime.R;
 
@@ -99,6 +105,27 @@ public class SearchServer {
      */
     private static ConcurrentHashMap<String, Mapping> relatedExistCache = null;
     private static final Mapping RELATED_NOT_FOUND = new Mapping();
+
+    /**
+     * perf: cache getRelatedPhrase() results per committed word. Every commit
+     * used to hit the related table before the candidate bar repopulated -
+     * very visible on e-ink. Invalidated after each learning write batch.
+     */
+    private static ConcurrentHashMap<String, List<Mapping>> relatedcache = null;
+
+    /**
+     * perf: single shared low-priority worker for learning / score updates /
+     * reverse lookups. The old code spawned a new Thread per committed
+     * candidate, which churns the scheduler on weak CPUs and competes with
+     * input at default priority. Single-threaded also keeps write order.
+     */
+    private static final ExecutorService learningExecutor =
+            Executors.newSingleThreadExecutor(r -> new Thread(() -> {
+                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                r.run();
+            }, "lime-learning"));
+
+    private static final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private Context mContext = null;
 
@@ -158,6 +185,10 @@ public class SearchServer {
 
         prefetchThread = new Thread() {
             public void run() {
+                // perf: prefetch fires 25+ queries right when the user starts
+                // typing; run at background priority so it never competes with
+                // the keystroke query on weak CPUs.
+                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 long startime = System.currentTimeMillis();
                 for (int i = 0; i < finalKeys.length(); i++) {
                     String key = finalKeys.substring(i, i + 1);
@@ -176,21 +207,35 @@ public class SearchServer {
     }
 
 
-    //TODO: Should cache related phrase 15,6,8 Jeremy
     public List<Mapping> getRelatedPhrase(String word, boolean getAllRecords) {
-        return dbadapter.getRelatedPhrase(word, getAllRecords);
+        // perf: serve from cache; invalidated after each learning write batch.
+        String key = word + (getAllRecords ? "#all" : "");
+        List<Mapping> cached = (relatedcache == null) ? null : relatedcache.get(key);
+        if (cached != null)
+            return cached;
+        List<Mapping> result = dbadapter.getRelatedPhrase(word, getAllRecords);
+        if (relatedcache != null && result != null)
+            relatedcache.put(key, result);
+        return result;
     }
 
     public void getCodeListStringFromWord(final String word) {
-        String result = dbadapter.getCodeListStringByWord(word);
-        if (result != null && !result.equals("")) {
-            LIMEUtilities.showNotification(
-                    mContext, true, mContext.getText(R.string.ime_setting), result, new Intent(mContext, MainActivity.class));
+        // perf: the reverse lookup queries an unindexed word column (potential
+        // full table scan) and used to run synchronously on the UI thread on
+        // every commit. Query on the learning worker; post UI back to main.
+        learningExecutor.execute(() -> {
+            String result = dbadapter.getCodeListStringByWord(word);
+            if (result != null && !result.equals("")) {
+                mainThreadHandler.post(() -> {
+                    LIMEUtilities.showNotification(
+                            mContext, true, mContext.getText(R.string.ime_setting), result, new Intent(mContext, MainActivity.class));
 
-            if(mLIMEPref.getReverseLookupNotify()){
-                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                    if (mLIMEPref.getReverseLookupNotify()) {
+                        Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }
+        });
     }
 
     private String cacheKey(String code) {
@@ -816,30 +861,27 @@ public class SearchServer {
             final List<Pair<Mapping, String>> bestSuggestionList = new LinkedList<>(suggestionLoL.get(suggestionLoL.size() - 1));
             final String selectedWord = selectedMapping.getWord();
 
-            Thread learnLDPhraseThread = new Thread() {
-                public void run() {
+            learningExecutor.execute(() -> {
 
-                    if (!bestSuggestionList.isEmpty()) {
-                        for (int j = 0; j < bestSuggestionList.size(); j++) {
-                            //TODO:should learn QP code for phonetic table
-                            if (selectedWord.startsWith(bestSuggestionList.get(j).first.getWord())) {
-                                if (bestSuggestionList.get(j).first.getWord().length() > 8)
-                                    break; //stop learning if word length > 8
-                                dbadapter.addOrUpdateMappingRecord(bestSuggestionList.get(j).second, bestSuggestionList.get(j).first.getWord());
-                                removeRemappedCodeCachedMappings(bestSuggestionList.get(j).second);
-                            }
-
-                            if ((DEBUG || dumpRunTimeSuggestion))// dump best suggestion list
-                                Log.i(TAG, "getRealCodeLength() best suggestion list(" + j + "): word="
-                                        + bestSuggestionList.get(j).first.getWord() + ", code=" + bestSuggestionList.get(j).second);
-
+                if (!bestSuggestionList.isEmpty()) {
+                    for (int j = 0; j < bestSuggestionList.size(); j++) {
+                        //TODO:should learn QP code for phonetic table
+                        if (selectedWord.startsWith(bestSuggestionList.get(j).first.getWord())) {
+                            if (bestSuggestionList.get(j).first.getWord().length() > 8)
+                                break; //stop learning if word length > 8
+                            dbadapter.addOrUpdateMappingRecord(bestSuggestionList.get(j).second, bestSuggestionList.get(j).first.getWord());
+                            removeRemappedCodeCachedMappings(bestSuggestionList.get(j).second);
                         }
+
+                        if ((DEBUG || dumpRunTimeSuggestion))// dump best suggestion list
+                            Log.i(TAG, "getRealCodeLength() best suggestion list(" + j + "): word="
+                                    + bestSuggestionList.get(j).first.getWord() + ", code=" + bestSuggestionList.get(j).second);
 
                     }
 
                 }
-            };
-            learnLDPhraseThread.start();
+
+            });
 
         }
 
@@ -862,6 +904,7 @@ public class SearchServer {
         keynamecache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
         coderemapcache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
         relatedExistCache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
+        relatedcache = new ConcurrentHashMap<>(LIME.SEARCHSRV_RESET_CACHE_SIZE);
 
         //  initial exact match stack here
         suggestionLoL = new LinkedList<>();
@@ -948,34 +991,35 @@ List<Mapping> scorelistSnapshot = null;
 
 
         if (DEBUG) Log.i(TAG, "postFinishInput(), creating offline updating thread");
-        // Jeremy '11,7,31 The updating process takes some time. Create a new thread to do this.
-        Thread UpdatingThread = new Thread() {
-            public void run() {
-                // for thread-safe operation, duplicate local copy of scorelist and LDphraselistarray
-                //List<Mapping> localScorelist = new LinkedList<Mapping>();
-                if (scorelist != null) {
-                    scorelistSnapshot.addAll(scorelist);
-                    scorelist.clear();
-                }
-                //Jeremy '11,7,28 combine to adduserdict and addscore
-                //Jeremy '11,6,12 do adduserdict and add score if diclist.size > 0 and only adduserdict if diclist.size >1
-                //Jeremy '11,6,11, always learn scores, but sorted according preference options
-
-                // Learn the consecutive two words as a related phrase).
-                learnRelatedPhrase(scorelistSnapshot);
-
-                ArrayList<List<Mapping>> localLDPhraseListArray = new ArrayList<>();
-                if (LDPhraseListArray != null) {
-                    localLDPhraseListArray.addAll(LDPhraseListArray);
-                    LDPhraseListArray.clear();
-                }
-
-                // Learn LD Phrase
-                learnLDPhrase(localLDPhraseListArray);
-
+        // Jeremy '11,7,31 The updating process takes some time. Run it on the
+        // shared low-priority learning worker.
+        learningExecutor.execute(() -> {
+            // for thread-safe operation, duplicate local copy of scorelist and LDphraselistarray
+            //List<Mapping> localScorelist = new LinkedList<Mapping>();
+            if (scorelist != null) {
+                scorelistSnapshot.addAll(scorelist);
+                scorelist.clear();
             }
-        };
-        UpdatingThread.start();
+            //Jeremy '11,7,28 combine to adduserdict and addscore
+            //Jeremy '11,6,12 do adduserdict and add score if diclist.size > 0 and only adduserdict if diclist.size >1
+            //Jeremy '11,6,11, always learn scores, but sorted according preference options
+
+            // Learn the consecutive two words as a related phrase).
+            learnRelatedPhrase(scorelistSnapshot);
+
+            ArrayList<List<Mapping>> localLDPhraseListArray = new ArrayList<>();
+            if (LDPhraseListArray != null) {
+                localLDPhraseListArray.addAll(LDPhraseListArray);
+                LDPhraseListArray.clear();
+            }
+
+            // Learn LD Phrase
+            learnLDPhrase(localLDPhraseListArray);
+
+            // learning may have added related phrases; drop the cached lists
+            if (relatedcache != null) relatedcache.clear();
+
+        });
 
     }
 
@@ -1276,12 +1320,11 @@ List<Mapping> scorelistSnapshot = null;
 
             // Jeremy '11,6,11. Always update score and sort according to preferences.
             scorelist.add(updateMappingTemp);
-            Thread UpdatingThread = new Thread() {
-                public void run() {
-                    updateScoreCache(updateMappingTemp);
-                }
-            };
-            UpdatingThread.start();
+            learningExecutor.execute(() -> {
+                updateScoreCache(updateMappingTemp);
+                // scores may reorder related phrases; drop the cached lists
+                if (relatedcache != null) relatedcache.clear();
+            });
         }
     }
 
@@ -1344,6 +1387,10 @@ List<Mapping> scorelistSnapshot = null;
 
         if (coderemapcache != null) {
             coderemapcache.clear();
+        }
+
+        if (relatedcache != null) {
+            relatedcache.clear();
         }
     }
 

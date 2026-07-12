@@ -68,6 +68,7 @@ import net.toload.main.hd.data.Mapping;
 import net.toload.main.hd.global.LIMEPreferenceManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -181,6 +182,24 @@ public class CandidateView extends View implements View.OnClickListener {
 
     private boolean mTransparentCandidateView = false;
 
+    // perf: candidate widths (mWordX/mWordWidth/mTotalWidth) are measured once
+    // per suggestion-list or font change (computeCandidateWidths) and reused by
+    // every subsequent draw pass instead of re-measuring in each onDraw.
+    private boolean mMeasurementsDirty = true;
+    // perf: font-scale the cached paint/dimension values were computed with;
+    // -1 forces the first updateFontSize() to run.
+    private float mCachedFontScale = -1f;
+    private int mCandidateFontSizePx;
+    // perf: cached clipboard text. getPrimaryClip() is a binder IPC, so it is
+    // only re-read after the system reports a clipboard change.
+    private volatile String mClipboardText = "";
+    private volatile boolean mClipboardTextValid = false;
+    private Paint mTransparentBackgroundPaint;
+    // perf: last applied layout size; resetWidth() skips the LayoutParams +
+    // requestLayout pass when nothing changed.
+    private int mLastLayoutWidth = -1;
+    private int mLastLayoutHeight = -1;
+
     //private Rect padding = null;
 
     /**
@@ -248,6 +267,18 @@ public class CandidateView extends View implements View.OnClickListener {
         if (mDrawablePaste != null) {
             mDrawablePaste = mDrawablePaste.mutate();
             mDrawablePaste.setColorFilter(mColorNormalText, PorterDuff.Mode.SRC_IN);
+        }
+
+        // perf: track clipboard changes so isClipboardEmpty() never does a
+        // binder IPC inside a layout pass; the relayout also refreshes the
+        // paste button when text is copied while the bar is empty.
+        ClipboardManager clipboard =
+                (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+        if (clipboard != null) {
+            clipboard.addPrimaryClipChangedListener(() -> {
+                mClipboardTextValid = false;
+                post(this::requestLayout);
+            });
         }
 
         final Resources r = context.getResources();
@@ -452,13 +483,29 @@ public class CandidateView extends View implements View.OnClickListener {
 
     }
 
+    /**
+     * Effective candidate text scale. The main bar historically rendered at
+     * 0.9x (an emoji-paint alias shrank the shared paint on every draw); the
+     * expanded grid rendered at full size and overrides this with 1.0.
+     */
+    protected float candidateTextScale() {
+        return 0.9f;
+    }
+
     protected void updateFontSize() {
-        Resources r = mContext.getResources();
         float scaling = mLIMEPref.getFontSize();
+        // perf: all values below depend only on the font-size pref; skip the
+        // resource lookups and paint updates unless it actually changed.
+        if (scaling == mCachedFontScale) return;
+        mCachedFontScale = scaling;
+        Resources r = mContext.getResources();
+        mCandidateFontSizePx = r.getDimensionPixelSize(R.dimen.candidate_font_size);
         mVerticalPadding = (int) (r.getDimensionPixelSize(R.dimen.candidate_vertical_padding) * scaling);
-        mCandidatePaint.setTextSize(r.getDimensionPixelSize(R.dimen.candidate_font_size) * scaling);
+        mCandidatePaint.setTextSize(mCandidateFontSizePx * scaling * candidateTextScale());
         mSelKeyPaint.setTextSize(r.getDimensionPixelSize(R.dimen.candidate_number_font_size) * scaling);
         configHeight = (int) (r.getDimensionPixelSize(R.dimen.candidate_stripe_height) * scaling);
+        mHeight = configHeight + mVerticalPadding;
+        mMeasurementsDirty = true;
         if (DEBUG)
             Log.i(TAG, "updateFontSize(), scaling=" + scaling + ", mVerticalPadding=" + mVerticalPadding);
     }
@@ -487,6 +534,14 @@ public class CandidateView extends View implements View.OnClickListener {
             int reservedButtons = (isEmpty() && !isClipboardEmpty()) ? 2 : 1;
             candiWidth -= mExpandButtonWidth * reservedButtons;
         }
+        // perf: skip the LayoutParams allocation and the resulting full
+        // IME-window layout pass when the size did not actually change.
+        // (The clipboard listener triggers a relayout when the paste button
+        // state changes while the size stays the same.)
+        if (candiWidth == mLastLayoutWidth && mHeight == mLastLayoutHeight)
+            return;
+        mLastLayoutWidth = candiWidth;
+        mLastLayoutHeight = mHeight;
         if (DEBUG)
             Log.i(TAG, "resetWidth() candiWidth:" + candiWidth);
         this.setLayoutParams(new LinearLayout.LayoutParams(candiWidth, mHeight));
@@ -853,13 +908,46 @@ public class CandidateView extends View implements View.OnClickListener {
         doDraw(null);
     }
 
+    /**
+     * perf: fill mWordX/mWordWidth/mTotalWidth for the current suggestion list.
+     * Runs once per list/font change instead of on every draw pass; the minimum
+     * width reference is measured once instead of once per candidate.
+     *
+     * @return false if the suggestion list mutated mid-loop (abort this pass).
+     */
+    private boolean computeCandidateWidths(final int count) {
+        final Paint candidatePaint = mCandidatePaint;
+        final float minWidth = candidatePaint.measureText("。");
+        int x = 0;
+        for (int i = 0; i < count; i++) {
+            if (count != mCount || mSuggestions == null || count != mSuggestions.size()
+                    || mSuggestions.size() == 0 || i >= mSuggestions.size()) {
+                mTotalWidth = x;
+                return false;  // mSuggestions is updated, force abort
+            }
+            String suggestion = mSuggestions.get(i).getWord();
+            if (i == 0 && mSuggestions.size() > 1 && mSuggestions.get(1).isRuntimeBuiltPhraseRecord()
+                    && suggestion.length() > 8) {
+                suggestion = suggestion.substring(0, 2) + "..";
+            }
+            float textWidth = (suggestion == null) ? 0
+                    : Math.max(candidatePaint.measureText(suggestion), minWidth);
+            final int wordWidth = (int) textWidth + X_GAP * 2;
+            mWordX[i] = x;
+            mWordWidth[i] = wordWidth;
+            x += wordWidth;
+        }
+        mTotalWidth = x;
+        mMeasurementsDirty = false;
+        return true;
+    }
+
     private void doDraw(Canvas canvas) {
 
 
         if (mSuggestions == null) return;
         if (DEBUG)
             Log.i(TAG, "CandidateView:doDraw():Suggestion mCount:" + mCount + " mSuggestions.size:" + mSuggestions.size());
-        mTotalWidth = 0;
 
         updateFontSize();
 
@@ -873,9 +961,6 @@ public class CandidateView extends View implements View.OnClickListener {
         final int height = mHeight;
         final Rect bgPadding = mBgPadding;
         final Paint candidatePaint = mCandidatePaint;
-        final Paint candidateEmojiPaint = mCandidatePaint;
-        candidateEmojiPaint.setTextSize((float) (candidateEmojiPaint.getTextSize() * 0.9));
-
         final Paint selKeyPaint = mSelKeyPaint;
         final int touchX = mTouchX;
         final int scrollX = getScrollX();
@@ -883,40 +968,23 @@ public class CandidateView extends View implements View.OnClickListener {
 
         final int textBaseLine = (int) (((height - mCandidatePaint.getTextSize()) / 2) - mCandidatePaint.ascent());
 
-        // Modified by jeremy '10, 3, 29.  Update mselectedindex if touched and build wordX[i] and wordwidth[i]
-        int x = 0;
         final int count = mCount; //Cache count here '11,8,18
-        for (int i = 0; i < count; i++) {
-            if (count != mCount || mSuggestions == null || count != mSuggestions.size()
-                    || mSuggestions.size() == 0 || i >= mSuggestions.size())
-                return;  // mSuggestion is updated, force abort
 
-            String suggestion = mSuggestions.get(i).getWord();
-            if (i == 0 && mSuggestions.size() > 1 && mSuggestions.get(1).isRuntimeBuiltPhraseRecord() && suggestion.length() > 8) {
-                suggestion = suggestion.substring(0, 2) + "..";
+        // perf: measure only when the list or font changed; every other draw
+        // (touch highlight, scrolling, paging) reuses the cached widths.
+        if (mMeasurementsDirty && !computeCandidateWidths(count))
+            return;  // mSuggestions was updated mid-measure, force abort
+
+        // Update mSelectedIndex from the touch position using cached widths.
+        if (!scrolled) {
+            for (int i = 0; i < count && i < mWordX.length; i++) {
+                final int x = mWordX[i];
+                if (touchX + scrollX >= x && touchX + scrollX < x + mWordWidth[i]) {
+                    mSelectedIndex = i;
+                    break;
+                }
             }
-            float base = (suggestion == null) ? 0 : candidatePaint.measureText("。");
-            float textWidth = (suggestion == null) ? 0 : candidatePaint.measureText(suggestion);
-
-            if (textWidth < base) {
-                textWidth = base;
-            }
-
-
-            final int wordWidth = (int) textWidth + X_GAP * 2;
-
-            mWordX[i] = x;
-
-            mWordWidth[i] = wordWidth;
-
-
-            if (touchX + scrollX >= x && touchX + scrollX < x + wordWidth && !scrolled) {
-                mSelectedIndex = i;
-            }
-            x += wordWidth;
         }
-
-        mTotalWidth = x;
 
         if (DEBUG)
             Log.i(TAG, "CandidateView:doDraw():mTotalWidth :" + mTotalWidth + "  this.getWidth():" + this.getWidth());
@@ -943,12 +1011,15 @@ public class CandidateView extends View implements View.OnClickListener {
             if (mTransparentCandidateView) {
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-                Paint backgroundPaint = new Paint();
-                backgroundPaint.setColor(ContextCompat.getColor(mContext, R.color.third_background_light));
-                backgroundPaint.setAlpha(33);
-                backgroundPaint.setStyle(Paint.Style.FILL);
+                // perf: created once instead of on every draw
+                if (mTransparentBackgroundPaint == null) {
+                    mTransparentBackgroundPaint = new Paint();
+                    mTransparentBackgroundPaint.setColor(ContextCompat.getColor(mContext, R.color.third_background_light));
+                    mTransparentBackgroundPaint.setAlpha(33);
+                    mTransparentBackgroundPaint.setStyle(Paint.Style.FILL);
+                }
 
-                canvas.drawRect(0.5f, bgPadding.top, mScreenWidth, height, backgroundPaint);
+                canvas.drawRect(0.5f, bgPadding.top, mScreenWidth, height, mTransparentBackgroundPaint);
             }
 
 
@@ -1003,7 +1074,7 @@ public class CandidateView extends View implements View.OnClickListener {
                 }
 
                 if (isEmoji) {
-                    canvas.drawText(suggestion, mWordX[i] + X_GAP, Math.round(textBaseLine * 0.95), candidateEmojiPaint);
+                    canvas.drawText(suggestion, mWordX[i] + X_GAP, Math.round(textBaseLine * 0.95), candidatePaint);
                 } else {
                     canvas.drawText(suggestion, mWordX[i] + X_GAP, textBaseLine, candidatePaint);
                 }
@@ -1091,12 +1162,8 @@ public class CandidateView extends View implements View.OnClickListener {
         if (DEBUG)
             Log.i(TAG, "setSuggestions()");
 
-        Resources res = mContext.getResources();
-
-        configHeight = (int) (res.getDimensionPixelSize(
-                R.dimen.candidate_stripe_height) * mLIMEPref.getFontSize());
-        mVerticalPadding = (int) (res.getDimensionPixelSize(R.dimen.candidate_vertical_padding) * mLIMEPref.getFontSize());
-        mHeight = configHeight + mVerticalPadding;
+        // perf: resource/pref reads are cached inside updateFontSize()
+        updateFontSize();
 
         currentX = 0;
         mTouchX = OUT_OF_BOUNDS;
@@ -1110,13 +1177,16 @@ public class CandidateView extends View implements View.OnClickListener {
         mShowNumber = showNumber;
 
         if (mShowNumber)
-            X_GAP = (int) (res.getDimensionPixelSize(R.dimen.candidate_font_size) * 0.35f);//13;
+            X_GAP = (int) (mCandidateFontSizePx * 0.35f);//13;
         else
-            X_GAP = (int) (res.getDimensionPixelSize(R.dimen.candidate_font_size) * 0.25f);
+            X_GAP = (int) (mCandidateFontSizePx * 0.25f);
 
+        // perf: new list -> cached widths are stale
+        mMeasurementsDirty = true;
 
         if (suggestions != null) {
-            mSuggestions = new LinkedList<>(suggestions);
+            // perf: ArrayList - the measure/draw loops index with get(i)
+            mSuggestions = new ArrayList<>(suggestions);
 
             if (mSuggestions.size() > 0) {
                 // Add by Jeremy '10, 3, 29
@@ -1147,7 +1217,7 @@ public class CandidateView extends View implements View.OnClickListener {
                     Log.i(TAG, "setSuggestions():mSuggestions=null");
             }
         } else {
-            mSuggestions = new LinkedList<>();
+            mSuggestions = new ArrayList<>();
             hideCandidatePopup();
         }
 
@@ -1165,22 +1235,18 @@ public class CandidateView extends View implements View.OnClickListener {
         //mHeight =0; //Jeremy '12,5,6 hide candidate bar when candidateview is fixed.
         if (mSuggestions != null) mSuggestions.clear();
         mCount = 0;
+        mMeasurementsDirty = true;
         // Jeremy 11,8,14 close all popup on clear
         setComposingText("");
         mTargetScrollX = 0;
         mTotalWidth = 0;
         hideComposing();
 
+        // perf: resource/pref reads are cached inside updateFontSize()
+        updateFontSize();
 
         prepareLayout();
         mHandler.updateUI(0);
-
-        Resources r = mContext.getResources();
-        configHeight = (int) (r.getDimensionPixelSize(
-                R.dimen.candidate_stripe_height) * mLIMEPref.getFontSize());
-        mVerticalPadding = (int) (r.getDimensionPixelSize(R.dimen.candidate_vertical_padding) * mLIMEPref.getFontSize());
-        configHeight = (int) (r.getDimensionPixelSize(R.dimen.candidate_stripe_height) * mLIMEPref.getFontSize());
-        mHeight = configHeight + mVerticalPadding;
 
     }
 
@@ -1203,13 +1269,24 @@ public class CandidateView extends View implements View.OnClickListener {
     }
 
     private String getClipboardText() {
-        ClipData data = ((ClipboardManager) getContext().getSystemService(CLIPBOARD_SERVICE))
-                .getPrimaryClip();
-        if (data == null || data.getItemCount() == 0) {
-            return "";
-        } else {
-            return data.getItemAt(0).getText().toString();
+        // perf: getPrimaryClip() is a binder IPC; reuse the cached text until
+        // the OnPrimaryClipChangedListener invalidates it.
+        if (mClipboardTextValid)
+            return mClipboardText;
+        String text = "";
+        try {
+            ClipData data = ((ClipboardManager) getContext().getSystemService(CLIPBOARD_SERVICE))
+                    .getPrimaryClip();
+            if (data != null && data.getItemCount() > 0) {
+                CharSequence itemText = data.getItemAt(0).getText();
+                if (itemText != null)
+                    text = itemText.toString();
+            }
+        } catch (Exception ignored) {
         }
+        mClipboardText = text;
+        mClipboardTextValid = true;
+        return text;
     }
 
     @Override

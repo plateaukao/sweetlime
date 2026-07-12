@@ -719,6 +719,14 @@ public class LimeDB extends LimeSQLiteOpenHelper {
                 }
             }
             db = this.getWritableDatabase();
+            // perf: WAL lets keystroke queries proceed while learning writes
+            // commit; the legacy rollback journal takes an exclusive lock that
+            // blocks readers for the whole write transaction.
+            try {
+                if (db != null) db.enableWriteAheadLogging();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             databaseOnHold = false;
             return db != null && db.isOpen();
         }
@@ -2442,6 +2450,11 @@ public class LimeDB extends LimeSQLiteOpenHelper {
             if (DEBUG)
                 Log.i(TAG, "buildQueryResult(): code=" + query_code + ", similar code limit=" + sLimit);
 
+            // perf: hoisted out of the row loop - replaceAll() compiles a regex
+            // on every call, and this value is constant for the whole query.
+            final int noToneQueryCodeLength = searchNoToneColumn
+                    ? query_code.replaceAll("[3467 ]", "").trim().length() : 0;
+
             do {
                 String word = cursor.getString(wordColumn);
                 //skip if word is null
@@ -2472,7 +2485,7 @@ public class LimeDB extends LimeSQLiteOpenHelper {
                 if (buildValidCodeList) {
                     String noToneCode = cursor.getString(noToneCodeColumn);
                     if (searchNoToneColumn && noToneCode != null
-                            && noToneCode.trim().length() == query_code.replaceAll("[3467 ]", "").trim().length()
+                            && noToneCode.trim().length() == noToneQueryCodeLength
                             && validCodeMap.size() < DUALCODE_COMPOSING_LIMIT)
                         validCodeMap.add(noToneCode);
                     else if (code != null && code.length() == query_code.length())

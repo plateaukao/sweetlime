@@ -3054,8 +3054,10 @@ public class LIMEService extends InputMethodService implements
                 }
                 hasCandidatesShown = true;
                 hasMappingList = true;
-                // Hide the bottom candidate bar
-                setCandidatesViewShown(false);
+                // Hide the bottom candidate bar. Routed through the handler:
+                // this path runs on the query (IO) thread and window state must
+                // only be touched on the main thread.
+                mCandidateViewHandler.hideCandidateView();
                 // Show the floating mini bar near cursor (must be on main thread)
                 final List<Mapping> popupSuggestions = suggestions;
                 mCandidateViewHandler.post(() -> showMiniCandidatePopup(popupSuggestions));
