@@ -44,6 +44,7 @@ import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -941,6 +942,18 @@ public class LIMEService extends InputMethodService implements
     }
 
     /**
+     * True if the event comes from a device that is a real (full/alphabetic)
+     * keyboard. Built-in tablet buttons (volume, page-turn) and remote page
+     * clickers report KEYBOARD_TYPE_NON_ALPHABETIC or no device at all;
+     * external keyboards and synthesized virtual-keyboard events report
+     * KEYBOARD_TYPE_ALPHABETIC.
+     */
+    private static boolean isFromAlphabeticKeyboard(KeyEvent event) {
+        InputDevice device = event.getDevice();
+        return device != null && device.getKeyboardType() == InputDevice.KEYBOARD_TYPE_ALPHABETIC;
+    }
+
+    /**
      * This translates incoming hard key events in to edit operations on an
      * InputConnection. It is only needed when using the PROCESS_HARD_KEYS
      * option.
@@ -950,6 +963,18 @@ public class LIMEService extends InputMethodService implements
                 + ", mInputView=" + (mInputView != null)
                 + ", mCandidateView=" + (mCandidateView != null)
                 + ", mEnglishOnly=" + mEnglishOnly);
+
+        // Only treat this key as physical-keyboard typing when it plausibly is:
+        // it produces a character, or it comes from a real (alphabetic) keyboard
+        // device. Hardware buttons on tablets/e-readers - volume rockers,
+        // page-turn buttons, BT page clickers - report vendor keycodes from
+        // non-keyboard devices; before this guard any such key fell into the
+        // onKeyDown() default branch and force-showed the IME window via
+        // requestShowSelf() below. (An explicit keycode blocklist can't win
+        // here: the set of vendor button codes is open-ended.)
+        if (event.getUnicodeChar() == 0 && !isFromAlphabeticKeyboard(event))
+            return false;
+
         boolean wasPhysicalKeyPressed = hasPhysicalKeyPressed;
         hasPhysicalKeyPressed = true;
 
