@@ -965,14 +965,23 @@ public class LIMEService extends InputMethodService implements
                 + ", mEnglishOnly=" + mEnglishOnly);
 
         // Only treat this key as physical-keyboard typing when it plausibly is:
-        // it produces a character, or it comes from a real (alphabetic) keyboard
-        // device. Hardware buttons on tablets/e-readers - volume rockers,
-        // page-turn buttons, BT page clickers - report vendor keycodes from
-        // non-keyboard devices; before this guard any such key fell into the
-        // onKeyDown() default branch and force-showed the IME window via
-        // requestShowSelf() below. (An explicit keycode blocklist can't win
-        // here: the set of vendor button codes is open-ended.)
-        if (event.getUnicodeChar() == 0 && !isFromAlphabeticKeyboard(event))
+        // it produces a character, or it is a standard keycode from a real
+        // (alphabetic) keyboard device. Hardware buttons on tablets/e-readers -
+        // volume rockers, page-turn buttons, BT page clickers - report vendor
+        // keycodes from non-keyboard devices; before this guard any such key
+        // fell into the onKeyDown() default branch and force-showed the IME
+        // window via requestShowSelf() below.
+        //
+        // The keycode cap is needed because vendor system services inject
+        // their own keycodes above the standard range through the virtual
+        // keyboard device, which reports KEYBOARD_TYPE_ALPHABETIC and so
+        // passes the device check (e.g. Supernote's GestureService injects
+        // keycode 310 repeatedly while the side slide bar is long-pressed -
+        // resting a palm on the bar while handwriting popped up the panel).
+        boolean producesChar = event.getUnicodeChar() != 0;
+        boolean standardKeyboardKey = isFromAlphabeticKeyboard(event)
+                && keyCode <= KeyEvent.KEYCODE_PROFILE_SWITCH;
+        if (!producesChar && !standardKeyboardKey)
             return false;
 
         boolean wasPhysicalKeyPressed = hasPhysicalKeyPressed;
