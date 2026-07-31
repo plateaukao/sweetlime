@@ -555,11 +555,17 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         SkinStyle skinStyle = SkinManager.getInstance().getActiveStyle(context);
         if (skinStyle != null) {
             boolean night = SkinManager.isNightMode(context);
+            mSkinSettings = SkinManager.getInstance().getActiveSkin(context);
+            mSkinHintColor = skinStyle.textSub;
+            mSkinHintTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    skinStyle.swipeSize, context.getResources().getDisplayMetrics());
+            mSkinHintEdge = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    5, context.getResources().getDisplayMetrics());
             mKeyBackground = SkinDrawables.keyBackground(context, skinStyle);
             mKeyTextColorNormal = skinStyle.textMain;
             mKeyTextColorPressed = skinStyle.textMain;
-            mFunctionKeyTextColorNormal = skinStyle.textMain;
-            mFunctionKeyTextColorPressed = skinStyle.textMain;
+            mFunctionKeyTextColorNormal = skinStyle.textSystem;
+            mFunctionKeyTextColorPressed = skinStyle.textSystem;
             mKeySubLabelTextColorNormal = skinStyle.textSub;
             mKeySubLabelTextColorPressed = skinStyle.textSub;
             DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -1074,6 +1080,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 // hint and popup hint.
                 shouldDrawIcon = shouldDrawLabelAndIcon(key);
             }
+            drawSkinSwipeHints(canvas, key, paint);
             if (shouldDrawIcon) {
                 Drawable icon = key.icon;
                 if (icon == null)
@@ -1203,6 +1210,77 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         }
         return result;
     }
+
+    private SkinSettings mSkinSettings;
+    private int mSkinHintColor;
+    private float mSkinHintTextSize;
+    private float mSkinHintEdge;
+
+    /**
+     * Draws the skin's per-key swipe hints in the key corners: swipe-up
+     * output top-left, swipe-down output bottom-right (canvas is already
+     * translated to the key origin).
+     */
+    private void drawSkinSwipeHints(Canvas canvas, Key key, Paint paint) {
+        if (mSkinSettings == null || key.codes == null || key.codes.length == 0) return;
+        int code = Character.toLowerCase(key.codes[0]);
+        if (code < 'a' || code > 'z') return;
+        SkinSettings.RowGesture gesture = mSkinSettings.rowGesture(skinRowIndex(key));
+        SkinSettings.KeySwipe up = (gesture.swipeUp && gesture.showSwipeUpText)
+                ? mSkinSettings.swipeUp.get((char) code) : null;
+        SkinSettings.KeySwipe down = (gesture.swipeDown && gesture.showSwipeDownText)
+                ? mSkinSettings.swipeDown.get((char) code) : null;
+        if (up == null && down == null) return;
+
+        paint.setTypeface(Typeface.DEFAULT);
+        paint.setTextSize(mSkinHintTextSize);
+        paint.setColor(mSkinHintColor);
+        if (up != null && up.label != null && up.label.length() > 0) {
+            paint.setTextAlign(Align.LEFT);
+            canvas.drawText(hintText(up.label),
+                    mSkinHintEdge, mSkinHintEdge + mSkinHintTextSize, paint);
+        }
+        if (down != null && down.label != null && down.label.length() > 0) {
+            paint.setTextAlign(Align.RIGHT);
+            canvas.drawText(hintText(down.label),
+                    key.width - mSkinHintEdge, key.height - mSkinHintEdge, paint);
+        }
+        paint.setTextAlign(Align.CENTER);
+    }
+
+    private static String hintText(String label) {
+        return label.length() > 3 ? label.substring(0, 3) : label;
+    }
+
+    /** Receiver for skin-defined per-key swipe actions (implemented by LIMEService). */
+    public interface SkinKeySwipeListener {
+        boolean onSkinKeySwipe(SkinSettings.KeySwipe action);
+    }
+
+    private SkinKeySwipeListener mSkinKeySwipeListener;
+
+    public void setSkinKeySwipeListener(SkinKeySwipeListener listener) {
+        mSkinKeySwipeListener = listener;
+    }
+
+    private final PointerTracker.SkinSwipeHandler mSkinSwipeHandler =
+            new PointerTracker.SkinSwipeHandler() {
+                @Override
+                public boolean onKeySwipe(Key downKey, boolean up) {
+                    if (mSkinKeySwipeListener == null) return false;
+                    SkinSettings skin = SkinManager.getInstance().getActiveSkin(getContext());
+                    if (skin == null || downKey.codes == null || downKey.codes.length == 0)
+                        return false;
+                    int code = Character.toLowerCase(downKey.codes[0]);
+                    if (code < 'a' || code > 'z') return false;
+                    SkinSettings.RowGesture gesture = skin.rowGesture(skinRowIndex(downKey));
+                    if (up ? !gesture.swipeUp : !gesture.swipeDown) return false;
+                    SkinSettings.KeySwipe action =
+                            (up ? skin.swipeUp : skin.swipeDown).get((char) code);
+                    if (action == null) return false;
+                    return mSkinKeySwipeListener.onSkinKeySwipe(action);
+                }
+            };
 
     /**
      * Maps a key to the skin designer's row numbering (0-based, top row of a
@@ -1436,6 +1514,7 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 tracker.setKeyboard(keys, mKeyHysteresisDistance);
             if (listener != null)
                 tracker.setOnKeyboardActionListener(listener);
+            tracker.setSkinSwipeHandler(mSkinSwipeHandler);
             pointers.add(tracker);
         }
 

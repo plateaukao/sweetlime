@@ -389,6 +389,17 @@ public class PointerTracker {
         showKeyPreviewAndUpdateKey(keyState.getKeyIndex());
     }
 
+    /** Skin-defined per-key vertical swipe; returns true when it consumed the touch. */
+    public interface SkinSwipeHandler {
+        boolean onKeySwipe(Key downKey, boolean up);
+    }
+
+    private SkinSwipeHandler mSkinSwipeHandler;
+
+    public void setSkinSwipeHandler(SkinSwipeHandler handler) {
+        mSkinSwipeHandler = handler;
+    }
+
     public void onUpEvent(int x, int y, long eventTime) {
         if (DEBUG)
             Log.i(TAG,"onUpEvent(): x = "+ x + ", y="+ y);
@@ -400,6 +411,22 @@ public class PointerTracker {
         mIsInSlidingKeyInput = false;
         if (mKeyAlreadyProcessed)
             return;
+
+        // Skin per-key swipe: vertical travel from the key touched at down.
+        boolean skinSwipeHandled = false;
+        if (!mIsRepeatableKey && mSkinSwipeHandler != null) {
+            int startX = mKeyState.getStartX();
+            int startY = mKeyState.getStartY();
+            int dx = x - startX;
+            int dy = y - startY;
+            Key downKey = getKey(mKeyDetector.getKeyIndexAndNearbyCodes(startX, startY, null));
+            if (downKey != null && downKey.height > 0
+                    && Math.abs(dy) > downKey.height / 2
+                    && Math.abs(dy) > Math.abs(dx) * 2) {
+                skinSwipeHandled = mSkinSwipeHandler.onKeySwipe(downKey, dy < 0);
+            }
+        }
+
         int keyIndex = mKeyState.onUpKey(x, y);
         if (isMinorMoveBounce(x, y, keyIndex)) {
             // Use previous fixed key index and coordinates.
@@ -407,7 +434,7 @@ public class PointerTracker {
             x = mKeyState.getKeyX();
             y = mKeyState.getKeyY();
         }
-        if (!mIsRepeatableKey) {
+        if (!mIsRepeatableKey && !skinSwipeHandled) {
             detectAndSendKey(keyIndex, x, y, eventTime);
         }
 

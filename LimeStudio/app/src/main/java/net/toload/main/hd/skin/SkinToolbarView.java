@@ -26,10 +26,12 @@ package net.toload.main.hd.skin;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,8 +41,10 @@ import info.plateaukao.sweetlime.R;
 
 /**
  * Toolbar shown in the candidate bar slot while nothing is being composed,
- * built from an imported skin's toolbarButtons configuration. Skin function
- * ids without a Sweet LIME equivalent render as blank spacers.
+ * built from an imported skin's toolbarButtons configuration. Buttons use
+ * icon drawables tinted with the skin's toolbar color where an equivalent
+ * exists; skin function ids without a Sweet LIME equivalent render as blank
+ * spacers.
  */
 public class SkinToolbarView extends LinearLayout {
 
@@ -67,38 +71,38 @@ public class SkinToolbarView extends LinearLayout {
                 MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY));
     }
 
-    private static String labelFor(int function) {
+    private static int iconFor(int function) {
         switch (function) {
             case SkinSettings.TB_SETTINGS:
-                return "設定";
+                return R.drawable.skin_ic_settings;
             case SkinSettings.TB_COLLAPSE:
-                return "▽";
+                return R.drawable.skin_ic_collapse;
             case SkinSettings.TB_CHI_ENG:
-                return "中英";
+                return R.drawable.skin_ic_lang;
             case SkinSettings.TB_SIMP_TRAD:
-                return "簡繁";
+                return R.drawable.skin_ic_translate;
             case SkinSettings.TB_SYMBOL:
-                return "符號";
+                return R.drawable.skin_ic_keyboard;
             case SkinSettings.TB_NUMBER:
-                return "123";
+                return R.drawable.skin_ic_dialpad;
             case SkinSettings.TB_SELECT_ALL:
-                return "全選";
+                return R.drawable.skin_ic_select_all;
             case SkinSettings.TB_COPY:
-                return "複製";
+                return R.drawable.skin_ic_copy;
             case SkinSettings.TB_CUT:
-                return "剪下";
+                return R.drawable.skin_ic_cut;
             case SkinSettings.TB_PASTE:
-                return "貼上";
+                return R.drawable.skin_ic_paste;
             case SkinSettings.TB_UNDO:
-                return "復原";
+                return R.drawable.skin_ic_undo;
             case SkinSettings.TB_REDO:
-                return "重做";
+                return R.drawable.skin_ic_redo;
             case SkinSettings.TB_CURSOR_LEFT:
-                return "◁";
+                return R.drawable.skin_ic_left;
             case SkinSettings.TB_CURSOR_RIGHT:
-                return "▷";
+                return R.drawable.skin_ic_right;
             default:
-                return null; // spacer / unsupported function
+                return 0; // spacer / unsupported function
         }
     }
 
@@ -109,14 +113,27 @@ public class SkinToolbarView extends LinearLayout {
         if (skin == null || style == null) return;
         setBackgroundColor(SkinDrawables.opaqueBackground(style.toolbarBackground, night));
 
+        int iconSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                style.toolbarSize, getContext().getResources().getDisplayMetrics());
+        LayoutParams lp = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f);
+
         for (final int function : skin.toolbarButtons) {
-            String label = labelFor(function);
-            TextView button = new TextView(getContext());
-            button.setGravity(Gravity.CENTER);
-            button.setTextColor(style.toolbarColor);
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, style.toolbarSize);
-            if (label != null) {
-                button.setText(label);
+            int iconRes = iconFor(function);
+            View button;
+            if (iconRes != 0) {
+                ImageView icon = new ImageView(getContext());
+                icon.setImageResource(iconRes);
+                icon.setColorFilter(style.toolbarColor, PorterDuff.Mode.SRC_IN);
+                icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                int pad = Math.max(0, (mHeight - iconSize) / 2);
+                icon.setPadding(0, pad, 0, pad);
+                button = icon;
+            } else {
+                // Spacer keeps the slot so the layout matches the design.
+                button = new TextView(getContext());
+                ((TextView) button).setGravity(Gravity.CENTER);
+            }
+            if (iconRes != 0) {
                 button.setBackgroundDrawable(
                         SkinDrawables.toolbarButtonBackground(getContext(), style));
                 button.setOnClickListener(new OnClickListener() {
@@ -126,7 +143,6 @@ public class SkinToolbarView extends LinearLayout {
                     }
                 });
             }
-            LayoutParams lp = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f);
             addView(button, lp);
         }
     }

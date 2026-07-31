@@ -24,12 +24,41 @@
 
 package net.toload.main.hd.skin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Parsed contents of a .cskin skin file (the settings.json inside the zip)
  * reduced to what Sweet LIME applies: light/dark styles, toolbar button
- * configuration and swipe/long-press gesture flags.
+ * configuration, swipe/long-press gesture flags and the per-key swipe maps
+ * from lib/swipeData.libsonnet.
  */
 public class SkinSettings {
+
+    /** One per-key swipe action from the skin's swipeData map. */
+    public static class KeySwipe {
+        /** Feed the value through the IM like a keypress (enters composing). */
+        public static final int TYPE_CHARACTER = 0;
+        /** Commit the value directly to the editor. */
+        public static final int TYPE_TEXT = 1;
+        /** Named action: cut/copy/paste/selectText/行首/行尾/tab. */
+        public static final int TYPE_SHORTCUT = 2;
+
+        public int type;
+        public String value;
+        /** Short hint drawn on the key cap. */
+        public String label;
+
+        public KeySwipe(int type, String value, String label) {
+            this.type = type;
+            this.value = value;
+            this.label = label;
+        }
+    }
+
+    /** Per-key swipe actions keyed by lowercase letter. */
+    public Map<Character, KeySwipe> swipeUp = new HashMap<>();
+    public Map<Character, KeySwipe> swipeDown = new HashMap<>();
 
     /** Per-row gesture switches. Rows are 1-4 top to bottom (index 0-3). */
     public static class RowGesture {

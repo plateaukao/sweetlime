@@ -47,13 +47,14 @@ public class SkinDrawables {
                 TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()));
     }
 
-    private static Drawable keyFace(Context context, SkinStyle style, int fillColor) {
+    private static Drawable keyFace(Context context, int fillColor,
+                                    int borderColor, float borderSize) {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadius(dp(context, 3));
         shape.setColor(fillColor);
-        if (style.borderSize > 0)
-            shape.setStroke(dp(context, style.borderSize), style.borderColor);
+        if (borderSize > 0)
+            shape.setStroke(dp(context, borderSize), borderColor);
         int inset = dp(context, 2);
         return new InsetDrawable(shape, inset, inset, inset, inset);
     }
@@ -65,13 +66,13 @@ public class SkinDrawables {
     public static StateListDrawable keyBackground(Context context, SkinStyle style) {
         StateListDrawable d = new StateListDrawable();
         d.addState(new int[]{android.R.attr.state_single, android.R.attr.state_pressed},
-                keyFace(context, style, style.keySystemPressed));
+                keyFace(context, style.keySystemPressed, style.systemBorderColor, style.systemBorderSize));
         d.addState(new int[]{android.R.attr.state_single},
-                keyFace(context, style, style.keySystem));
+                keyFace(context, style.keySystem, style.systemBorderColor, style.systemBorderSize));
         d.addState(new int[]{android.R.attr.state_pressed},
-                keyFace(context, style, style.keyNormalPressed));
+                keyFace(context, style.keyNormalPressed, style.borderColor, style.borderSize));
         d.addState(new int[]{},
-                keyFace(context, style, style.keyNormal));
+                keyFace(context, style.keyNormal, style.borderColor, style.borderSize));
         return d;
     }
 

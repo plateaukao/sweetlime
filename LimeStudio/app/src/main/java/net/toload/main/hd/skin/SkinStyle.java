@@ -46,6 +46,8 @@ public class SkinStyle {
     // Text
     public int textMain;
     public int textSub;
+    /** Function-key label color (v2 skins); falls back to textMain. */
+    public int textSystem;
     public int toolbarColor;
 
     // Candidate bar
@@ -61,6 +63,9 @@ public class SkinStyle {
     public int shadow;
     public int borderColor;
     public float borderSize;
+    /** Function-key border (v2 skins); falls back to borderColor/borderSize. */
+    public int systemBorderColor;
+    public float systemBorderSize;
 
     // Font sizes (designer points; use as sp)
     public float alphabetSize;

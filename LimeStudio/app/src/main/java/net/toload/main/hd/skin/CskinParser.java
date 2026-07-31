@@ -52,41 +52,127 @@ public class CskinParser {
     }
 
     public static SkinSettings parse(File cskinFile) throws IOException, JSONException {
-        String json = readSettingsJson(cskinFile);
-        if (json == null)
-            throw new IOException("No settings.json found in " + cskinFile.getName());
-        return parseSettingsJson(json);
-    }
-
-    private static String readSettingsJson(File cskinFile) throws IOException {
+        String json = null;
+        String swipeData = null;
         ZipFile zip = new ZipFile(cskinFile);
         try {
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (entry.isDirectory()) continue;
+                if (entry.isDirectory() || entry.getSize() > MAX_SETTINGS_JSON_SIZE) continue;
                 String name = entry.getName();
-                if (name.endsWith("settings.json") && entry.getSize() <= MAX_SETTINGS_JSON_SIZE) {
-                    InputStream in = zip.getInputStream(entry);
-                    try {
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        byte[] buf = new byte[8192];
-                        int n;
-                        while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
-                        return out.toString("UTF-8");
-                    } finally {
-                        in.close();
-                    }
-                }
+                if (json == null && name.endsWith("settings.json"))
+                    json = readEntry(zip, entry);
+                else if (name.endsWith("lib/swipeData.libsonnet"))
+                    swipeData = readEntry(zip, entry);
+                else if (swipeData == null && name.endsWith("lib/swipeData-en.libsonnet"))
+                    swipeData = readEntry(zip, entry);
             }
-            return null;
         } finally {
             zip.close();
+        }
+        if (json == null)
+            throw new IOException("No settings.json found in " + cskinFile.getName());
+        SkinSettings skin = parseSettingsJson(json);
+        if (swipeData != null)
+            parseSwipeData(swipeData, skin);
+        return skin;
+    }
+
+    private static String readEntry(ZipFile zip, ZipEntry entry) throws IOException {
+        InputStream in = zip.getInputStream(entry);
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
+            return out.toString("UTF-8");
+        } finally {
+            in.close();
         }
     }
 
     public static SkinSettings parseSettingsJson(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
+        if (root.optInt("schemaVersion", 1) >= 2)
+            return parseV2(root);
+        return parseV1(root);
+    }
+
+    /**
+     * Schema v2 (designer 2.0.0+): palette/groups under globalSettings,
+     * toolbar buttons under toolbar, gestures as feature-name lists under
+     * swipe. Palette field names are a superset of v1's.
+     */
+    private static SkinSettings parseV2(JSONObject root) {
+        SkinSettings skin = new SkinSettings();
+
+        JSONObject skinInfo = root.optJSONObject("skinInfo");
+        if (skinInfo != null) {
+            skin.name = skinInfo.optString("name", "");
+            skin.author = skinInfo.optString("author", "");
+        }
+        skin.enableCustomColors = true; // v2 exports always carry a palette
+
+        JSONObject global = root.optJSONObject("globalSettings");
+        JSONObject palette = global == null ? null : global.optJSONObject("palette");
+        JSONObject groups = global == null ? null : global.optJSONObject("groups");
+        skin.light = parseStyle(palette == null ? null : palette.optJSONObject("light"), groups, false);
+        skin.dark = parseStyle(palette == null ? null : palette.optJSONObject("dark"), groups, true);
+
+        JSONObject toolbar = root.optJSONObject("toolbar");
+        JSONArray toolbarButtons = toolbar == null ? null : toolbar.optJSONArray("toolbarButtons");
+        if (toolbarButtons != null) {
+            int n = Math.min(toolbarButtons.length(), skin.toolbarButtons.length);
+            for (int i = 0; i < n; i++)
+                skin.toolbarButtons[i] = toolbarButtons.optInt(i, SkinSettings.TB_SPACER);
+        }
+
+        parseGesturesV2(root.optJSONObject("swipe"), skin);
+        return skin;
+    }
+
+    private static void parseGesturesV2(JSONObject swipe, SkinSettings skin) {
+        SkinSettings.RowGesture global = new SkinSettings.RowGesture();
+        if (swipe != null) {
+            JSONArray features = swipe.optJSONArray("globalEnabledFeatures");
+            global.swipeUp = arrayContains(features, "swipeUp");
+            global.swipeDown = arrayContains(features, "swipeDown");
+            global.longPress = arrayContains(features, "longPress");
+            global.showSwipeUpText = arrayContains(features, "showSwipeUpText");
+            global.showSwipeDownText = arrayContains(features, "showSwipeDownText");
+        }
+        for (int i = 0; i < skin.rows.length; i++)
+            skin.rows[i] = global.copy();
+
+        if (swipe == null || !swipe.optBoolean("useAdvancedRowControl", false)) return;
+        JSONObject rowControl = swipe.optJSONObject("advancedRowControl");
+        if (rowControl == null) return;
+        JSONArray swipeUpRows = rowControl.optJSONArray("swipeUpRows");
+        JSONArray swipeDownRows = rowControl.optJSONArray("swipeDownRows");
+        JSONArray longPressRows = rowControl.optJSONArray("longPressRows");
+        JSONArray showUpRows = rowControl.optJSONArray("showSwipeUpTextRows");
+        JSONArray showDownRows = rowControl.optJSONArray("showSwipeDownTextRows");
+        for (int i = 0; i < skin.rows.length; i++) {
+            String row = "row" + (i + 1);
+            SkinSettings.RowGesture g = skin.rows[i];
+            if (swipeUpRows != null) g.swipeUp = arrayContains(swipeUpRows, row);
+            if (swipeDownRows != null) g.swipeDown = arrayContains(swipeDownRows, row);
+            if (longPressRows != null) g.longPress = arrayContains(longPressRows, row);
+            if (showUpRows != null) g.showSwipeUpText = arrayContains(showUpRows, row);
+            if (showDownRows != null) g.showSwipeDownText = arrayContains(showDownRows, row);
+        }
+    }
+
+    private static boolean arrayContains(JSONArray array, String value) {
+        if (array == null) return true; // absent list = feature untouched
+        for (int i = 0; i < array.length(); i++)
+            if (value.equals(array.optString(i))) return true;
+        return false;
+    }
+
+    /** Schema v1: flat settings.json matching the designer's initialSettings. */
+    private static SkinSettings parseV1(JSONObject root) {
         SkinSettings skin = new SkinSettings();
 
         JSONObject skinInfo = root.optJSONObject("skinInfo");
@@ -164,6 +250,9 @@ public class CskinParser {
         }
         s.toolbarBackground = s.keyboardBackground;
         s.borderSize = 0;
+        s.textSystem = s.textMain;
+        s.systemBorderColor = s.borderColor;
+        s.systemBorderSize = 0;
         s.alphabetSize = 21;
         s.lowercaseSize = 23;
         s.systemSize = 16;
@@ -192,6 +281,11 @@ public class CskinParser {
             s.shadow = color(p, "shadow", s.shadow);
             s.borderColor = color(p, "border", s.borderColor);
             s.borderSize = (float) p.optDouble("borderSize", s.borderSize);
+            // v2-only fields; v1 palettes fall back to the base values.
+            s.textSystem = color(p, "textSystem", s.textMain);
+            s.toolbarBackground = color(p, "toolbarBg", s.toolbarBackground);
+            s.systemBorderColor = color(p, "systemBorder", s.borderColor);
+            s.systemBorderSize = (float) p.optDouble("systemBorderSize", s.borderSize);
         }
         if (groups != null) {
             s.alphabetSize = (float) groups.optDouble("alphabetSize", s.alphabetSize);
@@ -286,6 +380,90 @@ public class CskinParser {
             g.showSwipeUpText = r.optBoolean("showSwipeUpText", g.showSwipeUpText);
             g.showSwipeDownText = r.optBoolean("showSwipeDownText", g.showSwipeDownText);
         }
+    }
+
+    // ---- per-key swipe data (lib/swipeData.libsonnet) -----------------------
+
+    private static final java.util.regex.Pattern KEY_LINE = java.util.regex.Pattern.compile(
+            "^\\s{2,}([a-z]):\\s*\\{(.+)\\},?\\s*$");
+    private static final String STR = "'((?:\\\\.|[^'\\\\])*)'|\"((?:\\\\.|[^\"\\\\])*)\"";
+    private static final java.util.regex.Pattern ACT_CHARACTER =
+            java.util.regex.Pattern.compile("character:\\s*(?:" + STR + ")");
+    private static final java.util.regex.Pattern ACT_SYMBOL =
+            java.util.regex.Pattern.compile("symbol:\\s*(?:" + STR + ")");
+    private static final java.util.regex.Pattern ACT_SHORTCUT =
+            java.util.regex.Pattern.compile("shortcut:\\s*(?:" + STR + ")");
+    private static final java.util.regex.Pattern ACT_PLAIN =
+            java.util.regex.Pattern.compile("action:\\s*(?:" + STR + ")");
+    private static final java.util.regex.Pattern LABEL_TEXT =
+            java.util.regex.Pattern.compile("(?<!hint)[lL]abel:\\s*\\{\\s*text:\\s*(?:" + STR + ")");
+    private static final java.util.regex.Pattern HINT_LABEL_TEXT =
+            java.util.regex.Pattern.compile("hintLabel:\\s*\\{\\s*text:\\s*(?:" + STR + ")");
+
+    /**
+     * Extracts the per-key swipe_up/swipe_down maps from the skin's
+     * lib/swipeData.libsonnet. The file is Jsonnet, but its entries are
+     * regular one-line declarations, so a tolerant line scan is enough;
+     * computed entries (function calls) are simply skipped.
+     */
+    static void parseSwipeData(String content, SkinSettings skin) {
+        java.util.Map<Character, SkinSettings.KeySwipe> current = null;
+        for (String line : content.split("\n")) {
+            if (line.contains("number_swipe_up") || line.contains("number_swipe_down")) {
+                current = null;
+            } else if (line.matches("\\s*swipe_up:\\s*\\{\\s*")) {
+                current = skin.swipeUp;
+            } else if (line.matches("\\s*swipe_down:\\s*\\{\\s*")) {
+                current = skin.swipeDown;
+            } else if (current != null) {
+                java.util.regex.Matcher m = KEY_LINE.matcher(line);
+                if (!m.matches()) continue;
+                char key = m.group(1).charAt(0);
+                String body = m.group(2);
+
+                int type;
+                String value;
+                String v;
+                if ((v = firstString(ACT_CHARACTER, body)) != null) {
+                    type = SkinSettings.KeySwipe.TYPE_CHARACTER;
+                    value = v;
+                } else if ((v = firstString(ACT_SYMBOL, body)) != null) {
+                    type = SkinSettings.KeySwipe.TYPE_TEXT;
+                    value = v;
+                } else if ((v = firstString(ACT_SHORTCUT, body)) != null) {
+                    type = SkinSettings.KeySwipe.TYPE_SHORTCUT;
+                    value = v.startsWith("#") ? v.substring(1) : v;
+                } else if ((v = firstString(ACT_PLAIN, body)) != null) {
+                    type = SkinSettings.KeySwipe.TYPE_SHORTCUT;
+                    value = v;
+                } else {
+                    continue; // computed entry (e.g. zKeyHandedness call) or unsupported
+                }
+
+                String label = firstString(LABEL_TEXT, body);
+                if (label == null) label = firstString(HINT_LABEL_TEXT, body);
+                if (label == null) label = value;
+                current.put(key, new SkinSettings.KeySwipe(type, value, label));
+            }
+        }
+    }
+
+    private static String firstString(java.util.regex.Pattern p, String body) {
+        java.util.regex.Matcher m = p.matcher(body);
+        if (!m.find()) return null;
+        String raw = m.group(1) != null ? m.group(1) : m.group(2);
+        return raw == null ? null : unescape(raw);
+    }
+
+    private static String unescape(String s) {
+        if (s.indexOf('\\') < 0) return s;
+        StringBuilder sb = new StringBuilder(s.length());
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' && i + 1 < s.length()) c = s.charAt(++i);
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     // ---- helpers ------------------------------------------------------------

@@ -3386,6 +3386,7 @@ public class LIMEService extends InputMethodService implements
                         R.layout.inputcandidate, null);
                 mInputView = mCandidateInInputView.findViewById(R.id.keyboard);
                 mInputView.setOnKeyboardActionListener(this);
+                mInputView.setSkinKeySwipeListener(mSkinKeySwipeListener);
                 hasDistinctMultitouch = mInputView.hasDistinctMultitouch();
                 mInputView.setHardwareAcceleratedDrawingEnabled(mIsHardwareAcceleratedDrawingEnabled);
                 mCandidateInInputView.initViews();
@@ -3404,6 +3405,7 @@ public class LIMEService extends InputMethodService implements
             if (mInputView == null || forceRecreate) {
                 mInputView = (LIMEKeyboardView) LayoutInflater.from(mThemeContext).inflate(R.layout.input, null);
                 mInputView.setOnKeyboardActionListener(this);
+                mInputView.setSkinKeySwipeListener(mSkinKeySwipeListener);
                 mInputView.setHardwareAcceleratedDrawingEnabled(mIsHardwareAcceleratedDrawingEnabled);
 
             }
@@ -4106,6 +4108,10 @@ public class LIMEService extends InputMethodService implements
                 mSkinToolbar.setVisibility(View.VISIBLE);
                 if (mCandidateViewInInputView != null)
                     mCandidateViewInInputView.setVisibility(View.GONE);
+                // The voice/expand button block would eat half the row.
+                View rightButtons = mCandidateInInputView == null ? null
+                        : mCandidateInInputView.findViewById(R.id.candidate_right_parent);
+                if (rightButtons != null) rightButtons.setVisibility(View.GONE);
             }
         });
     }
@@ -4121,6 +4127,10 @@ public class LIMEService extends InputMethodService implements
                 if (mCandidateViewInInputView != null
                         && mCandidateViewInInputView.getVisibility() != View.VISIBLE)
                     mCandidateViewInInputView.setVisibility(View.VISIBLE);
+                View rightButtons = mCandidateInInputView == null ? null
+                        : mCandidateInInputView.findViewById(R.id.candidate_right_parent);
+                if (rightButtons != null && rightButtons.getVisibility() != View.VISIBLE)
+                    rightButtons.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -4177,6 +4187,59 @@ public class LIMEService extends InputMethodService implements
                 break;
             default:
                 break;
+        }
+    }
+
+    /** Executes a skin-defined per-key swipe action from the keyboard view. */
+    private final LIMEKeyboardBaseView.SkinKeySwipeListener mSkinKeySwipeListener =
+            new LIMEKeyboardBaseView.SkinKeySwipeListener() {
+                @Override
+                public boolean onSkinKeySwipe(SkinSettings.KeySwipe action) {
+                    return handleSkinKeySwipe(action);
+                }
+            };
+
+    private boolean handleSkinKeySwipe(SkinSettings.KeySwipe action) {
+        if (action == null || action.value == null || action.value.length() == 0)
+            return false;
+        switch (action.type) {
+            case SkinSettings.KeySwipe.TYPE_CHARACTER: {
+                char c = action.value.charAt(0);
+                if (action.value.length() == 1 && c < 0x80) {
+                    // Route through the IM like a real keypress (may compose).
+                    onKey(c, new int[]{c}, 0, 0);
+                } else {
+                    onText(action.value);
+                }
+                return true;
+            }
+            case SkinSettings.KeySwipe.TYPE_TEXT:
+                onText(action.value);
+                return true;
+            case SkinSettings.KeySwipe.TYPE_SHORTCUT: {
+                String v = action.value;
+                InputConnection ic = getCurrentInputConnection();
+                if ("cut".equals(v)) {
+                    if (ic != null) ic.performContextMenuAction(android.R.id.cut);
+                } else if ("copy".equals(v)) {
+                    if (ic != null) ic.performContextMenuAction(android.R.id.copy);
+                } else if ("paste".equals(v)) {
+                    if (ic != null) ic.performContextMenuAction(android.R.id.paste);
+                } else if ("selectText".equals(v)) {
+                    if (ic != null) ic.performContextMenuAction(android.R.id.selectAll);
+                } else if ("行首".equals(v)) {
+                    keyDownUp(KeyEvent.KEYCODE_MOVE_HOME, false);
+                } else if ("行尾".equals(v)) {
+                    keyDownUp(KeyEvent.KEYCODE_MOVE_END, false);
+                } else if ("tab".equals(v)) {
+                    keyDownUp(KeyEvent.KEYCODE_TAB, false);
+                } else {
+                    return false; // unknown shortcut: fall back to normal key
+                }
+                return true;
+            }
+            default:
+                return false;
         }
     }
 
