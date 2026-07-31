@@ -269,6 +269,7 @@ public class CandidateView extends View implements View.OnClickListener {
 
         // Apply imported .cskin skin values on top of the static theme attrs.
         SkinStyle skinStyle = SkinManager.getInstance().getActiveStyle(context);
+        mSkinActive = skinStyle != null;
         if (skinStyle != null) {
             boolean night = SkinManager.isNightMode(context);
             mColorBackground = SkinDrawables.opaqueBackground(skinStyle.toolbarBackground, night);
@@ -902,11 +903,30 @@ public class CandidateView extends View implements View.OnClickListener {
         return mTotalWidth;
     }
 
+    /** Set at construction when an imported .cskin skin is active. */
+    private boolean mSkinActive = false;
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (DEBUG)
             Log.i(TAG, "onMeasure()");
-        int measuredWidth = resolveSize(mTotalWidth, widthMeasureSpec);
+        final int specMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int specSize = MeasureSpec.getSize(widthMeasureSpec);
+        final int measuredWidth;
+        if (mSkinActive && specSize > 0) {
+            // Wrap to the candidate content regardless of the spec mode, so
+            // a short list only covers the left part of the skin toolbar
+            // underneath; on overflow leave room for the expand button.
+            if (mTotalWidth <= specSize - mExpandButtonWidth)
+                measuredWidth = mTotalWidth;
+            else
+                measuredWidth = specSize - mExpandButtonWidth;
+        } else if (specMode == MeasureSpec.UNSPECIFIED) {
+            measuredWidth = mTotalWidth;
+        } else {
+            // Stock behavior: fill the row regardless of content width.
+            measuredWidth = specSize;
+        }
 
         final int desiredHeight = mHeight;
 

@@ -49,6 +49,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.graphics.Matrix;
@@ -3388,6 +3389,11 @@ public class LIMEService extends InputMethodService implements
         if (mFixedCandidateViewOn) { // Have candidateview in InputView
             // Create inputView if it's null
             if (mCandidateInInputView == null || mForceRecreate) {
+                // Re-attach below when replacing a live tree: paths like
+                // onConfigurationChanged() recreate without setInputView(),
+                // leaving the window showing the old tree while all fields
+                // point at the new one.
+                boolean replacingExisting = mCandidateInInputView != null;
 
                 mCandidateInInputView = (CandidateInInputViewContainer) LayoutInflater.from(mThemeContext).inflate(
                         R.layout.inputcandidate, null);
@@ -3406,18 +3412,24 @@ public class LIMEService extends InputMethodService implements
                 mSkinToolbar = mCandidateInInputView.findViewById(R.id.skinToolbar);
                 mSkinCandidateLayer = mCandidateInInputView.findViewById(R.id.skinCandidateLayer);
                 setupSkinToolbar();
+
+                if (replacingExisting)
+                    setInputView(mCandidateInInputView);
             }
             if (mCandidateView != mCandidateViewInInputView)
                 mCandidateView = mCandidateViewInInputView;
 
         } else {
             if (mInputView == null || forceRecreate) {
+                boolean replacingExisting = mInputView != null;
                 mInputView = (LIMEKeyboardView) LayoutInflater.from(mThemeContext).inflate(R.layout.input, null);
                 mInputView.setOnKeyboardActionListener(this);
                 mInputView.setSkinKeySwipeListener(mSkinKeySwipeListener);
                 mInputView.setSkinSpaceLabelProvider(mSkinSpaceLabelProvider);
                 mInputView.setHardwareAcceleratedDrawingEnabled(mIsHardwareAcceleratedDrawingEnabled);
 
+                if (replacingExisting)
+                    setInputView(mInputView);
             }
             mCandidateView = mCandidateViewStandAlone;
 

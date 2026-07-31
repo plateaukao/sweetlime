@@ -74,6 +74,7 @@ public class SkinToolbarView extends LinearLayout {
                 MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY));
     }
 
+
     private static int iconFor(int function) {
         switch (function) {
             case SkinSettings.TB_SETTINGS:

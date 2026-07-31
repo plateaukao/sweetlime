@@ -50,15 +50,14 @@
 
             <LinearLayout
                 android:id="@+id/skinCandidateLayer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <net.toload.main.hd.candidate.CandidateView
                     android:id="@+id/candidatesView"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.0"
                     android:gravity="center_vertical" />
 
                 <LinearLayout
