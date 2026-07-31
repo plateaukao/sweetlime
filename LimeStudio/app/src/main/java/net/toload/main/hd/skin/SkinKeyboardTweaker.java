@@ -25,6 +25,7 @@
 package net.toload.main.hd.skin;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import net.toload.main.hd.keyboard.LIMEBaseKeyboard;
 import net.toload.main.hd.keyboard.LIMEBaseKeyboard.Key;
@@ -44,8 +45,12 @@ public class SkinKeyboardTweaker {
     private static final int KEYCODE_SPACE = 32;
     private static final int KEYCODE_LETTER_Q = 113;
     private static final int KEYCODE_SWITCH_TO_SYMBOL_MODE = -2;
+    private static final int KEYCODE_HIDE_IME = -3;
     private static final int KEYCODE_SWITCH_TO_ENGLISH_MODE = -9;
     private static final int KEYCODE_SWITCH_TO_IM_MODE = -10;
+
+    /** Gesture navigation mode value of Settings.Secure navigation_mode. */
+    private static final int NAV_MODE_GESTURAL = 2;
 
     private SkinKeyboardTweaker() {
     }
@@ -57,7 +62,12 @@ public class SkinKeyboardTweaker {
         boolean toolbarChiEng = hasToolbarFunction(skin, SkinSettings.TB_CHI_ENG);
         boolean toolbarSymbols = hasToolbarFunction(skin, SkinSettings.TB_SYMBOL)
                 || hasToolbarFunction(skin, SkinSettings.TB_NUMBER);
-        if (!toolbarChiEng && !toolbarSymbols) return;
+        // The hide-IME key is redundant only when the system shows a button
+        // navigation bar (back dismisses the keyboard) AND the toolbar has
+        // its own collapse button.
+        boolean toolbarCollapse = hasToolbarFunction(skin, SkinSettings.TB_COLLAPSE)
+                && isNavigationBarShown(context);
+        if (!toolbarChiEng && !toolbarSymbols && !toolbarCollapse) return;
 
         List<Key> keys = keyboard.getKeys();
         if (!hasKeyCode(keys, KEYCODE_LETTER_Q)) return; // not a main text keyboard
@@ -70,9 +80,27 @@ public class SkinKeyboardTweaker {
                 toRemove.add(key);
             else if (toolbarSymbols && code == KEYCODE_SWITCH_TO_SYMBOL_MODE)
                 toRemove.add(key);
+            else if (toolbarCollapse && code == KEYCODE_HIDE_IME)
+                toRemove.add(key);
         }
         for (Key key : toRemove)
             removeKeyAndWidenSpace(keys, key);
+    }
+
+    /**
+     * True when a button navigation bar is on screen. Android 10+ exposes
+     * the mode via Settings.Secure navigation_mode (2 = gesture, no bar);
+     * older devices fall back to the framework's config_showNavigationBar.
+     */
+    public static boolean isNavigationBarShown(Context context) {
+        try {
+            return Settings.Secure.getInt(context.getContentResolver(),
+                    "navigation_mode") != NAV_MODE_GESTURAL;
+        } catch (Settings.SettingNotFoundException ignored) {
+        }
+        int id = context.getResources().getIdentifier(
+                "config_showNavigationBar", "bool", "android");
+        return id != 0 && context.getResources().getBoolean(id);
     }
 
     private static boolean hasToolbarFunction(SkinSettings skin, int function) {
@@ -128,5 +156,21 @@ public class SkinKeyboardTweaker {
             }
         }
         keys.remove(removed);
+
+        // Keep the row's edge anchoring intact for touch detection.
+        if ((removed.edgeFlags & LIMEBaseKeyboard.EDGE_LEFT) != 0) {
+            Key leftmost = null;
+            for (Key key : keys)
+                if (key.y == removed.y && (leftmost == null || key.x < leftmost.x))
+                    leftmost = key;
+            if (leftmost != null) leftmost.edgeFlags |= LIMEBaseKeyboard.EDGE_LEFT;
+        }
+        if ((removed.edgeFlags & LIMEBaseKeyboard.EDGE_RIGHT) != 0) {
+            Key rightmost = null;
+            for (Key key : keys)
+                if (key.y == removed.y && (rightmost == null || key.x > rightmost.x))
+                    rightmost = key;
+            if (rightmost != null) rightmost.edgeFlags |= LIMEBaseKeyboard.EDGE_RIGHT;
+        }
     }
 }

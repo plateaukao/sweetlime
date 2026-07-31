@@ -76,6 +76,7 @@ import net.toload.main.hd.keyboard.LIMEKeyboardBaseView;
 import net.toload.main.hd.keyboard.LIMEKeyboardView;
 import net.toload.main.hd.keyboard.LIMEMetaKeyKeyListener;
 import net.toload.main.hd.limesettings.LIMEPreferenceHC;
+import net.toload.main.hd.skin.SkinKeyboardTweaker;
 import net.toload.main.hd.skin.SkinManager;
 import net.toload.main.hd.skin.SkinSettings;
 import net.toload.main.hd.skin.SkinToolbarView;
@@ -3369,6 +3370,7 @@ public class LIMEService extends InputMethodService implements
                 mKeyboardSwitcher.resetKeyboards(true);
         }
         mSkinNightMode = SkinManager.isNightMode(this);
+        mSkinNavBarShown = SkinKeyboardTweaker.isNavigationBarShown(this);
         mSkinGeneration = SkinManager.getInstance().getGeneration();
 
         if (mThemeContext == null) {
@@ -4070,11 +4072,13 @@ public class LIMEService extends InputMethodService implements
 
     private SkinToolbarView mSkinToolbar;
     private boolean mSkinNightMode = false;
+    private boolean mSkinNavBarShown = false;
     private int mSkinGeneration = -1;
 
     private boolean skinStateChanged() {
         return mKeyboardThemeIndex == SkinManager.THEME_INDEX_CUSTOM
                 && (SkinManager.isNightMode(this) != mSkinNightMode
+                || SkinKeyboardTweaker.isNavigationBarShown(this) != mSkinNavBarShown
                 || mSkinGeneration != SkinManager.getInstance().getGeneration());
     }
 
