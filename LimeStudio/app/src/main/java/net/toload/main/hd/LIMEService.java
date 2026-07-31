@@ -577,6 +577,11 @@ public class LIMEService extends InputMethodService implements
             if (mFixedCandidateViewOn && mSkinToolbar != null
                     && SkinManager.getInstance().getActiveSkin(this) != null) {
                 mCandidateView.clear();
+                // Same state resets as hideCandidateView(): without them
+                // handleBackspace() keeps clearing the (already empty)
+                // candidates instead of sending DEL to the editor.
+                hasCandidatesShown = false;
+                hasChineseSymbolCandidatesShown = false;
                 showSkinToolbar();
             } else if (!mEnglishOnly && mLIMEPref.getAutoChineseSymbol() // Jeremy '12,4,29 use mEnglishOnly instead of onIM
                     && (hasCandidatesShown || mFixedCandidateViewOn)) { // Change isCandiateShown() to hasCandiatesShown
