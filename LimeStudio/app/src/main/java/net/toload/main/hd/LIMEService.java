@@ -4098,6 +4098,17 @@ public class LIMEService extends InputMethodService implements
                     public void onSkinToolbarAction(int function) {
                         handleSkinToolbarAction(function);
                     }
+
+                    @Override
+                    public boolean onSkinToolbarLongAction(int function) {
+                        if (function == SkinSettings.TB_CHI_ENG) {
+                            // Same as long-press on the removed hide-IME key.
+                            ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                                    .showInputMethodPicker();
+                            return true;
+                        }
+                        return false;
+                    }
                 });
         showSkinToolbar();
     }

@@ -50,6 +50,9 @@ public class SkinToolbarView extends LinearLayout {
 
     public interface OnActionListener {
         void onSkinToolbarAction(int function);
+
+        /** Long-press on a toolbar button; return true when handled. */
+        boolean onSkinToolbarLongAction(int function);
     }
 
     private final int mHeight;
@@ -140,6 +143,12 @@ public class SkinToolbarView extends LinearLayout {
                     @Override
                     public void onClick(View v) {
                         if (listener != null) listener.onSkinToolbarAction(function);
+                    }
+                });
+                button.setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return listener != null && listener.onSkinToolbarLongAction(function);
                     }
                 });
             }

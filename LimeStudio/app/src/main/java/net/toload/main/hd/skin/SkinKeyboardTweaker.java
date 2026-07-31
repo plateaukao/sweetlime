@@ -62,12 +62,15 @@ public class SkinKeyboardTweaker {
         boolean toolbarChiEng = hasToolbarFunction(skin, SkinSettings.TB_CHI_ENG);
         boolean toolbarSymbols = hasToolbarFunction(skin, SkinSettings.TB_SYMBOL)
                 || hasToolbarFunction(skin, SkinSettings.TB_NUMBER);
-        // The hide-IME key is redundant only when the system shows a button
-        // navigation bar (back dismisses the keyboard) AND the toolbar has
-        // its own collapse button.
-        boolean toolbarCollapse = hasToolbarFunction(skin, SkinSettings.TB_COLLAPSE)
-                && isNavigationBarShown(context);
-        if (!toolbarChiEng && !toolbarSymbols && !toolbarCollapse) return;
+        // The hide-IME key is redundant when the toolbar has the 中英 button
+        // (whose long-press opens the system IME picker, replacing this
+        // key's long-press), or when the system shows a button navigation
+        // bar (back dismisses the keyboard) and the toolbar has its own
+        // collapse button.
+        boolean removeHideKey = toolbarChiEng
+                || (hasToolbarFunction(skin, SkinSettings.TB_COLLAPSE)
+                && isNavigationBarShown(context));
+        if (!toolbarChiEng && !toolbarSymbols && !removeHideKey) return;
 
         List<Key> keys = keyboard.getKeys();
         if (!hasKeyCode(keys, KEYCODE_LETTER_Q)) return; // not a main text keyboard
@@ -80,7 +83,7 @@ public class SkinKeyboardTweaker {
                 toRemove.add(key);
             else if (toolbarSymbols && code == KEYCODE_SWITCH_TO_SYMBOL_MODE)
                 toRemove.add(key);
-            else if (toolbarCollapse && code == KEYCODE_HIDE_IME)
+            else if (removeHideKey && code == KEYCODE_HIDE_IME)
                 toRemove.add(key);
         }
         for (Key key : toRemove)
