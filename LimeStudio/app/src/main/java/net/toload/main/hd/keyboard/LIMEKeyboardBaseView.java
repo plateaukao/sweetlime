@@ -50,7 +50,9 @@ import android.os.Message;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -62,6 +64,10 @@ import android.widget.PopupWindow;
 
 import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.keyboard.LIMEBaseKeyboard.Key;
+import net.toload.main.hd.skin.SkinDrawables;
+import net.toload.main.hd.skin.SkinManager;
+import net.toload.main.hd.skin.SkinSettings;
+import net.toload.main.hd.skin.SkinStyle;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -543,6 +549,25 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             } else if (attr == R.styleable.LIMEKeyboardBaseView_symbolColorScheme) {
                 mSymbolColorScheme = a.getInt(attr, 0);
             }
+        }
+
+        // Apply imported .cskin skin values on top of the static theme attrs.
+        SkinStyle skinStyle = SkinManager.getInstance().getActiveStyle(context);
+        if (skinStyle != null) {
+            boolean night = SkinManager.isNightMode(context);
+            mKeyBackground = SkinDrawables.keyBackground(context, skinStyle);
+            mKeyTextColorNormal = skinStyle.textMain;
+            mKeyTextColorPressed = skinStyle.textMain;
+            mFunctionKeyTextColorNormal = skinStyle.textMain;
+            mFunctionKeyTextColorPressed = skinStyle.textMain;
+            mKeySubLabelTextColorNormal = skinStyle.textSub;
+            mKeySubLabelTextColorPressed = skinStyle.textSub;
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+            mKeyTextSize = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, skinStyle.alphabetSize, dm);
+            mLabelTextSize = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, skinStyle.systemSize, dm);
+            setBackgroundDrawable(SkinDrawables.keyboardBackground(skinStyle, night));
         }
 
         final Resources res = getResources();
@@ -1165,6 +1190,10 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         Key popupKey = tracker.getKey(keyIndex);
         if (popupKey == null)
             return false;
+        // Imported skins can turn off long-press actions per keyboard row.
+        SkinSettings skin = SkinManager.getInstance().getActiveSkin(getContext());
+        if (skin != null && !skin.rowGesture(skinRowIndex(popupKey)).longPress)
+            return false;
         boolean result = onLongPress(popupKey);
         if (result) {
             mMiniKeyboardTrackerId = tracker.mPointerId;
@@ -1173,6 +1202,20 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
             mPointerQueue.remove(tracker);
         }
         return result;
+    }
+
+    /**
+     * Maps a key to the skin designer's row numbering (0-based, top row of a
+     * 4-row layout first) by counting rows from the bottom, so the space row
+     * is always the skin's row 4 even on layouts with an extra number row.
+     */
+    private int skinRowIndex(Key key) {
+        if (mKeyboard == null || key.height <= 0) return 0;
+        int rowFromBottom = Math.round(
+                (mKeyboard.getHeight() - key.y - key.height) / (float) key.height);
+        if (rowFromBottom < 0) rowFromBottom = 0;
+        if (rowFromBottom > 3) rowFromBottom = 3;
+        return 3 - rowFromBottom;
     }
 
     private View inflateMiniKeyboardContainer(Key popupKey) {

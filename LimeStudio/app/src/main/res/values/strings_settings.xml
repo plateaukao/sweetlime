@@ -710,6 +710,7 @@
         <item>科技藍</item>
         <item>時尚紫</item>
         <item>放鬆綠</item>
+        <item>自訂皮膚 (.cskin)</item>
     </string-array>
 
 
@@ -720,7 +721,14 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
+        <item>6</item>
     </string-array>
+
+    <string name="import_cskin_title">匯入 .cskin 皮膚</string>
+    <string name="import_cskin_summary">匯入皮膚設計器匯出的 .cskin 檔案，並套用其配色與字號</string>
+    <string name="import_cskin_success">皮膚已匯入並套用</string>
+    <string name="import_cskin_failed">皮膚匯入失敗：無法解析 .cskin 檔案</string>
+
 
 
     <string-array name="split_keyboard_options">

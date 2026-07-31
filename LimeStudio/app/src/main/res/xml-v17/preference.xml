@@ -40,6 +40,10 @@
             android:key="keyboard_theme"
             android:title="@string/keyboard_themes" />
         />
+        <Preference
+            android:key="import_cskin"
+            android:summary="@string/import_cskin_summary"
+            android:title="@string/import_cskin_title" />
         <!-- <net.toload.main.hd.limesettings.MultiListPreference
                  android:key="keyboard_state"
                  android:title="@string/keyboard_list"

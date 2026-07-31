@@ -27,18 +27,25 @@ package net.toload.main.hd.limesettings;
 import android.app.Activity;
 import android.app.backup.BackupManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
+import android.widget.Toast;
+
+import java.io.InputStream;
 
 import net.toload.main.hd.DBServer;
 import info.plateaukao.sweetlime.R;
 import net.toload.main.hd.SearchServer;
 import net.toload.main.hd.data.KeyboardObj;
 import net.toload.main.hd.global.LIMEPreferenceManager;
+import net.toload.main.hd.skin.SkinManager;
+import net.toload.main.hd.skin.SkinSettings;
 
 
 public class LIMEPreferenceHC extends Activity {
@@ -70,6 +77,8 @@ public class LIMEPreferenceHC extends Activity {
 		private Context ctx = null;
 		private DBServer DBSrv = null;
 		private LIMEPreferenceManager mLIMEPref = null;
+		private static final int REQUEST_IMPORT_CSKIN = 4301;
+
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -82,6 +91,58 @@ public class LIMEPreferenceHC extends Activity {
 			}
 			mLIMEPref = new LIMEPreferenceManager(ctx);
 			DBSrv = new DBServer(ctx);
+
+			Preference importCskin = findPreference("import_cskin");
+			if (importCskin != null) {
+				importCskin.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+						intent.setType("*/*");
+						intent.addCategory(Intent.CATEGORY_OPENABLE);
+						try {
+							startActivityForResult(Intent.createChooser(intent,
+									getString(R.string.import_cskin_title)), REQUEST_IMPORT_CSKIN);
+						} catch (android.content.ActivityNotFoundException e) {
+							Log.w(TAG, "No file picker available", e);
+						}
+						return true;
+					}
+				});
+			}
+		}
+
+		@Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+			if (requestCode == REQUEST_IMPORT_CSKIN) {
+				if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+					SkinSettings skin = null;
+					try {
+						InputStream in = ctx.getContentResolver().openInputStream(data.getData());
+						if (in != null) {
+							try {
+								skin = SkinManager.getInstance().importSkin(ctx, in);
+							} finally {
+								in.close();
+							}
+						}
+					} catch (Exception e) {
+						Log.w(TAG, "cskin import failed", e);
+					}
+					if (skin != null) {
+						// Activate the custom skin theme right away.
+						getPreferenceScreen().getSharedPreferences().edit()
+								.putString("keyboard_theme",
+										Integer.toString(SkinManager.THEME_INDEX_CUSTOM))
+								.commit();
+						Toast.makeText(ctx, R.string.import_cskin_success, Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(ctx, R.string.import_cskin_failed, Toast.LENGTH_LONG).show();
+					}
+				}
+				return;
+			}
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 
 		@Override

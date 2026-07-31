@@ -715,6 +715,7 @@
             <item>科技蓝</item>
             <item>时尚紫</item>
             <item>放松绿</item>
+            <item>自定义皮肤 (.cskin)</item>
     </string-array>
 
     <string-array name="keyboard_themes_values">
@@ -724,7 +725,14 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
+        <item>6</item>
     </string-array>
+
+    <string name="import_cskin_title">导入 .cskin 皮肤</string>
+    <string name="import_cskin_summary">导入皮肤设计器导出的 .cskin 文件，并套用其配色与字号</string>
+    <string name="import_cskin_success">皮肤已导入并套用</string>
+    <string name="import_cskin_failed">皮肤导入失败：无法解析 .cskin 文件</string>
+
 
 
     <!-- AD Message -->

@@ -39,6 +39,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Message;
 
@@ -66,6 +67,9 @@ import android.widget.TextView;
 import net.toload.main.hd.LIMEService;
 import net.toload.main.hd.data.Mapping;
 import net.toload.main.hd.global.LIMEPreferenceManager;
+import net.toload.main.hd.skin.SkinDrawables;
+import net.toload.main.hd.skin.SkinManager;
+import net.toload.main.hd.skin.SkinStyle;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -262,6 +266,23 @@ public class CandidateView extends View implements View.OnClickListener {
         }
 
         a.recycle();
+
+        // Apply imported .cskin skin values on top of the static theme attrs.
+        SkinStyle skinStyle = SkinManager.getInstance().getActiveStyle(context);
+        if (skinStyle != null) {
+            boolean night = SkinManager.isNightMode(context);
+            mColorBackground = SkinDrawables.opaqueBackground(skinStyle.toolbarBackground, night);
+            mColorNormalText = skinStyle.candidateUnselectedText;
+            mColorNormalTextHighlight = skinStyle.candidateSelectedText;
+            mColorComposingText = skinStyle.textMain;
+            mColorSelKey = skinStyle.textSub;
+            GradientDrawable suggestHighlight = new GradientDrawable();
+            suggestHighlight.setShape(GradientDrawable.RECTANGLE);
+            suggestHighlight.setCornerRadius(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 3, context.getResources().getDisplayMetrics()));
+            suggestHighlight.setColor(skinStyle.candidateSelectedBackground);
+            mDrawableSuggestHighlight = suggestHighlight;
+        }
 
         mDrawablePaste = ContextCompat.getDrawable(context, R.drawable.paste);
         if (mDrawablePaste != null) {

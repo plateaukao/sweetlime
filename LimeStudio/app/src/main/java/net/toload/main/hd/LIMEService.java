@@ -76,6 +76,9 @@ import net.toload.main.hd.keyboard.LIMEKeyboardBaseView;
 import net.toload.main.hd.keyboard.LIMEKeyboardView;
 import net.toload.main.hd.keyboard.LIMEMetaKeyKeyListener;
 import net.toload.main.hd.limesettings.LIMEPreferenceHC;
+import net.toload.main.hd.skin.SkinManager;
+import net.toload.main.hd.skin.SkinSettings;
+import net.toload.main.hd.skin.SkinToolbarView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -568,7 +571,13 @@ public class LIMEService extends InputMethodService implements
                 Log.i(TAG, "clearSuggestions(): "
                         + ", hasCandidatesShown:" + hasCandidatesShown);
 
-            if (!mEnglishOnly && mLIMEPref.getAutoChineseSymbol() // Jeremy '12,4,29 use mEnglishOnly instead of onIM
+            // With a skin toolbar active the idle bar shows the toolbar instead
+            // of the auto Chinese-symbol list.
+            if (mFixedCandidateViewOn && mSkinToolbar != null
+                    && SkinManager.getInstance().getActiveSkin(this) != null) {
+                mCandidateView.clear();
+                showSkinToolbar();
+            } else if (!mEnglishOnly && mLIMEPref.getAutoChineseSymbol() // Jeremy '12,4,29 use mEnglishOnly instead of onIM
                     && (hasCandidatesShown || mFixedCandidateViewOn)) { // Change isCandiateShown() to hasCandiatesShown
                 mCandidateView.clear();
                 if (hasCandidatesShown)
@@ -3098,6 +3107,9 @@ public class LIMEService extends InputMethodService implements
                 return;
             }
 
+            // Candidates need the bar; swap the skin toolbar out.
+            hideSkinToolbar();
+
             if ((!mFixedCandidateViewOn)
                     && mCandidateView != mCandidateViewStandAlone) {
                 mCandidateViewInInputView.clear();
@@ -3349,6 +3361,16 @@ public class LIMEService extends InputMethodService implements
                 mKeyboardSwitcher.resetKeyboards(true);
         }
 
+        // Custom skin: rebuild views when day/night flips or a new skin was imported.
+        if (skinStateChanged()) {
+            mForceRecreate = true;
+            mThemeContext = null;
+            if (mKeyboardSwitcher != null)
+                mKeyboardSwitcher.resetKeyboards(true);
+        }
+        mSkinNightMode = SkinManager.isNightMode(this);
+        mSkinGeneration = SkinManager.getInstance().getGeneration();
+
         if (mThemeContext == null) {
             mThemeContext = new ContextThemeWrapper(this, getKeyboardTheme());
             if (mKeyboardSwitcher != null)
@@ -3371,6 +3393,9 @@ public class LIMEService extends InputMethodService implements
                 mCandidateViewInInputView.setService(this);
 
                 candidateHintView = mCandidateInInputView.findViewById(R.id.candidate_hint);
+
+                mSkinToolbar = mCandidateInInputView.findViewById(R.id.skinToolbar);
+                setupSkinToolbar();
             }
             if (mCandidateView != mCandidateViewInInputView)
                 mCandidateView = mCandidateViewInInputView;
@@ -3880,10 +3905,14 @@ public class LIMEService extends InputMethodService implements
     }
 
     public void swipeDown() {
+        SkinSettings skin = SkinManager.getInstance().getActiveSkin(this);
+        if (skin != null && !skin.anySwipeDown()) return;
         handleClose();
     }
 
     public void swipeUp() {
+        SkinSettings skin = SkinManager.getInstance().getActiveSkin(this);
+        if (skin != null && !skin.anySwipeUp()) return;
         handleOptions();
     }
 
@@ -4017,12 +4046,149 @@ public class LIMEService extends InputMethodService implements
             new KeyboardTheme("TechBlue", 3, R.style.LIMETheme_TechBlue),
             new KeyboardTheme("FashionPurple", 4, R.style.LIMETheme_FashionPurple),
             new KeyboardTheme("RelaxGreen", 5, R.style.LIMETheme_RelaxGreen),
+            new KeyboardTheme("CustomSkin", SkinManager.THEME_INDEX_CUSTOM, R.style.LIMETheme_Light),
     };
 
     private int mKeyboardThemeIndex = -1;
 
     private int getKeyboardTheme() {
+        // Custom skin bases on Light/Dark so unskinned attrs match the mode;
+        // skin colors override on top in the views.
+        if (mKeyboardThemeIndex == SkinManager.THEME_INDEX_CUSTOM)
+            return SkinManager.isNightMode(this)
+                    ? R.style.LIMETheme_Dark : R.style.LIMETheme_Light;
+        if (mKeyboardThemeIndex < 0 || mKeyboardThemeIndex >= KEYBOARD_THEMES.length)
+            return R.style.LIMETheme_Light;
         return KEYBOARD_THEMES[mKeyboardThemeIndex].mStyleId;
+    }
+
+    // ------------------------------------------------------------------
+    // Imported .cskin skin support
+    // ------------------------------------------------------------------
+
+    private SkinToolbarView mSkinToolbar;
+    private boolean mSkinNightMode = false;
+    private int mSkinGeneration = -1;
+
+    private boolean skinStateChanged() {
+        return mKeyboardThemeIndex == SkinManager.THEME_INDEX_CUSTOM
+                && (SkinManager.isNightMode(this) != mSkinNightMode
+                || mSkinGeneration != SkinManager.getInstance().getGeneration());
+    }
+
+    private void setupSkinToolbar() {
+        if (mSkinToolbar == null) return;
+        SkinSettings skin = SkinManager.getInstance().getActiveSkin(this);
+        if (skin == null) {
+            mSkinToolbar.setVisibility(View.GONE);
+            if (mCandidateViewInInputView != null)
+                mCandidateViewInInputView.setVisibility(View.VISIBLE);
+            return;
+        }
+        mSkinToolbar.setup(skin, SkinManager.getInstance().getActiveStyle(this),
+                SkinManager.isNightMode(this),
+                new SkinToolbarView.OnActionListener() {
+                    @Override
+                    public void onSkinToolbarAction(int function) {
+                        handleSkinToolbarAction(function);
+                    }
+                });
+        showSkinToolbar();
+    }
+
+    /** Swap the toolbar in for the candidate strip (no composing going on). */
+    private void showSkinToolbar() {
+        if (mSkinToolbar == null
+                || SkinManager.getInstance().getActiveSkin(this) == null) return;
+        mCandidateViewHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mSkinToolbar.setVisibility(View.VISIBLE);
+                if (mCandidateViewInInputView != null)
+                    mCandidateViewInInputView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    /** Swap the candidate strip back in (candidates need the row). */
+    private void hideSkinToolbar() {
+        if (mSkinToolbar == null) return;
+        mCandidateViewHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mSkinToolbar.getVisibility() != View.GONE)
+                    mSkinToolbar.setVisibility(View.GONE);
+                if (mCandidateViewInInputView != null
+                        && mCandidateViewInInputView.getVisibility() != View.VISIBLE)
+                    mCandidateViewInInputView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void handleSkinToolbarAction(int function) {
+        InputConnection ic = getCurrentInputConnection();
+        switch (function) {
+            case SkinSettings.TB_SETTINGS:
+                launchSettings();
+                break;
+            case SkinSettings.TB_COLLAPSE:
+                handleClose();
+                break;
+            case SkinSettings.TB_CHI_ENG:
+                switchChiEng();
+                break;
+            case SkinSettings.TB_SIMP_TRAD:
+                showHanConvertPicker();
+                break;
+            case SkinSettings.TB_SYMBOL:
+                if (mInputView != null)
+                    switchKeyboard(KEYCODE_SWITCH_TO_SYMBOL_MODE);
+                break;
+            case SkinSettings.TB_NUMBER:
+                if (mKeyboardSwitcher != null) {
+                    mEnglishOnly = true;
+                    mKeyboardSwitcher.setKeyboardMode(activeIM, LIMEKeyboardSwitcher.MODE_PHONE,
+                            mImeOptions, false, false, false);
+                }
+                break;
+            case SkinSettings.TB_SELECT_ALL:
+                if (ic != null) ic.performContextMenuAction(android.R.id.selectAll);
+                break;
+            case SkinSettings.TB_COPY:
+                if (ic != null) ic.performContextMenuAction(android.R.id.copy);
+                break;
+            case SkinSettings.TB_CUT:
+                if (ic != null) ic.performContextMenuAction(android.R.id.cut);
+                break;
+            case SkinSettings.TB_PASTE:
+                if (ic != null) ic.performContextMenuAction(android.R.id.paste);
+                break;
+            case SkinSettings.TB_UNDO:
+                sendCtrlKeyCombo(KeyEvent.KEYCODE_Z, false);
+                break;
+            case SkinSettings.TB_REDO:
+                sendCtrlKeyCombo(KeyEvent.KEYCODE_Z, true);
+                break;
+            case SkinSettings.TB_CURSOR_LEFT:
+                keyDownUp(KeyEvent.KEYCODE_DPAD_LEFT, false);
+                break;
+            case SkinSettings.TB_CURSOR_RIGHT:
+                keyDownUp(KeyEvent.KEYCODE_DPAD_RIGHT, false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /** Best-effort undo/redo: Ctrl(+Shift)+key sent to the editor. */
+    private void sendCtrlKeyCombo(int keyCode, boolean shift) {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return;
+        long now = SystemClock.uptimeMillis();
+        int meta = KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON;
+        if (shift) meta |= KeyEvent.META_SHIFT_ON | KeyEvent.META_SHIFT_LEFT_ON;
+        ic.sendKeyEvent(new KeyEvent(now, now, KeyEvent.ACTION_DOWN, keyCode, 0, meta));
+        ic.sendKeyEvent(new KeyEvent(now, now, KeyEvent.ACTION_UP, keyCode, 0, meta));
     }
 
 }
