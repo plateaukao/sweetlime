@@ -32,6 +32,7 @@ import net.toload.main.hd.data.KeyboardObj;
 import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.keyboard.LIMEKeyboard;
 import net.toload.main.hd.keyboard.LIMEKeyboardView;
+import net.toload.main.hd.skin.SkinKeyboardTweaker;
 
 import java.util.HashMap;
 import java.util.List;
@@ -272,6 +273,7 @@ public class LIMEKeyboardSwitcher {
 	                mLIMEPref.getSplitKeyboard() //Jeremy '12,5,27 add the split keyboard option
 	                );
 	        	keyboard.setKeyboardSwitcher(this);
+	        	SkinKeyboardTweaker.apply(keyboard, mThemedContext);
 	            if (id.mEnableShiftLock) {
 	                keyboard.enableShiftLock();
 	            }

@@ -4145,7 +4145,11 @@ public class LIMEService extends InputMethodService implements
                 handleClose();
                 break;
             case SkinSettings.TB_CHI_ENG:
-                switchChiEng();
+                // Same path as the bottom-row EN/中 soft keys, which the
+                // tweaker removes when this toolbar button is configured.
+                if (mInputView != null)
+                    switchKeyboard(mEnglishOnly
+                            ? KEYCODE_SWITCH_TO_IM_MODE : KEYCODE_SWITCH_TO_ENGLISH_MODE);
                 break;
             case SkinSettings.TB_SIMP_TRAD:
                 showHanConvertPicker();
