@@ -561,6 +561,9 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                     skinStyle.swipeSize, context.getResources().getDisplayMetrics());
             mSkinHintEdge = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     5, context.getResources().getDisplayMetrics());
+            mSkinSpaceTextColor = skinStyle.textMain;
+            mSkinSpaceTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    skinStyle.spaceSize, context.getResources().getDisplayMetrics());
             mKeyBackground = SkinDrawables.keyBackground(context, skinStyle);
             mKeyTextColorNormal = skinStyle.textMain;
             mKeyTextColorPressed = skinStyle.textMain;
@@ -1081,6 +1084,8 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                 shouldDrawIcon = shouldDrawLabelAndIcon(key);
             }
             drawSkinSwipeHints(canvas, key, paint);
+            if (drawSkinSpaceLabel(canvas, key, paint, padding))
+                shouldDrawIcon = false;
             if (shouldDrawIcon) {
                 Drawable icon = key.icon;
                 if (icon == null)
@@ -1215,6 +1220,40 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
     private int mSkinHintColor;
     private float mSkinHintTextSize;
     private float mSkinHintEdge;
+    private int mSkinSpaceTextColor;
+    private float mSkinSpaceTextSize;
+
+    /** Supplies the current input-mode name shown on the space bar (English/中/注音…). */
+    public interface SkinSpaceLabelProvider {
+        String getSkinSpaceLabel();
+    }
+
+    private SkinSpaceLabelProvider mSkinSpaceLabelProvider;
+
+    public void setSkinSpaceLabelProvider(SkinSpaceLabelProvider provider) {
+        mSkinSpaceLabelProvider = provider;
+    }
+
+    /**
+     * With the skin active the space bar drops its icon and shows the
+     * current input mode in a small font instead (canvas translated to the
+     * key origin). Returns true when it drew the label.
+     */
+    private boolean drawSkinSpaceLabel(Canvas canvas, Key key, Paint paint, Rect padding) {
+        if (mSkinSettings == null || mSkinSpaceLabelProvider == null) return false;
+        if (key.codes == null || key.codes.length == 0 || key.codes[0] != ' ') return false;
+        String modeLabel = mSkinSpaceLabelProvider.getSkinSpaceLabel();
+        if (modeLabel == null || modeLabel.length() == 0) return false;
+
+        paint.setTypeface(Typeface.DEFAULT);
+        paint.setTextSize(mSkinSpaceTextSize);
+        paint.setColor(mSkinSpaceTextColor);
+        paint.setTextAlign(Align.CENTER);
+        final float centerX = (key.width + padding.left - padding.right) / 2f;
+        final float centerY = (key.height + padding.top - padding.bottom) / 2f;
+        canvas.drawText(modeLabel, centerX, centerY + mSkinSpaceTextSize * 0.35f, paint);
+        return true;
+    }
 
     /**
      * Draws the skin's per-key swipe hints in the key corners: swipe-up

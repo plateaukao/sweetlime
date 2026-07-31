@@ -3389,6 +3389,7 @@ public class LIMEService extends InputMethodService implements
                 mInputView = mCandidateInInputView.findViewById(R.id.keyboard);
                 mInputView.setOnKeyboardActionListener(this);
                 mInputView.setSkinKeySwipeListener(mSkinKeySwipeListener);
+                mInputView.setSkinSpaceLabelProvider(mSkinSpaceLabelProvider);
                 hasDistinctMultitouch = mInputView.hasDistinctMultitouch();
                 mInputView.setHardwareAcceleratedDrawingEnabled(mIsHardwareAcceleratedDrawingEnabled);
                 mCandidateInInputView.initViews();
@@ -3408,6 +3409,7 @@ public class LIMEService extends InputMethodService implements
                 mInputView = (LIMEKeyboardView) LayoutInflater.from(mThemeContext).inflate(R.layout.input, null);
                 mInputView.setOnKeyboardActionListener(this);
                 mInputView.setSkinKeySwipeListener(mSkinKeySwipeListener);
+                mInputView.setSkinSpaceLabelProvider(mSkinSpaceLabelProvider);
                 mInputView.setHardwareAcceleratedDrawingEnabled(mIsHardwareAcceleratedDrawingEnabled);
 
             }
@@ -4210,6 +4212,21 @@ public class LIMEService extends InputMethodService implements
                 break;
         }
     }
+
+    /** Current input-mode name for the skin's space-bar label. */
+    private final LIMEKeyboardBaseView.SkinSpaceLabelProvider mSkinSpaceLabelProvider =
+            new LIMEKeyboardBaseView.SkinSpaceLabelProvider() {
+                @Override
+                public String getSkinSpaceLabel() {
+                    if (mEnglishOnly) return "English";
+                    if (activatedIMList != null && activatedIMNameList != null) {
+                        int i = activatedIMList.indexOf(activeIM);
+                        if (i >= 0 && i < activatedIMNameList.size())
+                            return activatedIMNameList.get(i);
+                    }
+                    return "中";
+                }
+            };
 
     /** Executes a skin-defined per-key swipe action from the keyboard view. */
     private final LIMEKeyboardBaseView.SkinKeySwipeListener mSkinKeySwipeListener =
