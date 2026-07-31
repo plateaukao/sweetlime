@@ -45,6 +45,7 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
     private ImageButton mRightButton;
     private ImageButton mPasteButton;
     private View mButtonRightExpand;
+    private View mSkinToolbar;
     private CandidateView mCandidateView;
 
     Context ctx;
@@ -63,6 +64,7 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
             Log.i(TAG, "initViews()");
         if (mCandidateView == null) {
             mButtonRightExpand = findViewById(R.id.candidate_right_parent);
+            mSkinToolbar = findViewById(R.id.skinToolbar);
 
             mCandidateView = findViewById(R.id.candidatesView);
             mCandidateView.setBackgroundColor(mCandidateView.mColorBackground);
@@ -110,6 +112,15 @@ public class CandidateInInputViewContainer extends LinearLayout implements View.
             boolean showVoiceInputButton = mCandidateView.isEmpty();
             if (mCandidateView.isCandidateExpanded())
                 showExpandButton = true;
+
+            // While the skin toolbar occupies the row, the whole right-button
+            // block stays hidden so the toolbar keeps the full width.
+            boolean skinToolbarShowing =
+                    mSkinToolbar != null && mSkinToolbar.getVisibility() == VISIBLE;
+            if (skinToolbarShowing) {
+                showExpandButton = false;
+                showVoiceInputButton = false;
+            }
 
             boolean showPasteButton = showVoiceInputButton && !mCandidateView.isClipboardEmpty();
 
