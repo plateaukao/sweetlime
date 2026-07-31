@@ -4155,10 +4155,12 @@ public class LIMEService extends InputMethodService implements
                 showHanConvertPicker();
                 break;
             case SkinSettings.TB_SYMBOL:
+                // Like the bottom-row 123 key: toggle the symbol keyboard.
                 if (mInputView != null)
                     switchKeyboard(KEYCODE_SWITCH_TO_SYMBOL_MODE);
                 break;
             case SkinSettings.TB_NUMBER:
+                // Numeric keypad; the toolbar stays available to leave it.
                 if (mKeyboardSwitcher != null) {
                     mEnglishOnly = true;
                     mKeyboardSwitcher.setKeyboardMode(activeIM, LIMEKeyboardSwitcher.MODE_PHONE,
