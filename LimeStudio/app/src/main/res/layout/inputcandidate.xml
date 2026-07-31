@@ -34,50 +34,63 @@
         android:background="@color/color_white"
         android:orientation="horizontal">
 
-        <net.toload.main.hd.skin.SkinToolbarView
-            android:id="@+id/skinToolbar"
+        <!-- The toolbar sits underneath; the candidate layer overlays it while
+             candidates are showing (INVISIBLE/VISIBLE only, no relayout). -->
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:orientation="horizontal"
-            android:visibility="gone" />
+            android:layout_weight="1.0">
 
-        <net.toload.main.hd.candidate.CandidateView
-            android:id="@+id/candidatesView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1.0"
-            android:gravity="center_vertical" />
-
-        <LinearLayout
-            android:id="@+id/candidate_right_parent"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:background="@color/color_white"
-            android:clickable="true"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/candidate_paste"
-                android:layout_width="@dimen/candidate_expand_button_width"
-                android:layout_height="fill_parent"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:contentDescription="@string/paste"
-                android:src="@drawable/paste"
+            <net.toload.main.hd.skin.SkinToolbarView
+                android:id="@+id/skinToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:visibility="gone" />
 
-            <ImageButton
-                android:id="@+id/candidate_right"
-                android:layout_width="@dimen/candidate_expand_button_width"
-                android:layout_height="fill_parent"
-                android:clickable="true"
-                android:contentDescription="@string/more_cand"
-                android:src="@drawable/ic_suggest_expander" />
+            <LinearLayout
+                android:id="@+id/skinCandidateLayer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <net.toload.main.hd.candidate.CandidateView
+                    android:id="@+id/candidatesView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.0"
+                    android:gravity="center_vertical" />
+
+                <LinearLayout
+                    android:id="@+id/candidate_right_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="right"
+                    android:background="@color/color_white"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/candidate_paste"
+                        android:layout_width="@dimen/candidate_expand_button_width"
+                        android:layout_height="fill_parent"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:contentDescription="@string/paste"
+                        android:src="@drawable/paste"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/candidate_right"
+                        android:layout_width="@dimen/candidate_expand_button_width"
+                        android:layout_height="fill_parent"
+                        android:clickable="true"
+                        android:contentDescription="@string/more_cand"
+                        android:src="@drawable/ic_suggest_expander" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout

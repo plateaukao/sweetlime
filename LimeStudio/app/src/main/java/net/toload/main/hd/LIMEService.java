@@ -3404,6 +3404,7 @@ public class LIMEService extends InputMethodService implements
                 candidateHintView = mCandidateInInputView.findViewById(R.id.candidate_hint);
 
                 mSkinToolbar = mCandidateInInputView.findViewById(R.id.skinToolbar);
+                mSkinCandidateLayer = mCandidateInInputView.findViewById(R.id.skinCandidateLayer);
                 setupSkinToolbar();
             }
             if (mCandidateView != mCandidateViewInInputView)
@@ -4078,6 +4079,7 @@ public class LIMEService extends InputMethodService implements
     // ------------------------------------------------------------------
 
     private SkinToolbarView mSkinToolbar;
+    private View mSkinCandidateLayer;
     private boolean mSkinNightMode = false;
     private boolean mSkinNavBarShown = false;
     private int mSkinGeneration = -1;
@@ -4094,8 +4096,8 @@ public class LIMEService extends InputMethodService implements
         SkinSettings skin = SkinManager.getInstance().getActiveSkin(this);
         if (skin == null) {
             mSkinToolbar.setVisibility(View.GONE);
-            if (mCandidateViewInInputView != null)
-                mCandidateViewInInputView.setVisibility(View.VISIBLE);
+            if (mSkinCandidateLayer != null)
+                mSkinCandidateLayer.setVisibility(View.VISIBLE);
             return;
         }
         mSkinToolbar.setup(skin, SkinManager.getInstance().getActiveStyle(this),
@@ -4117,42 +4119,34 @@ public class LIMEService extends InputMethodService implements
                         return false;
                     }
                 });
+        // The toolbar stays put underneath; the candidate layer overlays it
+        // while candidates show. Only the layer's visibility ever changes
+        // (INVISIBLE, not GONE), so typing causes no relayout flicker.
+        mSkinToolbar.setVisibility(View.VISIBLE);
         showSkinToolbar();
     }
 
-    /** Swap the toolbar in for the candidate strip (no composing going on). */
+    /** Uncovers the toolbar (nothing composing): candidate layer turns invisible. */
     private void showSkinToolbar() {
-        if (mSkinToolbar == null
+        if (mSkinToolbar == null || mSkinCandidateLayer == null
                 || SkinManager.getInstance().getActiveSkin(this) == null) return;
         mCandidateViewHandler.post(new Runnable() {
             @Override
             public void run() {
-                mSkinToolbar.setVisibility(View.VISIBLE);
-                if (mCandidateViewInInputView != null)
-                    mCandidateViewInInputView.setVisibility(View.GONE);
-                // The voice/expand button block would eat half the row.
-                View rightButtons = mCandidateInInputView == null ? null
-                        : mCandidateInInputView.findViewById(R.id.candidate_right_parent);
-                if (rightButtons != null) rightButtons.setVisibility(View.GONE);
+                if (mSkinCandidateLayer.getVisibility() != View.INVISIBLE)
+                    mSkinCandidateLayer.setVisibility(View.INVISIBLE);
             }
         });
     }
 
-    /** Swap the candidate strip back in (candidates need the row). */
+    /** Candidates need the row: the candidate layer covers the toolbar. */
     private void hideSkinToolbar() {
-        if (mSkinToolbar == null) return;
+        if (mSkinCandidateLayer == null) return;
         mCandidateViewHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (mSkinToolbar.getVisibility() != View.GONE)
-                    mSkinToolbar.setVisibility(View.GONE);
-                if (mCandidateViewInInputView != null
-                        && mCandidateViewInInputView.getVisibility() != View.VISIBLE)
-                    mCandidateViewInInputView.setVisibility(View.VISIBLE);
-                View rightButtons = mCandidateInInputView == null ? null
-                        : mCandidateInInputView.findViewById(R.id.candidate_right_parent);
-                if (rightButtons != null && rightButtons.getVisibility() != View.VISIBLE)
-                    rightButtons.setVisibility(View.VISIBLE);
+                if (mSkinCandidateLayer.getVisibility() != View.VISIBLE)
+                    mSkinCandidateLayer.setVisibility(View.VISIBLE);
             }
         });
     }
