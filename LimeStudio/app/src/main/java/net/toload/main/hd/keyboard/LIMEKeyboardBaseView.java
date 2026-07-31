@@ -1206,6 +1206,10 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
         SkinSettings skin = SkinManager.getInstance().getActiveSkin(getContext());
         if (skin != null && !skin.rowGesture(skinRowIndex(popupKey)).longPress)
             return false;
+        // Letter keys have no XML popup; with a skin active, long-press
+        // offers the key's swipe-hint characters as a popup instead.
+        if (skin != null && popupKey.popupResId == 0)
+            synthesizeSkinPopup(popupKey, skin);
         boolean result = onLongPress(popupKey);
         if (result) {
             mMiniKeyboardTrackerId = tracker.mPointerId;
@@ -1320,6 +1324,29 @@ public class LIMEKeyboardBaseView extends View implements PointerTracker.UIProxy
                     return mSkinKeySwipeListener.onSkinKeySwipe(action);
                 }
             };
+
+    /**
+     * Gives a letter key a popup built from its skin swipe-up/down
+     * characters (shortcut actions are skipped), using the generic
+     * character-popup template.
+     */
+    private void synthesizeSkinPopup(Key key, SkinSettings skin) {
+        if (key.codes == null || key.codes.length == 0) return;
+        int code = Character.toLowerCase(key.codes[0]);
+        if (code < 'a' || code > 'z') return;
+        StringBuilder chars = new StringBuilder();
+        appendPopupChar(chars, skin.swipeUp.get((char) code));
+        appendPopupChar(chars, skin.swipeDown.get((char) code));
+        if (chars.length() == 0) return;
+        key.popupCharacters = chars.toString();
+        key.popupResId = R.xml.popup_template;
+    }
+
+    private static void appendPopupChar(StringBuilder sb, SkinSettings.KeySwipe swipe) {
+        if (swipe == null || swipe.value == null) return;
+        if (swipe.type == SkinSettings.KeySwipe.TYPE_SHORTCUT) return;
+        if (swipe.value.length() == 1) sb.append(swipe.value);
+    }
 
     /**
      * Maps a key to the skin designer's row numbering (0-based, top row of a
