@@ -501,9 +501,9 @@ public class SetupImFragment extends Fragment {
     final static int BACKUP_FILE_REQUEST_CODE = 10421;
 
     private void launchBackupFilePicker() {
+        // ACTION_OPEN_DOCUMENT_TREE is a folder picker: it accepts no MIME type
+        // and no CATEGORY_OPENABLE; adding either makes resolution fail.
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, BACKUP_FILE_REQUEST_CODE);
     }
 
