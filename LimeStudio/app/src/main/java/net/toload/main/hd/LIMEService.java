@@ -59,6 +59,7 @@ import android.view.inputmethod.CursorAnchorInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ import net.toload.main.hd.candidate.CandidateInInputViewContainer;
 import net.toload.main.hd.candidate.CandidateView;
 import net.toload.main.hd.candidate.CandidateViewContainer;
 import net.toload.main.hd.data.ChineseSymbol;
+import net.toload.main.hd.emoji.EmojiPanelView;
 import net.toload.main.hd.data.Keyboard;
 import net.toload.main.hd.data.Mapping;
 import net.toload.main.hd.global.LIMEPreferenceManager;
@@ -120,6 +122,10 @@ public class LIMEService extends InputMethodService implements
     private CandidateViewContainer mCandidateViewContainer = null;
     private CompletionInfo[] mCompletions;
     private TextView candidateHintView = null;
+
+    // Emoji picker panel shown in place of the keyboard (fixed candidate view only)
+    private FrameLayout mKeyboardFrame = null;
+    private EmojiPanelView mEmojiPanel = null;
 
     // Floating mini candidate bar for physical keyboard mode
     private PopupWindow mMiniCandidatePopup;
@@ -3413,6 +3419,9 @@ public class LIMEService extends InputMethodService implements
                 mSkinCandidateLayer = mCandidateInInputView.findViewById(R.id.skinCandidateLayer);
                 setupSkinToolbar();
 
+                mKeyboardFrame = mCandidateInInputView.findViewById(R.id.keyboardFrame);
+                mEmojiPanel = null; // belonged to the replaced view tree
+
                 if (replacingExisting)
                     setInputView(mCandidateInInputView);
             }
@@ -3430,6 +3439,9 @@ public class LIMEService extends InputMethodService implements
 
                 if (replacingExisting)
                     setInputView(mInputView);
+
+                mKeyboardFrame = null; // no frame to host the emoji panel in this layout
+                mEmojiPanel = null;
             }
             mCandidateView = mCandidateViewStandAlone;
 
@@ -4034,6 +4046,7 @@ public class LIMEService extends InputMethodService implements
         if (DEBUG)
             Log.i(TAG, "onFinishInputView()");
         super.onFinishInputView(finishingInput);
+        hideEmojiPanel(); // Come back to the keyboard when the IME reopens.
         hideCandidateView(); // Jeremy '12,5,7 hideCandiate when inputview is closed but not yet leave the
                              // original field (onfinishinput() will not called).
     }
@@ -4163,6 +4176,91 @@ public class LIMEService extends InputMethodService implements
         });
     }
 
+    private boolean isEmojiPanelShown() {
+        return mEmojiPanel != null && mEmojiPanel.getVisibility() == View.VISIBLE;
+    }
+
+    /**
+     * Shows the emoji picker in place of the keyboard, sized to the keyboard so
+     * the IME window keeps its height. The keyboard view goes INVISIBLE (not
+     * GONE) so returning from the panel causes no relayout.
+     */
+    private void showEmojiPanel() {
+        if (mKeyboardFrame == null || mInputView == null || SearchSrv == null)
+            return;
+
+        // Commit pending composing text like other keyboard mode switches do.
+        try {
+            if (mComposing != null && mComposing.length() > 0) {
+                getCurrentInputConnection().commitText(mComposing, 1);
+                finishComposing();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        clearComposing(false);
+        hideCandidateView();
+
+        int panelHeight = mInputView.getHeight();
+        if (panelHeight <= 0 && mInputView.getKeyboard() != null)
+            panelHeight = mInputView.getKeyboard().getHeight();
+        if (panelHeight <= 0)
+            return;
+
+        if (mEmojiPanel == null) {
+            Context panelContext = mThemeContext == null ? this : mThemeContext;
+            mEmojiPanel = new EmojiPanelView(panelContext, SearchSrv.getAllEmoji(), mLIMEPref,
+                    SkinManager.getInstance().getActiveStyle(this), SkinManager.isNightMode(this),
+                    new EmojiPanelView.Listener() {
+                        @Override
+                        public void onEmojiPicked(String emoji) {
+                            onText(emoji);
+                        }
+
+                        @Override
+                        public void onEmojiBack() {
+                            hideEmojiPanel();
+                        }
+
+                        @Override
+                        public void onEmojiSpace() {
+                            sendKeyChar(' ');
+                        }
+
+                        @Override
+                        public void onEmojiDelete() {
+                            keyDownUp(KeyEvent.KEYCODE_DEL, false);
+                        }
+
+                        @Override
+                        public void onEmojiEnter() {
+                            sendKeyChar('\n');
+                        }
+                    });
+            mKeyboardFrame.addView(mEmojiPanel, new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, panelHeight));
+        } else {
+            ViewGroup.LayoutParams lp = mEmojiPanel.getLayoutParams();
+            if (lp != null && lp.height != panelHeight) {
+                lp.height = panelHeight;
+                mEmojiPanel.setLayoutParams(lp);
+            }
+        }
+        mEmojiPanel.showDefaultCategory();
+        mEmojiPanel.setVisibility(View.VISIBLE);
+        mInputView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideEmojiPanel() {
+        if (mEmojiPanel == null)
+            return;
+        mEmojiPanel.saveRecents();
+        if (mEmojiPanel.getVisibility() != View.GONE)
+            mEmojiPanel.setVisibility(View.GONE);
+        if (mInputView != null && mInputView.getVisibility() != View.VISIBLE)
+            mInputView.setVisibility(View.VISIBLE);
+    }
+
     private void handleSkinToolbarAction(int function) {
         InputConnection ic = getCurrentInputConnection();
         switch (function) {
@@ -4175,6 +4273,7 @@ public class LIMEService extends InputMethodService implements
             case SkinSettings.TB_CHI_ENG:
                 // Same path as the bottom-row EN/中 soft keys, which the
                 // tweaker removes when this toolbar button is configured.
+                hideEmojiPanel();
                 if (mInputView != null)
                     switchKeyboard(mEnglishOnly
                             ? KEYCODE_SWITCH_TO_IM_MODE : KEYCODE_SWITCH_TO_ENGLISH_MODE);
@@ -4184,11 +4283,20 @@ public class LIMEService extends InputMethodService implements
                 break;
             case SkinSettings.TB_SYMBOL:
                 // Like the bottom-row 123 key: toggle the symbol keyboard.
+                hideEmojiPanel();
                 if (mInputView != null)
                     switchKeyboard(KEYCODE_SWITCH_TO_SYMBOL_MODE);
                 break;
+            case SkinSettings.TB_EMOJI:
+                // Emoji picker replaces the keyboard; the toolbar stays to leave it.
+                if (isEmojiPanelShown())
+                    hideEmojiPanel();
+                else
+                    showEmojiPanel();
+                break;
             case SkinSettings.TB_NUMBER:
                 // Numeric keypad; the toolbar stays available to leave it.
+                hideEmojiPanel();
                 if (mKeyboardSwitcher != null) {
                     mEnglishOnly = true;
                     mKeyboardSwitcher.setKeyboardMode(activeIM, LIMEKeyboardSwitcher.MODE_PHONE,

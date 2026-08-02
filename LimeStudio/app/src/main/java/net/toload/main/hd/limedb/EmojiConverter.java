@@ -76,6 +76,41 @@ public class EmojiConverter extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	}
 
+	/** One distinct emoji from the database, with the id of its first keyword row. */
+	public static class EmojiItem {
+		public final String value;
+		public final int firstId;
+
+		public EmojiItem(String value, int firstId) {
+			this.value = value;
+			this.firstId = firstId;
+		}
+	}
+
+	/**
+	 * All distinct emoji in database order. The en table follows Unicode block
+	 * order, so consecutive firstId ranges form the emoji picker categories.
+	 */
+	public List<EmojiItem> getAllEmoji() {
+		List<EmojiItem> output = new LinkedList<>();
+		Cursor cursor = null;
+		try {
+			SQLiteDatabase db = this.getReadableDatabase();
+			cursor = db.rawQuery("SELECT " + FIELD_VALUE + ", MIN(id) FROM en GROUP BY "
+					+ FIELD_VALUE + " ORDER BY MIN(id)", null);
+			while (cursor.moveToNext()) {
+				String word = cursor.getString(0);
+				if (word != null && !word.isEmpty() && !word.equals(" "))
+					output.add(new EmojiItem(word, cursor.getInt(1)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null) cursor.close();
+		}
+		return output;
+	}
+
 	public List<Mapping> convert(String tag, Integer emoji){
 
 		List<Mapping> output = new LinkedList<Mapping>();

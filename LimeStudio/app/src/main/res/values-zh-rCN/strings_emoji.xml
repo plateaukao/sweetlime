@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Emoji picker panel -->
+    <string name="emoji_tab_recent">常用</string>
+    <string name="emoji_tab_smileys">表情</string>
+    <string name="emoji_tab_people">人物</string>
+    <string name="emoji_tab_animals">动物</string>
+    <string name="emoji_tab_plants">植物</string>
+    <string name="emoji_tab_food">食物</string>
+    <string name="emoji_tab_travel">旅游</string>
+    <string name="emoji_tab_activity">活动</string>
+    <string name="emoji_tab_objects">物品</string>
+    <string name="emoji_tab_symbols">符号</string>
+    <string name="emoji_key_back">返回</string>
+    <string name="emoji_key_space">空格</string>
+    <string name="emoji_key_enter">换行</string>
+</resources>

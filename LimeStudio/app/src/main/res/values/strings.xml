@@ -272,4 +272,19 @@
     <string name="show_typed_word_title">顯示剛打的字在鍵盤中間</string>
     <string name="show_typed_word_summary">減少眼睛不斷來回，將剛打的字直接顯示在鍵盤中間</string>
 
+    <!-- Emoji picker panel -->
+    <string name="emoji_tab_recent">常用</string>
+    <string name="emoji_tab_smileys">表情</string>
+    <string name="emoji_tab_people">人物</string>
+    <string name="emoji_tab_animals">動物</string>
+    <string name="emoji_tab_plants">植物</string>
+    <string name="emoji_tab_food">食物</string>
+    <string name="emoji_tab_travel">旅遊</string>
+    <string name="emoji_tab_activity">活動</string>
+    <string name="emoji_tab_objects">物品</string>
+    <string name="emoji_tab_symbols">符號</string>
+    <string name="emoji_key_back">返回</string>
+    <string name="emoji_key_space">空格</string>
+    <string name="emoji_key_enter">換行</string>
+
 </resources>

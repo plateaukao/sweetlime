@@ -4168,6 +4168,11 @@ public class LimeDB extends LimeSQLiteOpenHelper {
         return emojiConverter.convert(source, emoji);
     }
 
+    public List<EmojiConverter.EmojiItem> getAllEmoji() {
+        checkEmojiDB();
+        return emojiConverter.getAllEmoji();
+    }
+
     /**
      * Jeremy '11,9,8 moved from searchService
      */

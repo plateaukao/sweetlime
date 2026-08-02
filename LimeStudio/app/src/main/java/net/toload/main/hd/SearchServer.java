@@ -37,6 +37,7 @@ import net.toload.main.hd.data.Mapping;
 import net.toload.main.hd.global.LIME;
 import net.toload.main.hd.global.LIMEPreferenceManager;
 import net.toload.main.hd.global.LIMEUtilities;
+import net.toload.main.hd.limedb.EmojiConverter;
 import net.toload.main.hd.limedb.LimeDB;
 
 import android.os.Handler;
@@ -570,6 +571,15 @@ public class SearchServer {
             }
         }
         return null;
+    }
+
+    private static List<EmojiConverter.EmojiItem> allEmojiCache = null;
+
+    /** All distinct emoji from emoji.db in category order, for the emoji picker panel. */
+    public List<EmojiConverter.EmojiItem> getAllEmoji() {
+        if (allEmojiCache == null)
+            allEmojiCache = dbadapter.getAllEmoji();
+        return allEmojiCache;
     }
 
     public List<Mapping> getMappingByCode(String code, boolean softkeyboard, boolean getAllRecords, boolean prefetchCache)

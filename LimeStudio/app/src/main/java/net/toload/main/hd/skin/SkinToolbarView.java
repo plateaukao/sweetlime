@@ -87,6 +87,8 @@ public class SkinToolbarView extends LinearLayout {
                 return R.drawable.skin_ic_translate;
             case SkinSettings.TB_SYMBOL:
                 return R.drawable.skin_ic_keyboard;
+            case SkinSettings.TB_EMOJI:
+                return R.drawable.skin_ic_emoji;
             case SkinSettings.TB_NUMBER:
                 return R.drawable.skin_ic_dialpad;
             case SkinSettings.TB_SELECT_ALL:
