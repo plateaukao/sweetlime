@@ -44,6 +44,9 @@ public class SkinKeyboardTweaker {
 
     private static final int KEYCODE_SPACE = 32;
     private static final int KEYCODE_LETTER_Q = 113;
+    // Shift layouts define letter keys with uppercase codes (lime_shift.xml
+    // et al. carry Q=81, not q=113).
+    private static final int KEYCODE_LETTER_Q_UPPER = 81;
     private static final int KEYCODE_SWITCH_TO_SYMBOL_MODE = -2;
     private static final int KEYCODE_HIDE_IME = -3;
     private static final int KEYCODE_SWITCH_TO_ENGLISH_MODE = -9;
@@ -73,7 +76,8 @@ public class SkinKeyboardTweaker {
         if (!toolbarChiEng && !toolbarSymbols && !removeHideKey) return;
 
         List<Key> keys = keyboard.getKeys();
-        if (!hasKeyCode(keys, KEYCODE_LETTER_Q)) return; // not a main text keyboard
+        if (!hasKeyCode(keys, KEYCODE_LETTER_Q)
+                && !hasKeyCode(keys, KEYCODE_LETTER_Q_UPPER)) return; // not a main text keyboard
 
         List<Key> toRemove = new ArrayList<>();
         for (Key key : keys) {
