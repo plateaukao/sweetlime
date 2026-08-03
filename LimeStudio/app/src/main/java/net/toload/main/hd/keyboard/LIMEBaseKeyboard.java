@@ -993,11 +993,18 @@ public class LIMEBaseKeyboard {
                 int count = 0;
                 for (int i = 0; i < mKeys.size(); i++) {
                     final Key key = mKeys.get(i);
-                    if (key.squaredDistanceFrom(x, y) < mProximityThreshold ||
-                            key.squaredDistanceFrom(x + mCellWidth - 1, y) < mProximityThreshold ||
-                            key.squaredDistanceFrom(x + mCellWidth - 1, y + mCellHeight - 1)
-                                    < mProximityThreshold ||
-                            key.squaredDistanceFrom(x, y + mCellHeight - 1) < mProximityThreshold) {
+                    // Distance from the cell rectangle to the key rectangle,
+                    // zero when they overlap. The former center-distance test
+                    // assumed keys no wider than ~3.6 default keys and left
+                    // the far ends of wider keys (e.g. the space bar widened
+                    // by SkinKeyboardTweaker) out of the grid, untappable.
+                    final int dx = Math.max(0, Math.max(
+                            key.x - (x + mCellWidth - 1),
+                            x - (key.x + key.width)));
+                    final int dy = Math.max(0, Math.max(
+                            key.y - (y + mCellHeight - 1),
+                            y - (key.y + key.height)));
+                    if (dx * dx + dy * dy < mProximityThreshold) {
                         indices[count++] = i;
                     }
                 }
