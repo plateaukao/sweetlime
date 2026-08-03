@@ -1106,8 +1106,11 @@ public class CandidateView extends View implements View.OnClickListener {
                     default:
                         selKeyPaint.setColor(mColorSelKey);
                         if (i == mSelectedIndex)
-                            candidatePaint.setColor(mColorNormalText);
-                            //candidatePaint.setColor(mColorNormalTextHighlight);
+                            // Skins pair candidateSelectedText with the selected
+                            // background pill; stock themes deliberately keep the
+                            // normal text color here (8661589).
+                            candidatePaint.setColor(mSkinActive
+                                    ? mColorNormalTextHighlight : mColorNormalText);
                         else
                             candidatePaint.setColor(mColorNormalText);
                         break;
