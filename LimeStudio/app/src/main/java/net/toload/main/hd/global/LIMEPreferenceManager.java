@@ -536,6 +536,11 @@ public class LIMEPreferenceManager {
 		return sp.getBoolean("show_typed_word", false);
 	}
 
+	public boolean getSpaceCursorDrag(){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return sp.getBoolean("space_cursor_drag", false);
+	}
+
 	public int getShowArrowKeys(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return Integer.parseInt(sp.getString("show_arrow_key", "0"));

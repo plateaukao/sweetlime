@@ -2021,6 +2021,12 @@ public class LIMEService extends InputMethodService implements
             switchToNextActivatedIM(true);
         } else if (primaryCode == LIMEKeyboardView.KEYCODE_PREV_IM) {
             switchToNextActivatedIM(false);
+        } else if (primaryCode == LIMEKeyboardView.KEYCODE_CURSOR_RIGHT) {
+            if (mComposing.length() == 0)
+                keyDownUp(KeyEvent.KEYCODE_DPAD_RIGHT, false);
+        } else if (primaryCode == LIMEKeyboardView.KEYCODE_CURSOR_LEFT) {
+            if (mComposing.length() == 0)
+                keyDownUp(KeyEvent.KEYCODE_DPAD_LEFT, false);
         } else if (primaryCode == KEYCODE_SWITCH_TO_ENGLISH_MODE && mInputView != null) { // chi->eng
             switchKeyboard(primaryCode);
             // Jeremy '11,5,31 Rewrite softkeybaord enter/space and english separator

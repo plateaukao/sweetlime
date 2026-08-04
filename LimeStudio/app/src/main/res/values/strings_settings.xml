@@ -141,6 +141,8 @@
     <string name="candidate_query_debounce_summary">電子紙等低效能裝置可設定延遲，快速連打時只查詢最後一鍵</string>
     <string name="key_press_highlight">按鍵按下強調效果</string>
     <string name="key_press_highlight_summary">關閉後按鍵時不重繪強調效果，電子紙裝置可減少閃爍與延遲</string>
+    <string name="space_cursor_drag">空白鍵滑動移動游標</string>
+    <string name="space_cursor_drag_summary">在空白鍵上左右滑動以移動文字游標（啟用後空白鍵滑動不再切換輸入法）</string>
     <string name="vibrate_on_keypress">打字震動</string>
     <string name="sound_on_keypress">打字音效</string>
     <string name="display_number_keypads">顯示數字鍵盤</string>

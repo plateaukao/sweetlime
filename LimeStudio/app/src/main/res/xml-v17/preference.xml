@@ -158,6 +158,11 @@
             android:title="@string/key_press_highlight" />
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="space_cursor_drag"
+            android:summary="@string/space_cursor_drag_summary"
+            android:title="@string/space_cursor_drag" />
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="switch_english_mode"
             android:summary="@string/switch_english_mode_summary_1"
             android:title="@string/switch_english_mode_1" />

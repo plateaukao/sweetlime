@@ -140,6 +140,8 @@
     <string name="candidate_query_debounce_summary">电子纸等低效能设备可设定延迟，快速连打时只查询最后一键</string>
     <string name="key_press_highlight">按键按下强调效果</string>
     <string name="key_press_highlight_summary">关闭后按键时不重绘强调效果，电子纸设备可减少闪烁与延迟</string>
+    <string name="space_cursor_drag">空格键滑动移动光标</string>
+    <string name="space_cursor_drag_summary">在空格键上左右滑动以移动文字光标（启用后空格键滑动不再切换输入法）</string>
     <string name="vibrate_on_keypress">打字震动</string>
     <string name="sound_on_keypress">打字音效</string>
     <string name="display_number_keypads">显示数字键盘</string>
