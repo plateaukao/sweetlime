@@ -145,6 +145,8 @@
     <string name="space_cursor_drag_summary">在空白鍵上左右滑動以移動文字游標（啟用後空白鍵滑動不再切換輸入法）</string>
     <string name="vibrate_on_keypress">打字震動</string>
     <string name="sound_on_keypress">打字音效</string>
+    <string name="piano_sound_on_keypress">琴鍵音效</string>
+    <string name="piano_sound_on_keypress_summary">以鋼琴 Do Re Mi 音階取代按鍵音</string>
     <string name="display_number_keypads">顯示數字鍵盤</string>
     <string name="display_number_keypads_summary">顯示數字按鈕於鍵盤上</string>
     <string name="similiar_enable_switch">啟用關聯字典</string>

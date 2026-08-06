@@ -254,9 +254,15 @@ public class LIMEPreferenceManager {
 	
 	
 	public boolean getSoundOnKeyPressed(){
-		
+
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return sp.getBoolean("sound_on_keypress", false);
+	}
+
+	public boolean getPianoSoundOnKeyPressed(){
+
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return sp.getBoolean("piano_sound_on_keypress", false);
 	}
 
 	public boolean getEmojiMode(){

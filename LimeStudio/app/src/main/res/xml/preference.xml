@@ -152,6 +152,12 @@
             android:key="sound_on_keypress"
             android:title="@string/sound_on_keypress" />
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="sound_on_keypress"
+            android:key="piano_sound_on_keypress"
+            android:summary="@string/piano_sound_on_keypress_summary"
+            android:title="@string/piano_sound_on_keypress" />
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="key_press_highlight"
             android:summary="@string/key_press_highlight_summary"

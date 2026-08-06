@@ -31,8 +31,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.inputmethodservice.InputMethodService;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -180,6 +183,9 @@ public class LIMEService extends InputMethodService implements
 
     private Vibrator mVibrator;
     private AudioManager mAudioManager;
+    private SoundPool mSoundPool;
+    private int mPianoSoundId;
+    private float mPianoGain = 0.5f;
 
     private boolean hasNumberMapping = false;
     private boolean hasSymbolMapping = false;
@@ -289,6 +295,22 @@ public class LIMEService extends InputMethodService implements
 
         mVibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        mSoundPool = new SoundPool.Builder()
+                .setMaxStreams(4)
+                .setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build())
+                .build();
+        mPianoSoundId = mSoundPool.load(this, R.raw.piano_c4, 1);
+
+        // Match the fixed attenuation the OS applies to its own keypress sounds
+        // (internal config_soundEffectVolumeDb, -6 dB in AOSP), then take it
+        // another 6 dB down: a tonal piano note carries further than a click.
+        int volDbId = Resources.getSystem().getIdentifier("config_soundEffectVolumeDb", "integer", "android");
+        int volDb = (volDbId != 0) ? Resources.getSystem().getInteger(volDbId) : -6;
+        mPianoGain = (float) Math.pow(10, (volDb - 6) / 20.0);
 
         mLongPressKeyTimeout = getResources().getInteger(R.integer.config_long_press_key_timeout); // Jeremy '11,8,15
                                                                                                    // read longpress
@@ -3989,6 +4011,10 @@ public class LIMEService extends InputMethodService implements
             }
         }
         if (mLIMEPref.getSoundOnKeyPressed()) {
+            if (mLIMEPref.getPianoSoundOnKeyPressed()) {
+                playPianoNote(primaryCode);
+                return;
+            }
             int sound = AudioManager.FX_KEYPRESS_STANDARD;
             switch (primaryCode) {
                 case LIMEBaseKeyboard.KEYCODE_DELETE:
@@ -4004,6 +4030,32 @@ public class LIMEService extends InputMethodService implements
             float FX_VOLUME = 1.0f;
             mAudioManager.playSoundEffect(sound, FX_VOLUME);
         }
+    }
+
+    private void playPianoNote(int primaryCode) {
+        // Semitone offsets from the bundled C4 sample; ordinary keys all play the same do,
+        // only function keys get their own note.
+        int semitones;
+        switch (primaryCode) {
+            case MY_KEYCODE_SPACE:
+                semitones = 7;   // sol
+                break;
+            case MY_KEYCODE_ENTER:
+                semitones = 12;  // high do
+                break;
+            case LIMEBaseKeyboard.KEYCODE_DELETE:
+                semitones = -5;  // low sol
+                break;
+            case LIMEBaseKeyboard.KEYCODE_SHIFT:
+                semitones = -3;  // low la
+                break;
+            default:
+                semitones = 0;   // do
+                break;
+        }
+        // SoundPool rate range is 0.5–2.0: exactly one octave down/up from the C4 sample
+        float rate = (float) Math.pow(2, semitones / 12f);
+        mSoundPool.play(mPianoSoundId, mPianoGain, mPianoGain, 1, 0, rate);
     }
 
     /**
@@ -4030,6 +4082,7 @@ public class LIMEService extends InputMethodService implements
             Log.i(TAG, "onDestroy()");
 
         queryDispatcher.destroy();
+        mSoundPool.release();
         // jeremy 12,4,21 need to check again---
         // clearComposing(true); see no need to do this '12,4,21
         super.onDestroy();
