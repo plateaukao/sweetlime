@@ -125,8 +125,8 @@
         <ListPreference
             android:defaultValue="1"
             android:dialogTitle="@string/keyboard_size"
-            android:entries="@array/five_size_scale_options"
-            android:entryValues="@array/five_size_scale_values"
+            android:entries="@array/keyboard_size_scale_options"
+            android:entryValues="@array/keyboard_size_scale_values"
             android:key="keyboard_size"
             android:title="@string/keyboard_size" />
         <ListPreference

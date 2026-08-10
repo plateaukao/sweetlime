@@ -755,6 +755,15 @@
         <item>小</item>
         <item>特小</item>
     </string-array>
+    <string-array name="keyboard_size_scale_options">
+        <item>极大</item>
+        <item>超大</item>
+        <item>特大</item>
+        <item>大</item>
+        <item>一般</item>
+        <item>小</item>
+        <item>特小</item>
+    </string-array>
 
     <!-- Vibrate level Options List -->
     <string name="vibrate_level">震动强度</string>
