@@ -58,7 +58,7 @@
     </Row>
     
     <Row limehd:rowEdgeFlags="bottom">
-        <Key limehd:codes="-3"  limehd:keyIcon="@drawable/sym_keyboard_done_light" limehd:isModifier="true" limehd:keyEdgeFlags="left"/>
+        <Key limehd:codes="-10" limehd:keyLabel="中" limehd:isModifier="true" limehd:keyEdgeFlags="left"/>
         <Key limehd:codes="42" limehd:keyLabel="*"/>
         <Key limehd:codes="48" limehd:keyLabel="0"/>
         <Key limehd:codes="35" limehd:keyLabel="\#"/>
