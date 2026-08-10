@@ -33,6 +33,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- Android 11+ package visibility: without this, getEnabledInputMethodList()
+         only returns IMEs visible to this app, hiding Google voice typing and
+         Gboard, so the mic button silently does nothing. -->
+    <queries>
+        <intent>
+            <action android:name="android.view.InputMethod" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/logo"

@@ -4120,6 +4120,8 @@ public class LIMEService extends InputMethodService implements
         String voiceID = LIMEUtilities.isVoiceSearchServiceExist(getBaseContext());
         if (voiceID != null)
             this.switchInputMethod(voiceID);
+        else
+            Toast.makeText(this, R.string.voice_input_not_available, Toast.LENGTH_LONG).show();
 
     }
 

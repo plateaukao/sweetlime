@@ -175,6 +175,7 @@
     <!-- Changjei Keyboard, Standard Keyboard-->
     <string name="typing_mode_english">切换输入模式 / 英文</string>
     <string name="typing_mode_mixed">切换输入模式 / 混合</string>
+    <string name="voice_input_not_available">找不到可用的语音输入法，请在系统设置中启用「Google 语音输入」</string>
 
     <!-- Popup keyboard char sequences-->
     <string name="chinese_punctuation">“”！？、。，</string>
